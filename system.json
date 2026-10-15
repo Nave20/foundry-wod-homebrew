@@ -1,0 +1,127 @@
+{
+  "id": "wod_homebrew",
+  "type": "system",
+  "title": "Monde des Ténèbres (Homebrew)",
+  "description": "<p>Système maison pour le Monde des Ténèbres (V20, Dark Ages V20, W20, M20) : Mortel, Vampire, Goule, Garou, Mage.</p>",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.369"
+  },
+  "authors": [
+    {
+      "name": "Nave20"
+    }
+  ],
+  "esmodules": [
+    "wod_homebrew.mjs"
+  ],
+  "styles": [
+    "styles/wod_homebrew.css"
+  ],
+  "languages": [
+    {
+      "lang": "fr",
+      "name": "Français",
+      "path": "lang/fr.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/fr.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "mortel": {
+        "htmlFields": [
+          "biographie.historique",
+          "biographie.apparence",
+          "biographie.relations",
+          "biographie.notes_mj"
+        ],
+        "gmOnlyFields": [
+          "biographie.notes_mj"
+        ]
+      },
+      "vampire": {
+        "htmlFields": [
+          "biographie.historique",
+          "biographie.apparence",
+          "biographie.relations",
+          "biographie.notes_mj"
+        ],
+        "gmOnlyFields": [
+          "biographie.notes_mj"
+        ]
+      },
+      "goule": {
+        "htmlFields": [
+          "biographie.historique",
+          "biographie.apparence",
+          "biographie.relations",
+          "biographie.notes_mj"
+        ],
+        "gmOnlyFields": [
+          "biographie.notes_mj"
+        ]
+      },
+      "garou": {
+        "htmlFields": [
+          "biographie.historique",
+          "biographie.apparence",
+          "biographie.relations",
+          "biographie.notes_mj"
+        ],
+        "gmOnlyFields": [
+          "biographie.notes_mj"
+        ]
+      },
+      "mage": {
+        "htmlFields": [
+          "biographie.historique",
+          "biographie.apparence",
+          "biographie.relations",
+          "biographie.notes_mj"
+        ],
+        "gmOnlyFields": [
+          "biographie.notes_mj"
+        ]
+      }
+    },
+    "Item": {
+      "objet": {
+        "htmlFields": [
+          "description"
+        ]
+      }
+    }
+  },
+  "initiative": "1d10 + @dexterite + @astuce",
+  "grid": {
+    "distance": 1,
+    "units": "m"
+  },
+  "primaryTokenAttribute": null,
+  "secondaryTokenAttribute": null,
+  "socket": false,
+  "flags": {
+    "hotReload": {
+      "extensions": [
+        "css",
+        "hbs",
+        "json"
+      ],
+      "paths": [
+        "styles",
+        "templates",
+        "lang"
+      ]
+    }
+  },
+  "url": "https://github.com/Nave20/foundry-wod-homebrew",
+  "bugs": "https://github.com/Nave20/foundry-wod-homebrew/issues",
+  "readme": "README.md",
+  "changelog": "https://github.com/Nave20/foundry-wod-homebrew/blob/main/CHANGELOG.md",
+  "license": "LICENSE"
+}

@@ -1,0 +1,77 @@
+<section class="tab etat {{tab.cssClass}}" data-group="primary" data-tab="etat">
+  <div class="colonnes deux">
+    <fieldset>
+      <legend>{{localize "WODHOMEBREW.Actor.FIELDS.volonte.label"}}</legend>
+      {{formGroup systemFields.volonte.fields.permanente value=source.volonte.permanente localize=true disabled=(not editable)}}
+      {{formGroup systemFields.volonte.fields.temporaire value=source.volonte.temporaire localize=true disabled=(not editable)}}
+    </fieldset>
+
+    <fieldset class="sante">
+      <legend>{{localize "WODHOMEBREW.Actor.FIELDS.sante.label"}}</legend>
+      {{formGroup systemFields.sante.fields.contondants value=source.sante.contondants localize=true disabled=(not editable)}}
+      {{formGroup systemFields.sante.fields.letaux value=source.sante.letaux localize=true disabled=(not editable)}}
+      {{formGroup systemFields.sante.fields.aggraves value=source.sante.aggraves localize=true disabled=(not editable)}}
+      {{formGroup systemFields.sante.fields.niveaux value=source.sante.niveaux localize=true disabled=(not editable)}}
+      <ol class="niveaux-sante">
+        {{#each sante as |n|}}
+        <li class="{{#if n.coche}}coche {{n.type}}{{/if}}">
+          <span class="case">{{#if (eq n.type "aggrave")}}✱{{else if (eq n.type "letal")}}X{{else if (eq n.type "contondant")}}/{{/if}}</span>
+          <span class="niveau">{{localize n.label}}</span>
+          <span class="malus">{{n.malusTexte}}</span>
+        </li>
+        {{/each}}
+      </ol>
+      <p class="hint">{{localize "WODHOMEBREW.Sante.Etat"}} : {{localize etatSante}} ({{system.sante.etat.malus}})</p>
+    </fieldset>
+
+    {{#if estVampirique}}
+    <fieldset>
+      <legend>{{localize "WODHOMEBREW.Actor.FIELDS.vertus.label"}}</legend>
+      {{#each vertus as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
+    </fieldset>
+    <fieldset>
+      <legend>{{localize "WODHOMEBREW.Actor.FIELDS.voie.label"}}</legend>
+      {{formGroup systemFields.voie.fields.nom value=source.voie.nom localize=true disabled=(not editable)}}
+      {{formGroup systemFields.voie.fields.valeur value=source.voie.valeur localize=true disabled=(not editable)}}
+    </fieldset>
+    <fieldset>
+      <legend>{{localize "WODHOMEBREW.Actor.FIELDS.sang.label"}}</legend>
+      {{formGroup systemFields.sang.fields.valeur value=source.sang.valeur localize=true disabled=(not editable)}}
+      {{formGroup systemFields.sang.fields.max value=source.sang.max localize=true disabled=(not editable)}}
+      {{formGroup systemFields.sang.fields.par_tour value=source.sang.par_tour localize=true disabled=(not editable)}}
+    </fieldset>
+    {{/if}}
+
+    {{#if estGarou}}
+    <fieldset>
+      <legend>{{localize "WODHOMEBREW.Actor.FIELDS.rage.label"}} / {{localize "WODHOMEBREW.Actor.FIELDS.gnose.label"}}</legend>
+      {{formGroup systemFields.rage.fields.permanente value=source.rage.permanente localize=true disabled=(not editable)}}
+      {{formGroup systemFields.rage.fields.temporaire value=source.rage.temporaire localize=true disabled=(not editable)}}
+      {{formGroup systemFields.gnose.fields.permanente value=source.gnose.permanente localize=true disabled=(not editable)}}
+      {{formGroup systemFields.gnose.fields.temporaire value=source.gnose.temporaire localize=true disabled=(not editable)}}
+    </fieldset>
+    <fieldset>
+      <legend>{{localize "WODHOMEBREW.Actor.FIELDS.renommee.label"}}</legend>
+      {{formGroup systemFields.renommee.fields.gloire.fields.permanente value=source.renommee.gloire.permanente localize=true disabled=(not editable)}}
+      {{formGroup systemFields.renommee.fields.gloire.fields.temporaire value=source.renommee.gloire.temporaire localize=true disabled=(not editable)}}
+      {{formGroup systemFields.renommee.fields.honneur.fields.permanente value=source.renommee.honneur.permanente localize=true disabled=(not editable)}}
+      {{formGroup systemFields.renommee.fields.honneur.fields.temporaire value=source.renommee.honneur.temporaire localize=true disabled=(not editable)}}
+      {{formGroup systemFields.renommee.fields.sagesse.fields.permanente value=source.renommee.sagesse.permanente localize=true disabled=(not editable)}}
+      {{formGroup systemFields.renommee.fields.sagesse.fields.temporaire value=source.renommee.sagesse.temporaire localize=true disabled=(not editable)}}
+    </fieldset>
+    {{/if}}
+
+    {{#if estMage}}
+    <fieldset>
+      <legend>{{localize "WODHOMEBREW.Actor.FIELDS.spheres.label"}}</legend>
+      {{#each spheres as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
+    </fieldset>
+    <fieldset>
+      <legend>{{localize "WODHOMEBREW.Fiche.Magie"}}</legend>
+      {{formGroup systemFields.arete value=source.arete localize=true disabled=(not editable)}}
+      {{formGroup systemFields.quintessence value=source.quintessence localize=true disabled=(not editable)}}
+      {{formGroup systemFields.paradoxe value=source.paradoxe localize=true disabled=(not editable)}}
+    </fieldset>
+    {{/if}}
+  </div>
+</section>

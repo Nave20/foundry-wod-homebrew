@@ -1,0 +1,20 @@
+<div class="fiche-objet">
+  <header class="entete">
+    <img class="portrait" src="{{item.img}}" alt="{{item.name}}" data-action="editImage" data-edit="img">
+    <input class="nom" type="text" name="name" value="{{document._source.name}}" {{disabled (not editable)}}>
+  </header>
+  <div class="details">
+    {{formGroup systemFields.categorie value=source.categorie localize=true disabled=(not editable)}}
+    {{formGroup systemFields.quantite value=source.quantite localize=true disabled=(not editable)}}
+    {{#if estArme}}
+      {{formGroup systemFields.degats value=source.degats localize=true disabled=(not editable)}}
+      {{formGroup systemFields.type_degats value=source.type_degats localize=true blank="" disabled=(not editable)}}
+      {{formGroup systemFields.portee value=source.portee localize=true disabled=(not editable)}}
+    {{/if}}
+    {{#if estArmure}}
+      {{formGroup systemFields.armure value=source.armure localize=true disabled=(not editable)}}
+      {{formGroup systemFields.malus value=source.malus localize=true disabled=(not editable)}}
+    {{/if}}
+    {{formInput systemFields.description enriched=descriptionEnrichie value=source.description toggled=true disabled=(not editable)}}
+  </div>
+</div>

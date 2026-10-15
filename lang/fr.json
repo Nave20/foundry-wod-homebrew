@@ -1,0 +1,619 @@
+{
+  "TYPES": {
+    "Actor": {
+      "mortel": "Mortel",
+      "vampire": "Vampire",
+      "goule": "Goule",
+      "garou": "Garou",
+      "mage": "Mage"
+    },
+    "Item": {
+      "objet": "Objet"
+    }
+  },
+  "WODHOMEBREW": {
+    "Actor": {
+      "FIELDS": {
+        "jeu": {
+          "label": "Jeu",
+          "hint": "Choisit la liste de capacités affichée."
+        },
+        "role": {
+          "label": "Rôle"
+        },
+        "joueur": {
+          "label": "Joueur"
+        },
+        "statut": {
+          "label": "Statut"
+        },
+        "chronique": {
+          "label": "Chronique"
+        },
+        "concept": {
+          "label": "Concept"
+        },
+        "nature": {
+          "label": "Nature"
+        },
+        "attitude": {
+          "label": "Attitude"
+        },
+        "echelle_max": {
+          "label": "Échelle max.",
+          "hint": "Nombre de points affichés par trait (5 par défaut, 10 pour les anciens)."
+        },
+        "attributs": {
+          "label": "Attributs",
+          "force": {
+            "label": "Force"
+          },
+          "dexterite": {
+            "label": "Dextérité"
+          },
+          "vigueur": {
+            "label": "Vigueur"
+          },
+          "charisme": {
+            "label": "Charisme"
+          },
+          "manipulation": {
+            "label": "Manipulation"
+          },
+          "apparence": {
+            "label": "Apparence"
+          },
+          "perception": {
+            "label": "Perception"
+          },
+          "intelligence": {
+            "label": "Intelligence"
+          },
+          "astuce": {
+            "label": "Astuce"
+          }
+        },
+        "capacites": {
+          "label": "Capacités",
+          "vigilance": {
+            "label": "Vigilance"
+          },
+          "athletisme": {
+            "label": "Athlétisme"
+          },
+          "intuition": {
+            "label": "Intuition"
+          },
+          "bagarre": {
+            "label": "Bagarre"
+          },
+          "empathie": {
+            "label": "Empathie"
+          },
+          "expression": {
+            "label": "Expression"
+          },
+          "intimidation": {
+            "label": "Intimidation"
+          },
+          "commandement": {
+            "label": "Commandement"
+          },
+          "connaissance_de_la_rue": {
+            "label": "Connaissance de la rue"
+          },
+          "subterfuge": {
+            "label": "Subterfuge"
+          },
+          "prestidigitation": {
+            "label": "Prestidigitation"
+          },
+          "instinct_primal": {
+            "label": "Instinct primal"
+          },
+          "art": {
+            "label": "Art"
+          },
+          "animaux": {
+            "label": "Animaux"
+          },
+          "artisanat": {
+            "label": "Artisanat"
+          },
+          "conduite": {
+            "label": "Conduite"
+          },
+          "etiquette": {
+            "label": "Étiquette"
+          },
+          "armes_a_feu": {
+            "label": "Armes à feu"
+          },
+          "larcin": {
+            "label": "Larcin"
+          },
+          "melee": {
+            "label": "Mêlée"
+          },
+          "representation": {
+            "label": "Représentation"
+          },
+          "furtivite": {
+            "label": "Furtivité"
+          },
+          "survie": {
+            "label": "Survie"
+          },
+          "tir_a_l_arc": {
+            "label": "Tir à l'arc"
+          },
+          "commerce": {
+            "label": "Commerce"
+          },
+          "equitation": {
+            "label": "Équitation"
+          },
+          "arts_martiaux": {
+            "label": "Arts martiaux"
+          },
+          "meditation": {
+            "label": "Méditation"
+          },
+          "recherche": {
+            "label": "Recherche"
+          },
+          "technologie": {
+            "label": "Technologie"
+          },
+          "erudition": {
+            "label": "Érudition"
+          },
+          "informatique": {
+            "label": "Informatique"
+          },
+          "finances": {
+            "label": "Finances"
+          },
+          "investigation": {
+            "label": "Investigation"
+          },
+          "droit": {
+            "label": "Droit"
+          },
+          "medecine": {
+            "label": "Médecine"
+          },
+          "occultisme": {
+            "label": "Occultisme"
+          },
+          "politique": {
+            "label": "Politique"
+          },
+          "sciences": {
+            "label": "Sciences"
+          },
+          "enigmes": {
+            "label": "Énigmes"
+          },
+          "sagesse_populaire": {
+            "label": "Sagesse populaire"
+          },
+          "senechal": {
+            "label": "Sénéchal"
+          },
+          "theologie": {
+            "label": "Théologie"
+          },
+          "rituels": {
+            "label": "Rituels"
+          },
+          "cosmologie": {
+            "label": "Cosmologie"
+          },
+          "esoterisme": {
+            "label": "Ésotérisme"
+          }
+        },
+        "capacites_secondaires": {
+          "label": "Capacités secondaires",
+          "element": {
+            "nom": {
+              "label": "Nom"
+            },
+            "valeur": {
+              "label": "Valeur"
+            }
+          }
+        },
+        "historiques": {
+          "label": "Historiques",
+          "element": {
+            "nom": {
+              "label": "Nom"
+            },
+            "valeur": {
+              "label": "Valeur"
+            }
+          }
+        },
+        "atouts": {
+          "label": "Atouts",
+          "element": {
+            "nom": {
+              "label": "Nom"
+            },
+            "valeur": {
+              "label": "Valeur"
+            }
+          }
+        },
+        "handicaps": {
+          "label": "Handicaps",
+          "element": {
+            "nom": {
+              "label": "Nom"
+            },
+            "valeur": {
+              "label": "Valeur"
+            }
+          }
+        },
+        "volonte": {
+          "label": "Volonté",
+          "permanente": {
+            "label": "Permanente"
+          },
+          "temporaire": {
+            "label": "Temporaire"
+          }
+        },
+        "sante": {
+          "label": "Santé",
+          "niveaux": {
+            "label": "Niveaux de santé"
+          },
+          "contondants": {
+            "label": "Dégâts contondants"
+          },
+          "letaux": {
+            "label": "Dégâts létaux"
+          },
+          "aggraves": {
+            "label": "Dégâts aggravés"
+          }
+        },
+        "biographie": {
+          "label": "Biographie",
+          "historique": {
+            "label": "Historique"
+          },
+          "apparence": {
+            "label": "Apparence"
+          },
+          "relations": {
+            "label": "Relations"
+          },
+          "notes_mj": {
+            "label": "Notes du MJ"
+          }
+        },
+        "occupation": {
+          "label": "Occupation"
+        },
+        "affiliation": {
+          "label": "Affiliation"
+        },
+        "clan": {
+          "label": "Clan"
+        },
+        "generation": {
+          "label": "Génération"
+        },
+        "sire": {
+          "label": "Sire"
+        },
+        "secte": {
+          "label": "Secte"
+        },
+        "refuge": {
+          "label": "Refuge"
+        },
+        "domitor": {
+          "label": "Domitor"
+        },
+        "clan_domitor": {
+          "label": "Clan du domitor"
+        },
+        "disciplines": {
+          "label": "Disciplines",
+          "element": {
+            "nom": {
+              "label": "Nom"
+            },
+            "valeur": {
+              "label": "Valeur"
+            }
+          }
+        },
+        "vertus": {
+          "label": "Vertus",
+          "conscience": {
+            "label": "Conscience"
+          },
+          "maitrise_de_soi": {
+            "label": "Maîtrise de soi"
+          },
+          "courage": {
+            "label": "Courage"
+          }
+        },
+        "voie": {
+          "label": "Voie",
+          "nom": {
+            "label": "Voie"
+          },
+          "valeur": {
+            "label": "Valeur"
+          }
+        },
+        "sang": {
+          "label": "Réserve de sang",
+          "valeur": {
+            "label": "Points de sang"
+          },
+          "max": {
+            "label": "Maximum"
+          },
+          "par_tour": {
+            "label": "Par tour"
+          }
+        },
+        "race": {
+          "label": "Race"
+        },
+        "auspice": {
+          "label": "Auspice"
+        },
+        "tribu": {
+          "label": "Tribu"
+        },
+        "meute": {
+          "label": "Meute"
+        },
+        "totem": {
+          "label": "Totem"
+        },
+        "rang": {
+          "label": "Rang"
+        },
+        "dons": {
+          "label": "Dons",
+          "element": {
+            "nom": {
+              "label": "Nom"
+            },
+            "valeur": {
+              "label": "Valeur"
+            }
+          }
+        },
+        "rites": {
+          "label": "Rites",
+          "element": {
+            "nom": {
+              "label": "Nom"
+            },
+            "valeur": {
+              "label": "Valeur"
+            }
+          }
+        },
+        "fetiches": {
+          "label": "Fétiches",
+          "element": {
+            "nom": {
+              "label": "Nom"
+            },
+            "valeur": {
+              "label": "Valeur"
+            }
+          }
+        },
+        "rage": {
+          "label": "Rage",
+          "permanente": {
+            "label": "Permanente"
+          },
+          "temporaire": {
+            "label": "Temporaire"
+          }
+        },
+        "gnose": {
+          "label": "Gnose",
+          "permanente": {
+            "label": "Permanente"
+          },
+          "temporaire": {
+            "label": "Temporaire"
+          }
+        },
+        "renommee": {
+          "label": "Renommée",
+          "gloire": {
+            "label": "Gloire",
+            "permanente": {
+              "label": "Permanente"
+            },
+            "temporaire": {
+              "label": "Temporaire"
+            }
+          },
+          "honneur": {
+            "label": "Honneur",
+            "permanente": {
+              "label": "Permanente"
+            },
+            "temporaire": {
+              "label": "Temporaire"
+            }
+          },
+          "sagesse": {
+            "label": "Sagesse",
+            "permanente": {
+              "label": "Permanente"
+            },
+            "temporaire": {
+              "label": "Temporaire"
+            }
+          }
+        },
+        "tradition": {
+          "label": "Tradition / Convention"
+        },
+        "essence": {
+          "label": "Essence"
+        },
+        "cabale": {
+          "label": "Cabale"
+        },
+        "paradigme": {
+          "label": "Paradigme"
+        },
+        "pratique": {
+          "label": "Pratique"
+        },
+        "instruments": {
+          "label": "Instruments"
+        },
+        "spheres": {
+          "label": "Sphères",
+          "correspondance": {
+            "label": "Correspondance"
+          },
+          "entropie": {
+            "label": "Entropie"
+          },
+          "forces": {
+            "label": "Forces"
+          },
+          "vie": {
+            "label": "Vie"
+          },
+          "matiere": {
+            "label": "Matière"
+          },
+          "mental": {
+            "label": "Mental"
+          },
+          "prime": {
+            "label": "Prime"
+          },
+          "esprit": {
+            "label": "Esprit"
+          },
+          "temps": {
+            "label": "Temps"
+          }
+        },
+        "arete": {
+          "label": "Arété"
+        },
+        "quintessence": {
+          "label": "Quintessence"
+        },
+        "paradoxe": {
+          "label": "Paradoxe"
+        }
+      }
+    },
+    "Objet": {
+      "Nouveau": "Nouvel objet",
+      "Categorie": {
+        "arme": "Arme",
+        "armure": "Armure",
+        "divers": "Divers"
+      },
+      "FIELDS": {
+        "categorie": {
+          "label": "Catégorie"
+        },
+        "description": {
+          "label": "Description"
+        },
+        "quantite": {
+          "label": "Quantité"
+        },
+        "degats": {
+          "label": "Dégâts",
+          "hint": "Ex. : Force +2"
+        },
+        "type_degats": {
+          "label": "Type de dégâts"
+        },
+        "portee": {
+          "label": "Portée"
+        },
+        "armure": {
+          "label": "Protection"
+        },
+        "malus": {
+          "label": "Malus"
+        }
+      }
+    },
+    "Jeu": {
+      "V20": "Vampire V20",
+      "DAV20": "Dark Ages V20",
+      "W20": "Loup-garou W20",
+      "M20": "Mage M20"
+    },
+    "Attributs": {
+      "physiques": "Physiques",
+      "sociaux": "Sociaux",
+      "mentaux": "Mentaux"
+    },
+    "Capacites": {
+      "talents": "Talents",
+      "competences": "Compétences",
+      "connaissances": "Connaissances"
+    },
+    "Degats": {
+      "contondant": "Contondant",
+      "letal": "Létal",
+      "aggrave": "Aggravé"
+    },
+    "Sante": {
+      "Etat": "État actuel",
+      "Niveaux": {
+        "indemne": "Indemne",
+        "contusionne": "Contusionné",
+        "meurtri": "Meurtri",
+        "blesse": "Blessé",
+        "grievement_blesse": "Grièvement blessé",
+        "estropie": "Estropié",
+        "infirme": "Infirme",
+        "neutralise": "Neutralisé"
+      }
+    },
+    "Fiche": {
+      "Acteur": "Fiche Monde des Ténèbres",
+      "Objet": "Objet Monde des Ténèbres",
+      "Nom": "Nom",
+      "Reglages": "Réglages de la fiche",
+      "Attributs": "Attributs",
+      "Capacites": "Capacités",
+      "Magie": "Magie",
+      "Equipement": "Équipement",
+      "AucunObjet": "Aucun objet.",
+      "NomTrait": "Nom",
+      "Ajouter": "Ajouter",
+      "Retirer": "Retirer",
+      "Onglets": {
+        "traits": "Traits",
+        "avantages": "Avantages",
+        "etat": "État",
+        "biographie": "Biographie"
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{{!-- Liste libre { nom, valeur }. Paramètres : liste (cle, label, lignes), editable --}}
+<fieldset class="liste-traits" data-liste="{{liste.cle}}">
+  <legend>{{localize liste.label}}</legend>
+  <ol>
+    {{#each liste.lignes as |ligne|}}
+    <li class="ligne-trait">
+      <input type="text" name="system.{{../liste.cle}}.{{ligne.index}}.nom" value="{{ligne.nom}}"
+             placeholder="{{localize "WODHOMEBREW.Fiche.NomTrait"}}" {{disabled (not ../editable)}}>
+      <input type="number" name="system.{{../liste.cle}}.{{ligne.index}}.valeur" value="{{ligne.valeur}}"
+             min="0" step="1" {{disabled (not ../editable)}}>
+      {{#if ../editable}}
+      <button type="button" class="icone" data-action="listeRetirer" data-liste="{{../liste.cle}}" data-index="{{ligne.index}}"
+              data-tooltip="{{localize "WODHOMEBREW.Fiche.Retirer"}}"><i class="fa-solid fa-trash" inert></i></button>
+      {{/if}}
+    </li>
+    {{/each}}
+  </ol>
+  {{#if editable}}
+  <button type="button" class="ajouter" data-action="listeAjouter" data-liste="{{liste.cle}}">
+    <i class="fa-solid fa-plus" inert></i> {{localize "WODHOMEBREW.Fiche.Ajouter"}}
+  </button>
+  {{/if}}
+</fieldset>

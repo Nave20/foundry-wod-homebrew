@@ -1,0 +1,38 @@
+<section class="tab biographie {{tab.cssClass}}" data-group="primary" data-tab="biographie">
+  {{#each (object historique=bio.historique apparence=bio.apparence relations=bio.relations) as |b cle|}}
+  <fieldset>
+    <legend>{{localize (concat "WODHOMEBREW.Actor.FIELDS.biographie." cle ".label")}}</legend>
+    {{formInput b.field enriched=b.enriched value=b.value toggled=true disabled=(not @root.editable)}}
+  </fieldset>
+  {{/each}}
+
+  <fieldset class="objets">
+    <legend>{{localize "WODHOMEBREW.Fiche.Equipement"}}</legend>
+    <ol class="liste-objets">
+      {{#each objets as |objet|}}
+      <li class="objet draggable" data-item-id="{{objet.id}}">
+        <img src="{{objet.img}}" alt="">
+        <a class="nom-objet" data-action="objetEditer">{{objet.name}}</a>
+        <span class="hint">{{localize (lookup @root.categoriesObjet objet.system.categorie)}}</span>
+        {{#if @root.editable}}
+        <button type="button" class="icone" data-action="objetSupprimer" data-tooltip="{{localize "WODHOMEBREW.Fiche.Retirer"}}">
+          <i class="fa-solid fa-trash" inert></i>
+        </button>
+        {{/if}}
+      </li>
+      {{else}}
+      <li class="vide hint">{{localize "WODHOMEBREW.Fiche.AucunObjet"}}</li>
+      {{/each}}
+    </ol>
+    {{#if editable}}
+    <button type="button" class="ajouter" data-action="objetCreer"><i class="fa-solid fa-plus" inert></i> {{localize "WODHOMEBREW.Objet.Nouveau"}}</button>
+    {{/if}}
+  </fieldset>
+
+  {{#if isGM}}
+  <fieldset class="notes-mj">
+    <legend>{{localize "WODHOMEBREW.Actor.FIELDS.biographie.notes_mj.label"}}</legend>
+    {{formInput bio.notes_mj.field enriched=bio.notes_mj.enriched value=bio.notes_mj.value toggled=true disabled=(not editable)}}
+  </fieldset>
+  {{/if}}
+</section>

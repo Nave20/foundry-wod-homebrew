@@ -1,0 +1,23 @@
+<section class="tab traits {{tab.cssClass}}" data-group="primary" data-tab="traits">
+  <h2>{{localize "WODHOMEBREW.Fiche.Attributs"}}</h2>
+  <div class="colonnes">
+    {{#each attributs as |groupe|}}
+    <fieldset>
+      <legend>{{localize groupe.label}}</legend>
+      {{#each groupe.traits as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
+    </fieldset>
+    {{/each}}
+  </div>
+
+  <h2>{{localize "WODHOMEBREW.Fiche.Capacites"}} <span class="hint">({{system.jeu}})</span></h2>
+  <div class="colonnes">
+    {{#each capacites as |groupe|}}
+    <fieldset>
+      <legend>{{localize groupe.label}}</legend>
+      {{#each groupe.traits as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
+    </fieldset>
+    {{/each}}
+  </div>
+
+  {{> "systems/wod_homebrew/templates/actor/liste-traits.hbs" liste=listeSecondaires editable=editable}}
+</section>

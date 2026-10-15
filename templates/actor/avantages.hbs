@@ -1,0 +1,7 @@
+<section class="tab avantages {{tab.cssClass}}" data-group="primary" data-tab="avantages">
+  <div class="colonnes deux">
+    {{#each listesAvantages as |liste|}}
+      {{> "systems/wod_homebrew/templates/actor/liste-traits.hbs" liste=liste editable=@root.editable}}
+    {{/each}}
+  </div>
+</section>
