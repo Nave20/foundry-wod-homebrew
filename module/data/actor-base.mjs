@@ -1,7 +1,7 @@
 import { WODHOMEBREW } from "../config.mjs";
 import { groupe, jauge, listeTraits, points, texte } from "./fields.mjs";
 
-const { HTMLField, SchemaField, StringField } = foundry.data.fields;
+const { HTMLField, ObjectField, SchemaField, StringField } = foundry.data.fields;
 
 /**
  * Données communes à toutes les créatures (fiche « Mortel »).
@@ -29,7 +29,12 @@ export default class ActorBaseData extends foundry.abstract.TypeDataModel {
       // Traits
       attributs: groupe(attributs, 1),
       capacites: groupe(WODHOMEBREW.toutesCapacites, 0),
-      capacites_secondaires: listeTraits(),
+      // Chaque capacité secondaire est rangée dans une colonne : talents, competences ou connaissances
+      capacites_secondaires: listeTraits({ categorie: texte("talents"), specialite: texte() }),
+      // Capacités ajoutées par le MJ (Traits de la chronique) : { clé: { valeur, specialite } }
+      capacites_ajoutees: new ObjectField({ required: true, initial: {} }),
+      // Spécialité (texte libre) de chaque attribut et capacité
+      specialites: new SchemaField(Object.fromEntries([...attributs, ...WODHOMEBREW.toutesCapacites].map(k => [k, texte()]))),
       historiques: listeTraits(),
       atouts: listeTraits(),
       handicaps: listeTraits(),

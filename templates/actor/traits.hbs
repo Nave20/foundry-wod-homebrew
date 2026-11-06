@@ -4,7 +4,7 @@
     {{#each attributs as |groupe|}}
     <fieldset>
       <legend>{{localize groupe.label}}</legend>
-      {{#each groupe.traits as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
+      {{#each groupe.traits as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.nom name=c.name value=c.value spec=c.spec max=@root.echelle editable=@root.editable}}{{/each}}
     </fieldset>
     {{/each}}
   </div>
@@ -14,10 +14,37 @@
     {{#each capacites as |groupe|}}
     <fieldset>
       <legend>{{localize groupe.label}}</legend>
-      {{#each groupe.traits as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
+      {{#if @root.editable}}
+      <button type="button" class="ajouter-mini" data-action="listeAjouter" data-liste="capacites_secondaires"
+              data-categorie="{{groupe.cle}}" data-tooltip="{{localize "WODHOMEBREW.Fiche.AjouterCapacite"}}"><i class="fa-solid fa-plus" inert></i></button>
+      {{/if}}
+      {{#each groupe.traits as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.nom name=c.name value=c.value spec=c.spec max=@root.echelle editable=@root.editable}}{{/each}}
+      {{#each groupe.secondaires as |l|}}
+      <div class="form-group trait secondaire" data-index="{{l.index}}">
+        {{#if l.nom}}
+        <label class="nom-trait" {{#if @root.editable}}data-tooltip="{{localize "WODHOMEBREW.Fiche.Renommer"}}"{{/if}}>
+          <span class="libelle">{{l.nom}}</span>
+          {{#if l.specialite}}<span class="specialite">· {{l.specialite}}</span>{{/if}}
+          {{#if @root.editable}}
+          <a class="editer-specialite" data-action="specialite" data-tooltip="{{localize "WODHOMEBREW.Fiche.Specialite"}}"><i class="fa-solid fa-pen" inert></i></a>
+          {{/if}}
+        </label>
+        <input type="hidden" class="valeur-nom" name="system.capacites_secondaires.{{l.index}}.nom" value="{{l.nom}}">
+        {{else}}
+        <input type="text" class="nom-secondaire" name="system.capacites_secondaires.{{l.index}}.nom" value=""
+               placeholder="{{localize "WODHOMEBREW.Fiche.NomTrait"}}" {{disabled (not @root.editable)}}>
+        {{/if}}
+        <input type="hidden" name="system.capacites_secondaires.{{l.index}}.categorie" value="{{l.categorie}}">
+        <input type="hidden" class="valeur-specialite" name="system.capacites_secondaires.{{l.index}}.specialite" value="{{l.specialite}}">
+        {{wodPoints name=(concat "system.capacites_secondaires." l.index ".valeur") value=l.valeur max=@root.echelle editable=@root.editable}}
+        {{#if @root.editable}}
+        <button type="button" class="retirer-mini" data-action="listeRetirer" data-liste="capacites_secondaires" data-index="{{l.index}}"
+                data-tooltip="{{localize "WODHOMEBREW.Fiche.Retirer"}}"><i class="fa-solid fa-xmark" inert></i></button>
+        {{/if}}
+      </div>
+      {{/each}}
     </fieldset>
     {{/each}}
   </div>
 
-  {{> "systems/wod_homebrew/templates/actor/liste-traits.hbs" liste=listeSecondaires editable=editable}}
 </section>

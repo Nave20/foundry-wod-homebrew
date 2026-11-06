@@ -468,7 +468,7 @@
           }
         },
         "tradition": {
-          "label": "Tradition / Convention"
+          "label": "Tradition"
         },
         "essence": {
           "label": "Essence"
@@ -613,7 +613,48 @@
         "avantages": "Avantages",
         "etat": "État",
         "biographie": "Biographie"
-      }
+      },
+      "Identite": "Identité",
+      "AjouterCapacite": "Ajouter une capacité secondaire",
+      "Specialite": "Spécialité",
+      "Renommer": "Double-clic pour renommer"
+    },
+    "Suggestions": {
+      "physique": "Physiques",
+      "mental": "Mentaux",
+      "social": "Sociaux",
+      "surnaturel": "Surnaturels",
+      "creature": "Spécifiques : {creature}",
+      "camarilla": "Camarilla",
+      "sabbat": "Sabbat",
+      "independants": "Indépendants",
+      "lignees": "Lignées",
+      "nation_garou": "Nation Garou",
+      "autres_tribus": "Autres tribus",
+      "traditions": "Traditions",
+      "technocratie": "Technocratie",
+      "autres_mages": "Autres"
+    },
+    "Traits": {
+      "Titre": "Traits de la chronique",
+      "Ouvrir": "Configurer les traits",
+      "Aide": "Renommer, masquer ou ajouter des attributs et des capacités pour toutes les fiches du monde. Les valeurs et les jets ne sont pas affectés.",
+      "Afficher": "Traits à configurer",
+      "OngletAttributs": "Attributs (tous les jeux)",
+      "AideAttributs": "Laissez un champ vide pour garder le nom du livre. Le renommage s'applique à toutes les fiches.",
+      "AideCapacites": "Renommez, masquez (l'œil barré) ou ajoutez des capacités de base pour ce jeu. Un trait masqué garde ses valeurs.",
+      "Ajouter": "Ajouter une capacité de base",
+      "Ajoutee": "Ajoutée",
+      "Masquer": "Masquer sur les fiches",
+      "Reinitialiser": "Revenir aux noms des livres",
+      "Enregistrer": "Enregistrer",
+      "Enregistre": "Traits de la chronique enregistrés."
+    },
+    "PanneauMJ": {
+      "Titre": "Panneau du MJ — Monde des Ténèbres"
+    },
+    "Accueil": {
+      "Scene": "Accueil"
     }
   }
 }

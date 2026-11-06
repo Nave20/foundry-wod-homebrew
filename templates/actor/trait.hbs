@@ -1,0 +1,13 @@
+{{!-- Ligne « libellé (· spécialité) + points ».
+      Paramètres : label, name, value, max, editable, spec ({ name, value }, facultatif) --}}
+<div class="form-group trait">
+  <label class="nom-trait">
+    <span class="libelle">{{localize label}}</span>
+    {{#if spec.value}}<span class="specialite">· {{spec.value}}</span>{{/if}}
+    {{#if (and spec editable)}}
+    <a class="editer-specialite" data-action="specialite" data-tooltip="{{localize "WODHOMEBREW.Fiche.Specialite"}}"><i class="fa-solid fa-pen" inert></i></a>
+    {{/if}}
+  </label>
+  {{#if spec}}<input type="hidden" class="valeur-specialite" name="{{spec.name}}" value="{{spec.value}}">{{/if}}
+  {{wodPoints name=name value=value max=max editable=editable}}
+</div>

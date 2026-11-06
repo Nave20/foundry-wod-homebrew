@@ -7,6 +7,8 @@ export default class WodActor extends Actor {
     const data = { ...super.getRollData() };
     const s = this.system;
     Object.assign(data, s.attributs ?? {}, s.capacites ?? {});
+    // Capacités ajoutées par le MJ : même accès par leur clé (@pilotage…)
+    for ( const [cle, c] of Object.entries(s.capacites_ajoutees ?? {}) ) data[cle] = Number(c?.valeur) || 0;
     if (s.volonte) data.volonte = s.volonte.permanente;
     return data;
   }

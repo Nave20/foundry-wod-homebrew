@@ -1,20 +1,26 @@
 <header class="entete">
-  <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img">
+  <div class="colonne-portrait">
+    <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img">
+    <details class="reglages" {{#if reglagesOuverts}}open{{/if}}>
+      <summary><i class="fa-solid fa-gear" inert></i> {{localize "WODHOMEBREW.Fiche.Reglages"}}</summary>
+      <div class="panneau-reglages grille-champs">
+        {{#each entete.reglages as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
+      </div>
+    </details>
+  </div>
   <div class="entete-champs">
     <div class="nom-ligne">
       <input class="nom" type="text" name="name" value="{{document._source.name}}"
              placeholder="{{localize "WODHOMEBREW.Fiche.Nom"}}" {{disabled (not editable)}}>
       <span class="type-creature">{{localize typeLabel}}</span>
     </div>
-    <div class="grille-champs">
-      {{#each entete.commun as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
-      {{#each entete.creature as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
+    <div class="champs-cles">
+      {{#each entete.haut as |c|}}
+      <label class="champ-cle">
+        <span>{{localize c.field.label}}</span>
+        {{formInput c.field value=c.value disabled=(not @root.editable)}}
+      </label>
+      {{/each}}
     </div>
-    <details class="reglages">
-      <summary>{{localize "WODHOMEBREW.Fiche.Reglages"}}</summary>
-      <div class="grille-champs">
-        {{#each entete.reglages as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
-      </div>
-    </details>
   </div>
 </header>

@@ -1,0 +1,41 @@
+<div class="traits-corps">
+  <div class="form-group">
+    <label>{{localize "WODHOMEBREW.Traits.Afficher"}}</label>
+    <select class="onglet">
+      {{#each onglets as |o|}}<option value="{{o.cle}}" {{#if o.actif}}selected{{/if}}>{{localize o.label}}</option>{{/each}}
+    </select>
+  </div>
+  <p class="hint">{{localize (ifThen estAttributs "WODHOMEBREW.Traits.AideAttributs" "WODHOMEBREW.Traits.AideCapacites")}}</p>
+
+  <div class="liste-config">
+    {{#each groupes as |g|}}
+    <fieldset>
+      <legend>{{localize g.label}}</legend>
+      {{#unless @root.estAttributs}}
+      <button type="button" class="ajouter-mini" data-action="ajouter" data-groupe="{{g.groupe}}"
+              data-tooltip="{{localize "WODHOMEBREW.Traits.Ajouter"}}"><i class="fa-solid fa-plus" inert></i></button>
+      {{/unless}}
+      {{#each g.base as |t|}}
+      <div class="ligne-config {{#if t.masque}}masque{{/if}}">
+        <span class="livre">{{t.livre}}</span>
+        <input type="text" name="{{t.name}}" value="{{t.nom}}" placeholder="{{t.livre}}">
+        {{#unless @root.estAttributs}}
+        <label class="case-masquer" data-tooltip="{{localize "WODHOMEBREW.Traits.Masquer"}}">
+          <input type="checkbox" name="{{t.nameMasque}}" {{checked t.masque}}> <i class="fa-solid fa-eye-slash" inert></i>
+        </label>
+        {{/unless}}
+      </div>
+      {{/each}}
+      {{#each g.ajouts as |a|}}
+      <div class="ligne-config ajout">
+        <span class="livre"><i class="fa-solid fa-star" inert></i> {{localize "WODHOMEBREW.Traits.Ajoutee"}}</span>
+        <input type="text" class="nom-ajout" name="{{a.prefixe}}.nom" value="{{a.nom}}" placeholder="{{localize "WODHOMEBREW.Fiche.NomTrait"}}">
+        <input type="hidden" name="{{a.prefixe}}.cle" value="{{a.cle}}">
+        <button type="button" class="retirer-mini" data-action="retirer" data-groupe="{{g.groupe}}" data-index="{{@index}}"
+                data-tooltip="{{localize "WODHOMEBREW.Fiche.Retirer"}}"><i class="fa-solid fa-xmark" inert></i></button>
+      </div>
+      {{/each}}
+    </fieldset>
+    {{/each}}
+  </div>
+</div>

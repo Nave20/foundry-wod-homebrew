@@ -51,3 +51,159 @@
 .wod_homebrew prose-mirror { min-height: 120px; }
 .wod_homebrew.item .fiche-objet { display: flex; flex-direction: column; gap: 0.5rem; height: 100%; }
 .wod_homebrew.item .details { flex: 1; overflow-y: auto; }
+
+/* Couleur de la fiche selon la créature (mortel et goule gardent le thème de Foundry) */
+.wod_homebrew.actor.creature-vampire { --wod-accent: #8b1a1a; --wod-accent-clair: #c0392b; }
+.wod_homebrew.actor.creature-mage    { --wod-accent: #1f3f8f; --wod-accent-clair: #3a6fd8; }
+.wod_homebrew.actor.creature-garou   { --wod-accent: #1e4d2b; --wod-accent-clair: #3f8f55; }
+.wod_homebrew.actor[class*="creature-"]:is(.creature-vampire, .creature-mage, .creature-garou) {
+  .window-header { background: var(--wod-accent); color: #fff; }
+  .window-header :is(.window-title, button, a) { color: #fff; }
+  .window-content { border-top: 3px solid var(--wod-accent); }
+  h2 { border-bottom-color: var(--wod-accent-clair); }
+  legend { color: var(--wod-accent-clair); font-weight: bold; }
+  fieldset { border-color: var(--wod-accent-clair); }
+  nav.tabs [data-tab].active { color: var(--wod-accent-clair); border-bottom: 2px solid var(--wod-accent-clair); text-shadow: none; }
+  .type-creature { color: var(--wod-accent-clair); font-weight: bold; }
+}
+
+/* Menu de suggestions (listes préfaites) */
+.wod_homebrew .wod-suggestions {
+  --wod-menu-accent: var(--wod-accent-clair, var(--color-warm-2, #c9593f));
+  position: absolute; z-index: 1000; overflow-y: auto; padding: 0.25rem 0;
+  background: var(--color-bg, #1b1d24); color: var(--color-text-primary, #e7e7e7);
+  border: 1px solid var(--wod-menu-accent); border-radius: 6px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.45);
+  font-size: var(--font-size-13, 0.85rem);
+}
+.wod_homebrew .wod-suggestions .categorie {
+  position: sticky; top: -0.25rem; padding: 0.3rem 0.6rem 0.15rem;
+  background: inherit; color: var(--wod-menu-accent);
+  font-size: var(--font-size-11, 0.7rem); font-weight: bold; text-transform: uppercase; letter-spacing: 0.08em;
+  border-bottom: 1px solid color-mix(in srgb, var(--wod-menu-accent) 40%, transparent);
+}
+.wod_homebrew .wod-suggestions .suggestion {
+  display: flex; justify-content: space-between; gap: 0.75rem; padding: 0.2rem 0.6rem; cursor: pointer;
+}
+.wod_homebrew .wod-suggestions .suggestion:is(:hover, .active) {
+  background: color-mix(in srgb, var(--wod-menu-accent) 30%, transparent);
+}
+.wod_homebrew .wod-suggestions .cout { color: var(--wod-menu-accent); letter-spacing: 0.05em; white-space: nowrap; }
+
+/* Points cliquables (●●●○○) */
+.wod_homebrew { --wod-trait: var(--wod-accent-clair, var(--color-text-primary, #ddd)); }
+.wod_homebrew .wod-points { display: inline-flex; align-items: center; gap: 3px; flex-wrap: wrap; justify-content: flex-end; }
+.wod_homebrew .wod-point {
+  width: 12px; height: 12px; border-radius: 50%; box-sizing: border-box; flex: 0 0 auto;
+  border: 1.5px solid var(--wod-trait); cursor: pointer;
+}
+.wod_homebrew .wod-point.plein { background: var(--wod-trait); }
+.wod_homebrew .wod-point.groupe { margin-right: 5px; }
+.wod_homebrew .wod-points:not(.verrouille) .wod-point:hover { box-shadow: 0 0 0 2px color-mix(in srgb, var(--wod-trait) 45%, transparent); }
+.wod_homebrew .wod-points.verrouille .wod-point { cursor: default; }
+.wod_homebrew .form-group.trait > label { flex: 1; }
+.wod_homebrew .form-group.trait > .wod-points { flex: 0 0 auto; }
+.wod_homebrew .ligne-trait .wod-points { flex: 0 0 auto; max-width: 9.5rem; }
+
+/* En-tête compacte : 4 champs clés, libellé au-dessus */
+.wod_homebrew .champs-cles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; }
+.wod_homebrew .champ-cle { display: flex; flex-direction: column; gap: 0.1rem; margin: 0; }
+.wod_homebrew .champ-cle > span { font-size: var(--font-size-11, 0.7rem); text-transform: uppercase; letter-spacing: 0.05em; color: var(--wod-accent-clair, var(--color-text-subtle)); }
+.wod_homebrew .champ-cle input { height: 1.6rem; }
+.wod_homebrew fieldset.identite { margin-bottom: 0.5rem; }
+
+/* En-tête : la colonne de droite occupe toute la hauteur du portrait */
+.wod_homebrew .entete { align-items: stretch; }
+.wod_homebrew .entete-champs { justify-content: space-between; min-height: 100px; }
+.wod_homebrew .entete .nom-ligne .nom { height: 2.4rem; font-size: var(--font-size-24, 1.5rem); }
+.wod_homebrew .champ-cle > span { font-size: var(--font-size-12, 0.75rem); }
+.wod_homebrew .champ-cle input { height: 2rem; font-size: var(--font-size-14, 0.875rem); }
+
+/* Traits plus serrés (attributs, capacités, vertus, sphères, listes) */
+.wod_homebrew .tab fieldset { gap: 0; padding-top: 0.15rem; padding-bottom: 0.3rem; }
+.wod_homebrew .form-group.trait { margin: 0; padding: 3px 0; min-height: 0; line-height: 1.4; }
+.wod_homebrew .form-group.trait > label { line-height: 1.4; }
+.wod_homebrew .ligne-trait { margin-bottom: 3px; }
+.wod_homebrew .ligne-trait input[type="text"] { height: 1.6rem; }
+.wod_homebrew .ligne-trait button.icone { width: 1.6rem; height: 1.6rem; }
+.wod_homebrew .tab h2 { margin: 0.35rem 0 0.15rem; }
+
+/* Capacités secondaires dans leur colonne, bouton « + » dans le titre */
+.wod_homebrew legend { display: flex; align-items: center; gap: 0.35rem; }
+.wod_homebrew :is(button.ajouter-mini, button.retirer-mini) {
+  flex: 0 0 auto; width: 1.15rem; height: 1.15rem; min-height: 0; padding: 0; line-height: 1;
+  font-size: 0.65rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+}
+.wod_homebrew button.retirer-mini { border: none; background: none; opacity: 0.5; }
+.wod_homebrew button.retirer-mini:hover { opacity: 1; }
+.wod_homebrew .form-group.trait.secondaire > input[type="text"] {
+  flex: 1; min-width: 0; height: 1.5rem; padding: 0 0.25rem; font-style: italic;
+  border: none; border-bottom: 1px dashed var(--color-border); background: transparent;
+}
+
+/* Bouton « + » des colonnes : en haut à droite, petit, couleur de la fiche */
+.wod_homebrew fieldset:has(> button.ajouter-mini) { position: relative; }
+.wod_homebrew button.ajouter-mini {
+  position: absolute; top: 0.15rem; right: 0.35rem; width: 0.95rem; height: 0.95rem; font-size: 0.55rem;
+  background: transparent; color: var(--wod-trait); border: 1px solid var(--wod-trait); box-shadow: none;
+}
+.wod_homebrew button.ajouter-mini:hover { background: var(--wod-trait); color: var(--color-light-1, #fff); }
+
+/* Spécialités et noms figés */
+.wod_homebrew .nom-trait { display: flex; align-items: baseline; gap: 0.3rem; min-width: 0; flex: 1; margin: 0; }
+.wod_homebrew .nom-trait .libelle { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wod_homebrew .specialite {
+  font-style: italic; font-size: var(--font-size-12, 0.75rem); color: var(--wod-trait);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+}
+.wod_homebrew .editer-specialite { visibility: hidden; font-size: 0.6rem; color: var(--wod-trait); cursor: pointer; }
+.wod_homebrew .form-group.trait:hover .editer-specialite { visibility: visible; }
+.wod_homebrew .secondaire .nom-trait { cursor: text; }
+.wod_homebrew .secondaire button.retirer-mini { visibility: hidden; }
+.wod_homebrew .secondaire:hover button.retirer-mini { visibility: visible; }
+.wod_homebrew input.saisie-en-ligne, .wod_homebrew .form-group.trait.secondaire > input.nom-secondaire {
+  flex: 1; min-width: 0; height: 1.4rem; padding: 0 0.25rem; font-style: normal; font-size: inherit;
+}
+
+/* « + » posé sur la ligne d'encadrement, en haut à droite (il masque la ligne derrière lui) */
+.wod_homebrew button.ajouter-mini {
+  top: calc(-0.475rem - 8px); right: 0.6rem;
+  background: var(--color-cool-5, #0b0a13);
+  box-shadow: 0 0 0 3px var(--color-cool-5, #0b0a13);
+}
+
+/* Réglages de la fiche sous le portrait : panneau flottant au-dessus de la fiche */
+.wod_homebrew .colonne-portrait { position: relative; display: flex; flex-direction: column; gap: 0.2rem; flex: 0 0 100px; }
+.wod_homebrew .colonne-portrait .reglages summary {
+  font-size: var(--font-size-11, 0.7rem); white-space: nowrap; color: var(--wod-trait); list-style: none; text-align: center;
+}
+.wod_homebrew .colonne-portrait .reglages summary::-webkit-details-marker { display: none; }
+.wod_homebrew .panneau-reglages {
+  position: absolute; top: 100%; left: 0; z-index: 50; width: 30rem; margin-top: 0.2rem; padding: 0.5rem 0.75rem;
+  background: var(--color-cool-5, #0b0a13); border: 1px solid var(--wod-trait); border-radius: 6px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.45);
+}
+
+/* Fenêtre « Traits de la chronique » */
+.wod_homebrew.traits-config .window-content { display: flex; flex-direction: column; gap: 0.5rem; overflow: hidden; }
+.wod_homebrew.traits-config .traits-corps { flex: 1; display: flex; flex-direction: column; gap: 0.4rem; min-height: 0; }
+.wod_homebrew.traits-config .liste-config { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem; padding: 0.5rem 0.25rem 0 0; }
+.wod_homebrew.traits-config fieldset { position: relative; }
+.wod_homebrew .ligne-config { display: grid; grid-template-columns: 11rem 1fr 1.8rem; gap: 0.5rem; align-items: center; margin: 2px 0; }
+.wod_homebrew .ligne-config .livre { color: var(--color-text-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wod_homebrew .ligne-config.ajout .livre { color: var(--wod-trait); font-style: italic; }
+.wod_homebrew .ligne-config.masque input[type="text"] { opacity: 0.45; text-decoration: line-through; }
+.wod_homebrew .ligne-config .case-masquer { display: flex; align-items: center; gap: 0.2rem; cursor: pointer; font-size: 0.75rem; }
+.wod_homebrew .ligne-config .case-masquer input { margin: 0; }
+
+/* Panneau du MJ */
+.wod_homebrew.panneau-mj .entrees-mj { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.wod_homebrew .entree-mj { display: flex; align-items: center; gap: 0.75rem; width: 100%; height: auto; padding: 0.6rem 0.75rem; text-align: left; }
+.wod_homebrew .entree-mj > i { font-size: 1.4rem; width: 1.8rem; text-align: center; }
+.wod_homebrew .entree-mj .texte { display: flex; flex-direction: column; gap: 0.15rem; white-space: normal; }
+
+/* Aucune scène active : image d'accueil en fond plutôt qu'un écran noir */
+body.wod-sans-scene {
+  background: #000 url("../assets/accueil-4k.webp") center / cover no-repeat;
+}
+body.wod-sans-scene #board { opacity: 0; }

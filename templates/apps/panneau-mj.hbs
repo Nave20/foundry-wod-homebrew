@@ -1,0 +1,13 @@
+<ul class="entrees-mj">
+  {{#each entrees as |e|}}
+  <li>
+    <button type="button" class="entree-mj" data-action="ouvrir" data-id="{{e.id}}">
+      <i class="{{e.icone}}" inert></i>
+      <span class="texte">
+        <strong>{{localize e.titre}}</strong>
+        <span class="hint">{{localize e.aide}}</span>
+      </span>
+    </button>
+  </li>
+  {{/each}}
+</ul>

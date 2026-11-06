@@ -2,7 +2,7 @@
   <div class="colonnes deux">
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.volonte.label"}}</legend>
-      {{formGroup systemFields.volonte.fields.permanente value=source.volonte.permanente localize=true disabled=(not editable)}}
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.volonte.fields.permanente.label name="system.volonte.permanente" value=source.volonte.permanente max=10 editable=editable}}
       {{formGroup systemFields.volonte.fields.temporaire value=source.volonte.temporaire localize=true disabled=(not editable)}}
     </fieldset>
 
@@ -27,12 +27,12 @@
     {{#if estVampirique}}
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.vertus.label"}}</legend>
-      {{#each vertus as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
+      {{#each vertus as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.field.label name=c.field.fieldPath value=c.value max=@root.echelle editable=@root.editable}}{{/each}}
     </fieldset>
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.voie.label"}}</legend>
       {{formGroup systemFields.voie.fields.nom value=source.voie.nom localize=true disabled=(not editable)}}
-      {{formGroup systemFields.voie.fields.valeur value=source.voie.valeur localize=true disabled=(not editable)}}
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.voie.fields.valeur.label name="system.voie.valeur" value=source.voie.valeur max=10 editable=editable}}
     </fieldset>
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.sang.label"}}</legend>
@@ -45,18 +45,18 @@
     {{#if estGarou}}
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.rage.label"}} / {{localize "WODHOMEBREW.Actor.FIELDS.gnose.label"}}</legend>
-      {{formGroup systemFields.rage.fields.permanente value=source.rage.permanente localize=true disabled=(not editable)}}
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.rage.fields.permanente.label name="system.rage.permanente" value=source.rage.permanente max=10 editable=editable}}
       {{formGroup systemFields.rage.fields.temporaire value=source.rage.temporaire localize=true disabled=(not editable)}}
-      {{formGroup systemFields.gnose.fields.permanente value=source.gnose.permanente localize=true disabled=(not editable)}}
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.gnose.fields.permanente.label name="system.gnose.permanente" value=source.gnose.permanente max=10 editable=editable}}
       {{formGroup systemFields.gnose.fields.temporaire value=source.gnose.temporaire localize=true disabled=(not editable)}}
     </fieldset>
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.renommee.label"}}</legend>
-      {{formGroup systemFields.renommee.fields.gloire.fields.permanente value=source.renommee.gloire.permanente localize=true disabled=(not editable)}}
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.renommee.fields.gloire.fields.permanente.label name="system.renommee.gloire.permanente" value=source.renommee.gloire.permanente max=10 editable=editable}}
       {{formGroup systemFields.renommee.fields.gloire.fields.temporaire value=source.renommee.gloire.temporaire localize=true disabled=(not editable)}}
-      {{formGroup systemFields.renommee.fields.honneur.fields.permanente value=source.renommee.honneur.permanente localize=true disabled=(not editable)}}
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.renommee.fields.honneur.fields.permanente.label name="system.renommee.honneur.permanente" value=source.renommee.honneur.permanente max=10 editable=editable}}
       {{formGroup systemFields.renommee.fields.honneur.fields.temporaire value=source.renommee.honneur.temporaire localize=true disabled=(not editable)}}
-      {{formGroup systemFields.renommee.fields.sagesse.fields.permanente value=source.renommee.sagesse.permanente localize=true disabled=(not editable)}}
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.renommee.fields.sagesse.fields.permanente.label name="system.renommee.sagesse.permanente" value=source.renommee.sagesse.permanente max=10 editable=editable}}
       {{formGroup systemFields.renommee.fields.sagesse.fields.temporaire value=source.renommee.sagesse.temporaire localize=true disabled=(not editable)}}
     </fieldset>
     {{/if}}
@@ -64,11 +64,11 @@
     {{#if estMage}}
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.spheres.label"}}</legend>
-      {{#each spheres as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
+      {{#each spheres as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.field.label name=c.field.fieldPath value=c.value max=@root.echelle editable=@root.editable}}{{/each}}
     </fieldset>
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Fiche.Magie"}}</legend>
-      {{formGroup systemFields.arete value=source.arete localize=true disabled=(not editable)}}
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.arete.label name="system.arete" value=source.arete max=10 editable=editable}}
       {{formGroup systemFields.quintessence value=source.quintessence localize=true disabled=(not editable)}}
       {{formGroup systemFields.paradoxe value=source.paradoxe localize=true disabled=(not editable)}}
     </fieldset>

@@ -1,4 +1,11 @@
 <section class="tab biographie {{tab.cssClass}}" data-group="primary" data-tab="biographie">
+  <fieldset class="identite">
+    <legend>{{localize "WODHOMEBREW.Fiche.Identite"}}</legend>
+    <div class="grille-champs">
+      {{#each entete.identite as |c|}}{{formGroup c.field value=c.value localize=true disabled=(not @root.editable)}}{{/each}}
+    </div>
+  </fieldset>
+
   {{#each (object historique=bio.historique apparence=bio.apparence relations=bio.relations) as |b cle|}}
   <fieldset>
     <legend>{{localize (concat "WODHOMEBREW.Actor.FIELDS.biographie." cle ".label")}}</legend>

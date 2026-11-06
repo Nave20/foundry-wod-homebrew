@@ -18,9 +18,12 @@ export function jauge(initial = 1) {
   return new SchemaField({ permanente: points(initial), temporaire: points(initial) });
 }
 
-/** Liste libre de traits notés : [{ nom, valeur }] (historiques, disciplines, dons…) */
-export function listeTraits() {
-  return new ArrayField(new SchemaField({ nom: texte(), valeur: points(0) }));
+/**
+ * Liste libre de traits notés : [{ nom, valeur }] (historiques, disciplines, dons…)
+ * @param {object} [extra]  Champs supplémentaires de chaque ligne
+ */
+export function listeTraits(extra = {}) {
+  return new ArrayField(new SchemaField({ nom: texte(), valeur: points(0), ...extra }));
 }
 
 /** Schéma construit à partir d'une liste de clés : { cle: points(initial) } */
