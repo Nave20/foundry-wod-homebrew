@@ -4,7 +4,7 @@
     {{#each attributs as |groupe|}}
     <fieldset>
       <legend>{{localize groupe.label}}</legend>
-      {{#each groupe.traits as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.nom name=c.name value=c.value spec=c.spec max=@root.echelle editable=@root.editable}}{{/each}}
+      {{#each groupe.traits as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.nom name=c.name value=c.value spec=c.spec max=@root.echelle editable=@root.editable jet="attribut"}}{{/each}}
     </fieldset>
     {{/each}}
   </div>
@@ -18,9 +18,9 @@
       <button type="button" class="ajouter-mini" data-action="listeAjouter" data-liste="capacites_secondaires"
               data-categorie="{{groupe.cle}}" data-tooltip="{{localize "WODHOMEBREW.Fiche.AjouterCapacite"}}"><i class="fa-solid fa-plus" inert></i></button>
       {{/if}}
-      {{#each groupe.traits as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.nom name=c.name value=c.value spec=c.spec max=@root.echelle editable=@root.editable}}{{/each}}
+      {{#each groupe.traits as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.nom name=c.name value=c.value spec=c.spec max=@root.echelle editable=@root.editable jet="capacite"}}{{/each}}
       {{#each groupe.secondaires as |l|}}
-      <div class="form-group trait secondaire" data-index="{{l.index}}">
+      <div class="form-group trait secondaire" data-index="{{l.index}}" {{#if l.nom}}data-jet="capacite"{{/if}}>
         {{#if l.nom}}
         <label class="nom-trait" {{#if @root.editable}}data-tooltip="{{localize "WODHOMEBREW.Fiche.Renommer"}}"{{/if}}>
           <span class="libelle">{{l.nom}}</span>
@@ -47,4 +47,6 @@
     {{/each}}
   </div>
 
+  {{!-- Barre de jet : remplie par la fiche quand des traits sont sélectionnés --}}
+  <div class="barre-jet" hidden></div>
 </section>

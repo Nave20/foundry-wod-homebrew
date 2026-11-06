@@ -1,0 +1,45 @@
+<div class="regles-corps">
+  <fieldset>
+    <legend>{{localize "WODHOMEBREW.Jets.SectionDes"}}</legend>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.De"}}</label>
+      <div class="form-fields"><span class="prefixe">d</span><input type="number" name="de" value="{{regles.de}}" min="2" step="1"></div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.Difficulte"}}</label>
+      <div class="form-fields"><input type="number" name="difficulte" value="{{regles.difficulte}}" min="2" step="1"></div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.DixDouble"}}</label>
+      <input type="checkbox" name="dixDouble" {{checked regles.dixDouble}}>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.UnRetire"}}</label>
+      <input type="checkbox" name="unRetire" {{checked regles.unRetire}}>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>{{localize "WODHOMEBREW.Jets.SectionResultat"}}</legend>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.SeuilCritique"}}</label>
+      <div class="form-fields"><input type="number" name="seuilCritique" value="{{regles.seuilCritique}}" min="0" step="1"></div>
+    </div>
+    <p class="hint">{{localize "WODHOMEBREW.Jets.SeuilCritiqueAide"}}</p>
+  </fieldset>
+  <fieldset>
+    <legend>{{localize "WODHOMEBREW.Jets.SectionModificateurs"}}</legend>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.CapaciteNulle"}}</label>
+      <div class="form-fields"><span class="prefixe">+</span><input type="number" name="capaciteNulle" value="{{regles.capaciteNulle}}" min="0" step="1"></div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.SpecialiteDes"}}</label>
+      <div class="form-fields"><span class="prefixe">+</span><input type="number" name="specialiteDes" value="{{regles.specialiteDes}}" min="0" step="1"></div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.SpecialiteDifficulte"}}</label>
+      <div class="form-fields"><span class="prefixe">−</span><input type="number" name="specialiteDifficulte" value="{{regles.specialiteDifficulte}}" min="0" step="1"></div>
+    </div>
+  </fieldset>
+  <p class="hint">{{localize "WODHOMEBREW.Jets.AideBase"}}</p>
+</div>

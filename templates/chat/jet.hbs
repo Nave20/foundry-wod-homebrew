@@ -1,0 +1,16 @@
+<div class="wod-jet issue-{{issue}}">
+  <header class="wod-jet-traits">
+    {{#each traits as |t|}}{{#unless @first}}<span class="plus">+</span>{{/unless}}<span class="trait">{{t.nom}} <b>{{t.valeur}}</b></span>{{/each}}
+  </header>
+  <div class="wod-jet-infos">{{reserve}}d{{regles.de}} · {{localize "WODHOMEBREW.Jets.DifficulteCourte"}} {{regles.difficulte}}</div>
+  {{#if modificateurs.length}}
+  <ul class="wod-jet-mods">{{#each modificateurs as |m|}}<li>{{m}}</li>{{/each}}</ul>
+  {{/if}}
+  <ol class="wod-jet-des">
+    {{#each des as |d|}}<li class="de {{d.type}}" data-tooltip="{{#if (eq d.points 0)}}0{{else if (gt d.points 0)}}+{{d.points}}{{else}}{{d.points}}{{/if}}">{{d.valeur}}</li>{{/each}}
+  </ol>
+  <div class="wod-jet-resultat">
+    {{#if afficherNombre}}<span class="nombre">{{reussites}}</span>{{/if}}
+    <span class="texte">{{resultat}}</span>
+  </div>
+</div>

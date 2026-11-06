@@ -1,9 +1,40 @@
 <div class="traits-corps">
+  <fieldset class="barre-profil">
+    <legend>{{localize "WODHOMEBREW.Profils.Titre"}}</legend>
+    <div class="ligne-profil">
+      <select class="profil">
+        {{#if profilPersonnalise}}<option value="" selected>{{localize "WODHOMEBREW.Profils.Personnalise"}}</option>{{/if}}
+        <optgroup label="{{localize "WODHOMEBREW.Profils.Integres"}}">
+          {{#each profilsIntegres as |p|}}<option value="{{p.id}}" {{#if p.actif}}selected{{/if}}>{{p.nom}}</option>{{/each}}
+        </optgroup>
+        {{#if profilsMonde.length}}
+        <optgroup label="{{localize "WODHOMEBREW.Profils.DuMonde"}}">
+          {{#each profilsMonde as |p|}}<option value="{{p.id}}" {{#if p.actif}}selected{{/if}}>{{p.nom}}</option>{{/each}}
+        </optgroup>
+        {{/if}}
+      </select>
+      <span class="profil-modifie {{#if profilModifie}}visible{{/if}}">{{localize "WODHOMEBREW.Profils.Modifie"}}</span>
+    </div>
+    <div class="boutons-profil">
+      <button type="button" data-action="profilEnregistrer"><i class="fa-solid fa-bookmark" inert></i> {{localize "WODHOMEBREW.Profils.Enregistrer"}}</button>
+      {{#if profilEstMonde}}
+      <button type="button" data-action="profilSupprimer"><i class="fa-solid fa-trash" inert></i> {{localize "WODHOMEBREW.Profils.Supprimer"}}</button>
+      {{/if}}
+      <button type="button" data-action="profilExporter"><i class="fa-solid fa-file-export" inert></i> {{localize "WODHOMEBREW.Profils.Exporter"}}</button>
+      <button type="button" data-action="profilImporter"><i class="fa-solid fa-file-import" inert></i> {{localize "WODHOMEBREW.Profils.Importer"}}</button>
+    </div>
+    <p class="hint">{{localize "WODHOMEBREW.Profils.Aide"}}</p>
+  </fieldset>
+
   <div class="form-group">
     <label>{{localize "WODHOMEBREW.Traits.Afficher"}}</label>
     <select class="onglet">
       {{#each onglets as |o|}}<option value="{{o.cle}}" {{#if o.actif}}selected{{/if}}>{{localize o.label}}</option>{{/each}}
     </select>
+  </div>
+  <div class="form-group">
+    <label>{{localize "WODHOMEBREW.Traits.TrierAlpha"}}</label>
+    <input type="checkbox" name="trierAlpha" {{checked trierAlpha}}>
   </div>
   <p class="hint">{{localize (ifThen estAttributs "WODHOMEBREW.Traits.AideAttributs" "WODHOMEBREW.Traits.AideCapacites")}}</p>
 

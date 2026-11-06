@@ -3,7 +3,7 @@
   "type": "system",
   "title": "Monde des Ténèbres (Homebrew)",
   "description": "<p>Système maison pour le Monde des Ténèbres (V20, Dark Ages V20, W20, M20) : Mortel, Vampire, Goule, Garou, Mage.</p>",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "compatibility": {
     "minimum": "14",
     "verified": "14.369"

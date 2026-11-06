@@ -21,16 +21,28 @@ import { WODHOMEBREW } from "./config.mjs";
 export const SYSTEME = "wod_homebrew";
 export const REGLAGE = "traits";
 
-/** Réglage brut, toujours complet (objets vides par défaut) */
+/** Réglage du monde, toujours complet (objets vides par défaut) */
 export function configTraits() {
-  const brut = game.settings.get(SYSTEME, REGLAGE) ?? {};
-  const config = { attributs: { renommes: {} }, capacites: {} };
+  return normaliserTraits(game.settings.get(SYSTEME, REGLAGE));
+}
+
+/**
+ * Complète une configuration brute (réglage, profil, fichier importé) : chaque jeu et chaque colonne existent,
+ * les masques sont triés et sans doublon.
+ * @param {object} [brut]
+ */
+export function normaliserTraits(brut = {}) {
+  brut ??= {};
+  // trierAlpha : colonnes de capacités triées par ordre alphabétique (sinon ordre des livres, ajouts à la fin)
+  // livresPour : types d'acteur qui gardent les capacités des livres (exception par créature, ex. ["mortel"])
+  const config = { attributs: { renommes: {} }, capacites: {}, trierAlpha: !!brut.trierAlpha,
+    livresPour: [...new Set(brut.livresPour ?? [])].sort() };
   Object.assign(config.attributs.renommes, brut.attributs?.renommes ?? {});
   for ( const jeu of Object.keys(WODHOMEBREW.jeux) ) {
     const c = brut.capacites?.[jeu] ?? {};
     config.capacites[jeu] = {
       renommes: { ...(c.renommes ?? {}) },
-      masques: [...(c.masques ?? [])],
+      masques: [...new Set(c.masques ?? [])].sort(),
       ajouts: Object.fromEntries(Object.keys(WODHOMEBREW.capacites[jeu]).map(g => [g, [...(c.ajouts?.[g] ?? [])]]))
     };
   }
@@ -49,16 +61,23 @@ export function nomAttribut(cle, config = configTraits()) {
  * Capacités affichées pour un jeu, par colonne, renommages et masques appliqués.
  * @returns {Array<{groupe: string, traits: Array<{cle: string, nom: string, ajoutee: boolean}>}>}
  */
-export function capacitesAffichees(jeu, config = configTraits()) {
+export function capacitesAffichees(jeu, config = configTraits(), type = null) {
   const base = WODHOMEBREW.capacites[jeu] ?? WODHOMEBREW.capacites.V20;
-  const c = config.capacites[jeu] ?? config.capacites.V20;
+  const livres = { renommes: {}, masques: [], ajouts: {} };
+  const c = config.livresPour.includes(type) ? livres : (config.capacites[jeu] ?? config.capacites.V20);
+  const tri = (a, b) => a.nom.localeCompare(b.nom, "fr", { sensitivity: "base" });
   return Object.entries(base).map(([groupe, cles]) => ({
     groupe,
     traits: [
       ...cles.filter(k => !c.masques.includes(k))
         .map(k => ({ cle: k, nom: c.renommes[k] || nomLivre("capacites", k), ajoutee: false })),
-      ...(c.ajouts[groupe] ?? []).map(a => ({ cle: a.cle, nom: a.nom, ajoutee: true }))
-    ]
+      // Ajout : une capacité de base d'un autre jeu (art, meditation, rituels…) garde son stockage d'origine,
+      // une nouvelle capacité est stockée dans system.capacites_ajoutees
+      ...(c.ajouts[groupe] ?? []).filter(a => !cles.includes(a.cle)).map(a => {
+        const deBase = WODHOMEBREW.toutesCapacites.includes(a.cle);
+        return { cle: a.cle, nom: a.nom || c.renommes[a.cle] || nomLivre("capacites", a.cle), ajoutee: !deBase };
+      })
+    ].sort(config.trierAlpha ? tri : () => 0)
   }));
 }
 

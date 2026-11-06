@@ -9,6 +9,8 @@ import WodActorSheet from "./module/applications/actor-sheet.mjs";
 import WodItemSheet from "./module/applications/item-sheet.mjs";
 import { registerHelpers } from "./module/helpers.mjs";
 import { registerTraitsSettings } from "./module/traits.mjs";
+import { registerProfilsHooks, registerProfilsSettings } from "./module/profils.mjs";
+import { registerDesSettings } from "./module/des.mjs";
 import TraitsConfig from "./module/applications/traits-config.mjs";
 import PanneauMJ from "./module/applications/panneau-mj.mjs";
 import { registerAccueilHooks, registerAccueilSettings } from "./module/accueil.mjs";
@@ -19,6 +21,8 @@ Hooks.once("init", () => {
   CONFIG.WODHOMEBREW = WODHOMEBREW;
   registerHelpers();
   registerTraitsSettings(TraitsConfig);
+  registerProfilsSettings();
+  registerDesSettings();
   registerAccueilSettings();
   game.system.api = { data, documents: { WodActor, WodItem } };
 
@@ -80,3 +84,6 @@ Hooks.on("renderSceneControls", (app, element) => {
 
 // Accueil : scène créée au premier lancement, fond quand aucune scène n'est active
 registerAccueilHooks();
+
+// Profils de traits : un monde déjà configuré devient « personnalisé »
+registerProfilsHooks();

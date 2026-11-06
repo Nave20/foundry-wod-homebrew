@@ -648,13 +648,72 @@
       "Masquer": "Masquer sur les fiches",
       "Reinitialiser": "Revenir aux noms des livres",
       "Enregistrer": "Enregistrer",
-      "Enregistre": "Traits de la chronique enregistrés."
+      "Enregistre": "Traits de la chronique enregistrés.",
+      "TrierAlpha": "Trier les capacités par ordre alphabétique"
     },
     "PanneauMJ": {
       "Titre": "Panneau du MJ — Monde des Ténèbres"
     },
     "Accueil": {
       "Scene": "Accueil"
+    },
+    "Profils": {
+      "Titre": "Profil",
+      "Livres": "Livres (20e anniversaire)",
+      "Personnalise": "Configuration personnalisée",
+      "Integres": "Profils du système",
+      "DuMonde": "Profils de ce monde",
+      "Modifie": "modifié, non enregistré comme profil",
+      "Enregistrer": "Enregistrer comme profil",
+      "Supprimer": "Supprimer le profil",
+      "SupprimerConfirmer": "Supprimer le profil « {nom} » de ce monde ? Les fiches ne sont pas modifiées.",
+      "Exporter": "Exporter",
+      "Importer": "Importer",
+      "Nom": "Nom du profil",
+      "Aide": "Choisir un profil le charge ci-dessous ; « Enregistrer » en bas de la fenêtre l'applique à toutes les fiches du monde. Un profil enregistré avec le même nom est mis à jour.",
+      "EnregistreNotif": "Profil « {nom} » enregistré dans ce monde.",
+      "ImporteNotif": "Profil « {nom} » importé dans ce monde.",
+      "ImportInvalide": "Ce fichier n'est pas un profil de traits valide.",
+      "Homebrew": "Homebrew (Sang-froid, Esquive…)"
+    },
+    "Jets": {
+      "Titre": "Règles des jets",
+      "Aide": "Réglez le fonctionnement des jets de dés pour ce monde (dé utilisé, et bientôt vos règles maison).",
+      "AideBase": "La réserve est la somme des traits choisis (par exemple Force + Athlétisme), plus les modificateurs. Chaque dé égal ou supérieur à la difficulté donne une réussite. Total à 0 : échec ; total négatif : échec critique. La difficulté reste entre 2 et la valeur du dé.",
+      "De": "Dé de la réserve",
+      "Reinitialiser": "Revenir aux règles par défaut",
+      "Enregistre": "Règles des jets enregistrées.",
+      "Lancer": "Lancer",
+      "Annuler": "Annuler la sélection",
+      "Selectionner": "Cliquer pour l'ajouter au jet",
+      "Reserve": "{n}d{de}",
+      "ReserveVide": "La réserve est vide : choisissez des traits qui ont au moins un point.",
+      "Reussite": "réussite",
+      "Reussites": "réussites",
+      "Echec": "Échec",
+      "EchecCritique": "Échec critique ({n})",
+      "DifficulteCourte": "diff.",
+      "Difficulte": "Difficulté",
+      "DixDouble": "Un 10 compte pour deux réussites",
+      "UnRetire": "Un 1 retire une réussite",
+      "ReussiteCritique": "Réussite critique !",
+      "Des": "dés",
+      "Un_de": "dé",
+      "UtiliserSpecialite": "Spécialité",
+      "DesSupplementaires": "Dés en plus",
+      "Ajuster": "Ajuster les dés et la difficulté",
+      "ModCapaciteNulle": "{nom} à 0",
+      "ModSpecialite": "Spécialité ({nom})",
+      "ModDes": "Dés ajustés",
+      "ModDifficulte": "Difficulté ajustée",
+      "SectionDes": "Dés et réussites",
+      "SectionResultat": "Résultat",
+      "SectionModificateurs": "Modificateurs automatiques",
+      "SeuilCritique": "Réussite critique à partir de (réussites)",
+      "SeuilCritiqueAide": "0 = pas de réussite critique.",
+      "CapaciteNulle": "Difficulté ajoutée quand la capacité est à 0",
+      "SpecialiteDes": "Dés ajoutés par une spécialité",
+      "SpecialiteDifficulte": "Difficulté retirée par une spécialité"
     }
   }
 }

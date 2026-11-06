@@ -6,7 +6,7 @@ Système de jeu **maison** pour [Foundry Virtual Tabletop](https://foundryvtt.co
 > Le système est développé et testé sur ce build précis. Le build cible **évoluera** avec les mises à jour de Foundry ;
 > le [CHANGELOG](CHANGELOG.md) indique pour chaque version le build sur lequel elle a été vérifiée.
 
-Version actuelle du système : **0.2.0** · Statut : **en développement** (étape 2 sur 8)
+Version actuelle du système : **0.3.0** · Statut : **en développement** (étape 3 sur 8 en cours)
 
 ## Ce que fait le système aujourd'hui
 
@@ -25,7 +25,9 @@ Version actuelle du système : **0.2.0** · Statut : **en développement** (éta
 | Listes préfaites (historiques, atouts, handicaps, archétypes, clans, tribus, traditions…) | ✅ |
 | Panneau du MJ et « Traits de la chronique » (renommer, masquer, ajouter des traits) | ✅ |
 | Scène et image d'accueil | ✅ |
-| Jets de dés, malus de santé, pouvoirs, compendiums | ❌ à venir |
+| Profils de traits (Livres, Homebrew, profils du monde, export / import) | ✅ |
+| Jets de dés : réserve attribut + capacité, réussites, critiques, spécialité, ajustements, règles réglables par le MJ | ✅ |
+| Malus de santé et Volonté dans les jets, pouvoirs, compendiums | ❌ à venir |
 
 ## Installation (développement)
 
@@ -57,6 +59,7 @@ Chaque session de travail se termine par un envoi sur ce dépôt, avec son réca
 |---|---|---|
 | 2026-10-15 | 0.1.0 | Modèle de données des 5 créatures, fiche simple à onglets, objets, interface française |
 | 2026-11-06 | 0.2.0 | Points cliquables, couleurs, listes préfaites, spécialités, Panneau du MJ, Traits de la chronique, scène d'accueil |
+| 2026-11-06 | 0.3.0 | Profils de traits (dont Homebrew), jets de dés avec réussites et règles réglables |
 
 ## Développement
 

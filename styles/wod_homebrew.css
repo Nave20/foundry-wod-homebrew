@@ -207,3 +207,90 @@ body.wod-sans-scene {
   background: #000 url("../assets/accueil-4k.webp") center / cover no-repeat;
 }
 body.wod-sans-scene #board { opacity: 0; }
+
+/* Barre « Profil » de Traits de la chronique */
+.wod_homebrew .barre-profil { display: flex; flex-direction: column; gap: 0.4rem; }
+.wod_homebrew .ligne-profil { display: flex; align-items: center; gap: 0.6rem; }
+.wod_homebrew .ligne-profil select.profil { flex: 1; }
+.wod_homebrew .profil-modifie { display: none; font-size: var(--font-size-12, 0.75rem); font-style: italic; color: var(--color-warm-2, #d9822b); }
+.wod_homebrew .profil-modifie.visible { display: inline; }
+.wod_homebrew .boutons-profil { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.wod_homebrew .boutons-profil button { flex: 1 1 auto; width: auto; white-space: nowrap; }
+
+/* Jets : traits cliquables, sélection et barre de jet */
+.wod_homebrew .libelle.jetable { cursor: pointer; }
+.wod_homebrew .libelle.jetable:hover { color: var(--wod-trait); text-decoration: underline dotted; }
+.wod_homebrew .form-group.trait.selection-jet {
+  background: color-mix(in srgb, var(--wod-trait) 22%, transparent); border-radius: 4px;
+  box-shadow: inset 3px 0 0 var(--wod-trait);
+}
+.wod_homebrew .form-group.trait.selection-jet .libelle { font-weight: bold; color: var(--wod-trait); }
+.wod_homebrew .tab.traits { position: relative; }
+.wod_homebrew .barre-jet {
+  position: sticky; bottom: 0; z-index: 5; margin-top: 0.5rem; padding: 0.45rem 0.6rem;
+  display: flex; align-items: center; gap: 0.6rem;
+  background: var(--color-cool-5, #0b0a13); border: 1px solid var(--wod-trait); border-radius: 6px;
+  box-shadow: 0 -4px 14px rgb(0 0 0 / 0.4);
+}
+.wod_homebrew .barre-jet[hidden] { display: none; }
+.wod_homebrew .barre-jet > i { color: var(--wod-trait); font-size: 1.2rem; }
+.wod_homebrew .barre-jet .composition { flex: 1; font-weight: bold; }
+.wod_homebrew .barre-jet button.lancer { flex: 0 0 auto; width: auto; padding: 0 0.9rem; }
+.wod_homebrew .barre-jet button.annuler { flex: 0 0 auto; width: 1.9rem; padding: 0; }
+.wod_homebrew.regles-jets .form-fields .prefixe { font-weight: bold; }
+
+/* Carte de jet dans le chat */
+.wod-jet { display: flex; flex-direction: column; gap: 0.35rem; }
+.wod-jet-traits { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem; font-weight: bold; border: none; margin: 0; }
+.wod-jet-traits .trait b { color: #c9a24a; }
+.wod-jet-traits .plus { opacity: 0.6; }
+.wod-jet-infos { font-size: var(--font-size-12, 0.75rem); opacity: 0.75; }
+.wod-jet-des { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+.wod-jet-des .de {
+  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+  font-weight: bold; font-size: 0.85rem; border-radius: 5px; border: 1px solid #6b6b6b; color: #bbb; background: rgb(0 0 0 / 0.25);
+}
+.wod-jet-des .de.reussite { border-color: #4f9a5a; color: #e8ffe9; background: #2f6b39; }
+.wod-jet-des .de.max { border-color: #e9c46a; color: #2a1d00; background: linear-gradient(#f3d98a, #c9a24a); }
+.wod-jet-des .de.un { border-color: #b03a2e; color: #ffe5e1; background: #7d1f17; }
+.wod-jet-resultat {
+  display: flex; align-items: baseline; justify-content: center; gap: 0.4rem; padding: 0.35rem;
+  border-radius: 6px; background: rgb(0 0 0 / 0.25); text-align: center;
+}
+.wod-jet-resultat .nombre { font-size: 1.8rem; font-weight: bold; line-height: 1; }
+.wod-jet-resultat .texte { font-size: 1rem; font-weight: bold; }
+.wod-jet.issue-reussite .wod-jet-resultat { color: #7fd38a; }
+.wod-jet.issue-echec .wod-jet-resultat { color: #bbb; }
+.wod-jet.issue-critique .wod-jet-resultat { color: #ff7b6b; background: rgb(125 31 23 / 0.35); }
+
+/* Carte de jet : couleurs lisibles sur le fond parchemin des messages */
+.wod-jet-traits .trait b { color: #8a5a00; }
+.wod-jet-des .de { color: #3a3a3a; border-color: #8a8a8a; background: rgb(0 0 0 / 0.06); }
+.wod-jet-resultat { background: rgb(0 0 0 / 0.08); border: 1px solid rgb(0 0 0 / 0.12); }
+.wod-jet.issue-reussite .wod-jet-resultat { color: #1f6b2c; }
+.wod-jet.issue-echec .wod-jet-resultat { color: #4a4a4a; }
+.wod-jet.issue-critique .wod-jet-resultat { color: #8b1a1a; background: rgb(139 26 26 / 0.12); border-color: rgb(139 26 26 / 0.35); }
+
+/* Barre de jet : lignes, réglages, spécialité */
+.wod_homebrew .barre-jet { flex-direction: column; align-items: stretch; gap: 0.35rem; }
+.wod_homebrew .barre-jet .ligne-jet { display: flex; align-items: center; gap: 0.5rem; }
+.wod_homebrew .barre-jet .ligne-jet > i { color: var(--wod-trait); font-size: 1.15rem; }
+.wod_homebrew .barre-jet .composition { flex: 1; font-weight: bold; min-width: 0; }
+.wod_homebrew .barre-jet .resume { white-space: nowrap; color: var(--wod-trait); font-weight: bold; }
+.wod_homebrew .barre-jet button.icone-jet { flex: 0 0 auto; width: 1.9rem; height: 1.9rem; padding: 0; }
+.wod_homebrew .barre-jet button.icone-jet.actif { color: var(--wod-trait); border-color: var(--wod-trait); }
+.wod_homebrew .barre-jet .ligne-specialite { display: flex; align-items: center; gap: 0.35rem; margin: 0; cursor: pointer; }
+.wod_homebrew .barre-jet .ligne-specialite input { margin: 0; }
+.wod_homebrew .barre-jet .reglages-jet { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+.wod_homebrew .barre-jet .reglage { display: inline-flex; align-items: center; gap: 0.35rem; }
+.wod_homebrew .barre-jet .reglage button { width: 1.6rem; height: 1.6rem; padding: 0; line-height: 1; }
+.wod_homebrew .barre-jet .reglage b { min-width: 1.6rem; text-align: center; }
+.wod_homebrew .barre-jet .mods-jet { font-size: var(--font-size-12, 0.75rem); opacity: 0.85; font-style: italic; }
+
+/* Carte : modificateurs et réussite critique */
+.wod-jet-mods { list-style: none; margin: 0; padding: 0; font-size: var(--font-size-12, 0.75rem); font-style: italic; opacity: 0.85; }
+.wod-jet.issue-critique-reussite .wod-jet-resultat {
+  color: #5a3c00; background: linear-gradient(#f6e3a4, #d9b45a); border-color: #b8902f;
+  box-shadow: 0 0 8px rgb(217 180 90 / 0.6);
+}
+.wod-jet.issue-critique-reussite .wod-jet-resultat .texte { text-transform: uppercase; letter-spacing: 0.05em; }

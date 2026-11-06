@@ -2,6 +2,39 @@
 
 Une entrée par session de travail. Chaque entrée indique le build de Foundry sur lequel la version a été vérifiée.
 
+## 0.3.0 — 2026-11-06 · Session 3 : profils de traits et jets de dés
+
+Vérifié sur **Foundry VTT 14.369**.
+
+### Profils de traits
+- La fenêtre **Traits de la chronique** reçoit une barre **Profil**. On y choisit un profil, ce qui charge sa configuration ; on peut aussi **enregistrer** la configuration actuelle comme profil du monde (même nom = mise à jour), en **supprimer** un, l'**exporter** ou l'**importer** en `.json`.
+- **Profils du système**, disponibles dans tous les mondes :
+  - **Livres (20e anniversaire)** ;
+  - **Homebrew** : Sang-froid à la place d'Apparence, Esquive en talent, capacités propres à chaque créature (Vampire et Goule, Mage, Garou). Le Mortel garde les capacités des livres.
+- Option **Trier les capacités par ordre alphabétique**.
+- Un profil peut ajouter à un jeu une capacité de base d'un autre jeu (par exemple Art ou Méditation pour V20). Elle garde alors sa clé et ses points.
+- Exception par créature (`livresPour`) : la créature garde les capacités des livres, quel que soit le profil.
+
+### Jets de dés
+- **Composer un jet** : cliquer sur le nom d'un attribut puis d'une capacité (un de chaque). Une barre affiche la réserve et la difficulté.
+- **Roue ⚙** pour ajouter ou retirer des dés et ajuster la difficulté du jet. Case **Spécialité**, visible si l'un des traits en a une et cochée par défaut.
+- **Carte de résultat** dans le chat : dés en couleur, total de réussites, détail des modificateurs. Réussite critique, échec et échec critique.
+- **Règles des jets**, nouvelle entrée du Panneau du MJ, avec ces réglages par défaut :
+  - d10, difficulté 6 ;
+  - un 10 compte pour deux réussites, un 1 en retire une ;
+  - réussite critique à partir de 5 réussites ;
+  - capacité à 0 : difficulté +2 ;
+  - spécialité : +1 dé et −1 de difficulté.
+
+### Vérifications
+- Vérification statique (`check_system.py`) : 0 erreur, 0 avertissement.
+- Test dans Foundry 14.369, après redémarrage : 15/15 étapes.
+  - Fiches des 5 types, avec les points et les noms cliquables.
+  - Jet avec spécialité (6d10, diff. 5), roue ⚙ (+1 dé), lancer et carte de résultat, capacité à 0 (diff. 8).
+  - Panneau du MJ avec ses 2 entrées, profils disponibles, scène d'accueil.
+  - Aucune erreur ni aucun avertissement d'obsolescence dans la console.
+- Tests précédents de la session : enregistrement, chargement, suppression, export et import de profils ; comptage des réussites sur des dés connus (10, 10, 5 → 4 ; 6, 7, 1 → 1 ; 1, 1, 3 → −2).
+
 ## 0.2.0 — 2026-11-06 · Session 2 : mise en page de la fiche, traits de la chronique, accueil
 
 Vérifié sur **Foundry VTT 14.369**.

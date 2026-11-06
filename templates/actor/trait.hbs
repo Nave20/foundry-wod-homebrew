@@ -1,6 +1,7 @@
 {{!-- Ligne « libellé (· spécialité) + points ».
-      Paramètres : label, name, value, max, editable, spec ({ name, value }, facultatif) --}}
-<div class="form-group trait">
+      Paramètres : label, name, value, max, editable, spec ({ name, value }, facultatif),
+      jet ("attribut" ou "capacite" : le nom devient cliquable pour composer un jet) --}}
+<div class="form-group trait" {{#if jet}}data-jet="{{jet}}"{{/if}}>
   <label class="nom-trait">
     <span class="libelle">{{localize label}}</span>
     {{#if spec.value}}<span class="specialite">· {{spec.value}}</span>{{/if}}

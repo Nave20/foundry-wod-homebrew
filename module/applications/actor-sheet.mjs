@@ -2,6 +2,7 @@ import { WODHOMEBREW } from "../config.mjs";
 import { CHAMPS_PREFAITS, LISTES_PREFAITES } from "../listes.mjs";
 import MenuSuggestions from "./suggestions.mjs";
 import { capacitesAffichees, configTraits, nomAttribut } from "../traits.mjs";
+import { lancerJet, preparerJet, reglesJets, texteModificateur } from "../des.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -73,6 +74,15 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     }
   };
 
+  /**
+   * Traits sélectionnés pour un jet : un attribut et une capacité au plus ({ name, nom } ou null).
+   * Gardés d'un rendu à l'autre.
+   */
+  #jet = { attribut: null, capacite: null };
+
+  /** Options du jet en cours : spécialité utilisée, dés et difficulté ajoutés à la main, réglages dépliés */
+  #optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false };
+
   /** Panneau des réglages ouvert ? */
   #reglagesOuverts = false;
 
@@ -127,7 +137,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
         }))
       })),
       // Capacités du jeu, avec les noms, masques et ajouts des « Traits de la chronique »
-      capacites: capacitesAffichees(system.jeu, traitsChronique).map(({ groupe, traits }) => ({
+      capacites: capacitesAffichees(system.jeu, traitsChronique, type).map(({ groupe, traits }) => ({
         cle: groupe,
         label: `WODHOMEBREW.Capacites.${groupe}`,
         traits: traits.map(t => t.ajoutee ? {
@@ -196,6 +206,23 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
   /** @inheritDoc */
   async _onRender(context, options) {
     await super._onRender(context, options);
+    // Jets : un clic sur le nom d'un attribut ou d'une capacité le sélectionne (un par catégorie)
+    for ( const ligne of this.element.querySelectorAll(".form-group[data-jet]") ) {
+      const name = ligne.querySelector(".wod-points input[type=hidden]")?.name;
+      const libelle = ligne.querySelector(".nom-trait .libelle");
+      if ( !name || !libelle ) continue;
+      libelle.classList.add("jetable");
+      libelle.dataset.tooltip = _loc("WODHOMEBREW.Jets.Selectionner");
+      libelle.addEventListener("click", () => {
+        const cat = ligne.dataset.jet;
+        this.#jet[cat] = this.#jet[cat]?.name === name ? null : { name, nom: libelle.textContent.trim(), categorie: cat };
+        this.#optionsJet.specialite = true;   // la case Spécialité repart cochée à chaque nouvelle sélection
+        this.#majBarreJet();
+      });
+    }
+    this.#majBarreJet();
+    this.#ecouterBarreJet();
+
     // Le panneau « Réglages de la fiche » reste ouvert d'un rendu à l'autre
     this.element.querySelector("details.reglages")?.addEventListener("toggle", e => this.#reglagesOuverts = e.target.open);
     if ( !this.isEditable ) return;
@@ -261,6 +288,105 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     const i = Number(target.dataset.valeur);
     input.value = (i === Number(input.value)) ? i - 1 : i;
     input.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  /** Traits sélectionnés avec leur valeur et leur spécialité actuelles */
+  #traitsJet() {
+    return ["attribut", "capacite"].map(cat => this.#jet[cat]).filter(Boolean).map(t => {
+      const ligne = this.element.querySelector(`.form-group[data-jet] input[name="${t.name}"]`)?.closest(".form-group");
+      const specialite = ligne?.querySelector("input.valeur-specialite")?.value?.trim() || "";
+      return { nom: t.nom, categorie: t.categorie, valeur: Number(foundry.utils.getProperty(this.actor, t.name)) || 0, specialite };
+    });
+  }
+
+  /** Jet préparé (réserve, difficulté, modificateurs) à partir de la sélection et des options */
+  #jetPrepare() {
+    return preparerJet(this.#traitsJet(), this.#optionsJet);
+  }
+
+  #reinitialiserJet() {
+    this.#jet = { attribut: null, capacite: null };
+    this.#optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false };
+    this.#majBarreJet();
+  }
+
+  /** Surligne la sélection et redessine la barre de jet */
+  #majBarreJet() {
+    const barre = this.element.querySelector(".barre-jet");
+    // Un trait sélectionné qui n'est plus affiché (masqué, renommé, retiré) est oublié
+    for ( const cat of Object.keys(this.#jet) ) {
+      if ( this.#jet[cat] && !this.element.querySelector(`.form-group[data-jet] input[name="${this.#jet[cat].name}"]`) ) this.#jet[cat] = null;
+    }
+    for ( const ligne of this.element.querySelectorAll(".form-group[data-jet]") ) {
+      const name = ligne.querySelector(".wod-points input[type=hidden]")?.name;
+      ligne.classList.toggle("selection-jet", Object.values(this.#jet).some(t => t?.name === name));
+    }
+    if ( !barre ) return;
+    const jet = this.#jetPrepare();
+    barre.hidden = !jet.traits.length;
+    if ( !jet.traits.length ) return barre.replaceChildren();
+    const regles = reglesJets();
+    const o = this.#optionsJet;
+    const e = foundry.utils.escapeHTML;
+    const signe = n => (n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : "0");
+    const composition = jet.traits.map(t => `${e(t.nom)} (${t.valeur})`).join(" + ");
+    // La case Spécialité n'apparaît que si un des traits choisis en a une
+    const specialite = jet.specialites.length ? `
+      <label class="ligne-specialite">
+        <input type="checkbox" data-jet-action="specialite" ${o.specialite ? "checked" : ""}>
+        ${_loc("WODHOMEBREW.Jets.UtiliserSpecialite")} : <b>${e(jet.specialites.join(", "))}</b>
+        <span class="hint">(+${regles.specialiteDes} ${_loc("WODHOMEBREW.Jets.Un_de")}, −${regles.specialiteDifficulte} ${_loc("WODHOMEBREW.Jets.DifficulteCourte")})</span>
+      </label>` : "";
+    const reglages = o.ouvert ? `
+      <div class="reglages-jet">
+        <span class="reglage">${_loc("WODHOMEBREW.Jets.DesSupplementaires")}
+          <button type="button" data-jet-action="des-moins">−</button><b>${signe(o.desBonus)}</b><button type="button" data-jet-action="des-plus">+</button></span>
+        <span class="reglage">${_loc("WODHOMEBREW.Jets.Difficulte")}
+          <button type="button" data-jet-action="diff-moins">−</button><b>${jet.difficulte}</b><button type="button" data-jet-action="diff-plus">+</button></span>
+      </div>` : "";
+    const mods = jet.modificateurs.length
+      ? `<div class="mods-jet">${jet.modificateurs.map(m => e(texteModificateur(m))).join(" · ")}</div>` : "";
+    barre.innerHTML = `
+      <div class="ligne-jet">
+        <i class="fa-solid fa-dice-d20" inert></i>
+        <span class="composition">${composition}</span>
+        <span class="resume">${jet.reserve}d${regles.de} · ${_loc("WODHOMEBREW.Jets.DifficulteCourte")} ${jet.difficulte}</span>
+        <button type="button" class="icone-jet ${o.ouvert ? "actif" : ""}" data-jet-action="reglages" data-tooltip="${_loc("WODHOMEBREW.Jets.Ajuster")}"><i class="fa-solid fa-gear" inert></i></button>
+        <button type="button" class="lancer" data-jet-action="lancer"><i class="fa-solid fa-dice" inert></i> ${_loc("WODHOMEBREW.Jets.Lancer")}</button>
+        <button type="button" class="icone-jet" data-jet-action="annuler" data-tooltip="${_loc("WODHOMEBREW.Jets.Annuler")}"><i class="fa-solid fa-xmark" inert></i></button>
+      </div>${specialite}${reglages}${mods}`;
+  }
+
+  /** Clics et case à cocher de la barre de jet (sans passer par le formulaire de la fiche) */
+  #ecouterBarreJet() {
+    const barre = this.element.querySelector(".barre-jet");
+    if ( !barre ) return;
+    barre.addEventListener("change", event => {
+      event.stopPropagation();   // ne pas enregistrer la fiche
+      if ( event.target.dataset.jetAction === "specialite" ) {
+        this.#optionsJet.specialite = event.target.checked;
+        this.#majBarreJet();
+      }
+    });
+    barre.addEventListener("click", async event => {
+      const bouton = event.target.closest("button[data-jet-action]");
+      if ( !bouton ) return;
+      const o = this.#optionsJet;
+      switch ( bouton.dataset.jetAction ) {
+        case "reglages": o.ouvert = !o.ouvert; break;
+        case "des-plus": o.desBonus += 1; break;
+        case "des-moins": o.desBonus -= 1; break;
+        case "diff-plus": o.diffMod += 1; break;
+        case "diff-moins": o.diffMod -= 1; break;
+        case "annuler": return this.#reinitialiserJet();
+        case "lancer": {
+          const roll = await lancerJet(this.actor, this.#jetPrepare());
+          if ( roll ) this.#reinitialiserJet();
+          return;
+        }
+      }
+      this.#majBarreJet();
+    });
   }
 
   /** Clic sur ✎ : saisie de la spécialité du trait, à la place de son affichage */

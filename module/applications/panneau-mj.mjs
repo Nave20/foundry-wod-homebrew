@@ -1,4 +1,5 @@
 import TraitsConfig from "./traits-config.mjs";
+import ReglesJets from "./regles-jets.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -24,7 +25,8 @@ export default class PanneauMJ extends HandlebarsApplicationMixin(ApplicationV2)
    * @type {Array<{id: string, icone: string, titre: string, aide: string, app: typeof ApplicationV2}>}
    */
   static ENTREES = [
-    { id: "traits", icone: "fa-solid fa-list-check", titre: "WODHOMEBREW.Traits.Titre", aide: "WODHOMEBREW.Traits.Aide", app: TraitsConfig }
+    { id: "traits", icone: "fa-solid fa-list-check", titre: "WODHOMEBREW.Traits.Titre", aide: "WODHOMEBREW.Traits.Aide", app: TraitsConfig },
+    { id: "jets", icone: "fa-solid fa-dice-d20", titre: "WODHOMEBREW.Jets.Titre", aide: "WODHOMEBREW.Jets.Aide", app: ReglesJets }
   ];
 
   /** Ouvre le panneau, ou le ferme s'il est déjà ouvert */
