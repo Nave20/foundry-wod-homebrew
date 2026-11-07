@@ -27,6 +27,24 @@
     <p class="hint">{{localize "WODHOMEBREW.Jets.SeuilCritiqueAide"}}</p>
   </fieldset>
   <fieldset>
+    <legend>{{localize "WODHOMEBREW.Jets.SectionBlessure"}}</legend>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.MalusBlessureRegle"}}</label>
+      <input type="checkbox" name="malusBlessure" {{checked regles.malusBlessure}}>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.VolonteSansMalus"}}</label>
+      <input type="checkbox" name="volonteSansMalus" {{checked regles.volonteSansMalus}}>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>{{localize "WODHOMEBREW.Jets.SectionExtension"}}</legend>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.ExtensionDifficulte"}}</label>
+      <div class="form-fields"><span class="prefixe">+</span><input type="number" name="extensionDifficulte" value="{{regles.extensionDifficulte}}" min="0" step="1"></div>
+    </div>
+  </fieldset>
+  <fieldset>
     <legend>{{localize "WODHOMEBREW.Jets.SectionModificateurs"}}</legend>
     <div class="form-group">
       <label>{{localize "WODHOMEBREW.Jets.CapaciteNulle"}}</label>
@@ -39,6 +57,37 @@
     <div class="form-group">
       <label>{{localize "WODHOMEBREW.Jets.SpecialiteDifficulte"}}</label>
       <div class="form-fields"><span class="prefixe">−</span><input type="number" name="specialiteDifficulte" value="{{regles.specialiteDifficulte}}" min="0" step="1"></div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>{{localize "WODHOMEBREW.Jets.SectionRessources"}}</legend>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.VolonteReussites"}}</label>
+      <div class="form-fields"><span class="prefixe">+</span><input type="number" name="volonteReussites" value="{{regles.volonteReussites}}" min="0" step="1"></div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.VolonteSiReussite"}}</label>
+      <input type="checkbox" name="volonteSiReussite" {{checked regles.volonteSiReussite}}>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.SangDes"}}</label>
+      <div class="form-fields"><span class="prefixe">+</span><input type="number" name="sangDes" value="{{regles.sangDes}}" min="0" step="1"></div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.SangDifficulte"}}</label>
+      <div class="form-fields"><span class="prefixe">−</span><input type="number" name="sangDifficulte" value="{{regles.sangDifficulte}}" min="0" step="1"></div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.QuintessenceParJet"}}</label>
+      <div class="form-fields"><input type="number" name="quintessenceParJet" value="{{regles.quintessenceParJet}}" min="0" step="1"></div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.QuintessenceDifficulte"}}</label>
+      <div class="form-fields"><span class="prefixe">−</span><input type="number" name="quintessenceDifficulte" value="{{regles.quintessenceDifficulte}}" min="0" step="1"></div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "WODHOMEBREW.Jets.QuintessenceAvatarPrime"}}</label>
+      <input type="checkbox" name="quintessenceAvatarPrime" {{checked regles.quintessenceAvatarPrime}}>
     </div>
   </fieldset>
   <p class="hint">{{localize "WODHOMEBREW.Jets.AideBase"}}</p>

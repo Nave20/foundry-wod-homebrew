@@ -1,3 +1,5 @@
+import { quintessenceMax } from "../des.mjs";
+
 export default class WodActor extends Actor {
   /**
    * Données de jet : raccourcis @force, @vigilance, @volonte… en plus de system.*.
@@ -11,6 +13,17 @@ export default class WodActor extends Actor {
     for ( const [cle, c] of Object.entries(s.capacites_ajoutees ?? {}) ) data[cle] = Number(c?.valeur) || 0;
     if (s.volonte) data.volonte = s.volonte.permanente;
     return data;
+  }
+
+  /** @inheritDoc */
+  async _preUpdate(changes, options, user) {
+    if ( (await super._preUpdate(changes, options, user)) === false ) return false;
+    // Mage : la quintessence ne dépasse pas Avatar + Prime (calculé avec les valeurs après modification)
+    if ( (this.type === "mage") && (changes.system?.quintessence !== undefined) ) {
+      const apres = foundry.utils.mergeObject(this._source.system, changes.system, { inplace: false });
+      const max = quintessenceMax(apres);
+      if ( (max !== null) && (changes.system.quintessence > max) ) changes.system.quintessence = max;
+    }
   }
 
   /** @inheritDoc */

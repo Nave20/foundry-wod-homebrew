@@ -2,20 +2,23 @@
   <div class="colonnes deux">
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.volonte.label"}}</legend>
-      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.volonte.fields.permanente.label name="system.volonte.permanente" value=source.volonte.permanente max=10 editable=editable}}
+      <p class="hint">{{localize "WODHOMEBREW.Fiche.VolontePermanenteEnTete"}}</p>
       {{formGroup systemFields.volonte.fields.temporaire value=source.volonte.temporaire localize=true disabled=(not editable)}}
     </fieldset>
 
     <fieldset class="sante">
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.sante.label"}}</legend>
-      {{formGroup systemFields.sante.fields.contondants value=source.sante.contondants localize=true disabled=(not editable)}}
-      {{formGroup systemFields.sante.fields.letaux value=source.sante.letaux localize=true disabled=(not editable)}}
-      {{formGroup systemFields.sante.fields.aggraves value=source.sante.aggraves localize=true disabled=(not editable)}}
       {{formGroup systemFields.sante.fields.niveaux value=source.sante.niveaux localize=true disabled=(not editable)}}
+      <p class="hint">{{localize "WODHOMEBREW.Sante.AideClic"}}</p>
       <ol class="niveaux-sante">
         {{#each sante as |n|}}
         <li class="{{#if n.coche}}coche {{n.type}}{{/if}}">
+          {{#if @root.editable}}
+          <button type="button" class="case" data-action="caseSante" data-type="{{n.type}}"
+                  data-tooltip="{{localize "WODHOMEBREW.Sante.Aggraver"}}">{{#if (eq n.type "aggrave")}}✱{{else if (eq n.type "letal")}}X{{else if (eq n.type "contondant")}}/{{/if}}</button>
+          {{else}}
           <span class="case">{{#if (eq n.type "aggrave")}}✱{{else if (eq n.type "letal")}}X{{else if (eq n.type "contondant")}}/{{/if}}</span>
+          {{/if}}
           <span class="niveau">{{localize n.label}}</span>
           <span class="malus">{{n.malusTexte}}</span>
         </li>
@@ -69,7 +72,14 @@
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Fiche.Magie"}}</legend>
       {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.arete.label name="system.arete" value=source.arete max=10 editable=editable}}
-      {{formGroup systemFields.quintessence value=source.quintessence localize=true disabled=(not editable)}}
+      <div class="form-group">
+        <label>{{localize systemFields.quintessence.label}}</label>
+        <div class="form-fields quintessence">
+          <input type="number" name="system.quintessence" value="{{source.quintessence}}" min="0"
+                 {{#if (ne system.quintessenceMax null)}}max="{{system.quintessenceMax}}"{{/if}} step="1" {{disabled (not editable)}}>
+          {{#if (ne system.quintessenceMax null)}}<span class="max-quintessence" data-tooltip="{{localize "WODHOMEBREW.Jets.QuintessenceMaxAide"}}">/ {{system.quintessenceMax}}</span>{{/if}}
+        </div>
+      </div>
       {{formGroup systemFields.paradoxe value=source.paradoxe localize=true disabled=(not editable)}}
     </fieldset>
     {{/if}}

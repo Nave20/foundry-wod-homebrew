@@ -6,7 +6,7 @@ Système de jeu **maison** pour [Foundry Virtual Tabletop](https://foundryvtt.co
 > Le système est développé et testé sur ce build précis. Le build cible **évoluera** avec les mises à jour de Foundry ;
 > le [CHANGELOG](CHANGELOG.md) indique pour chaque version le build sur lequel elle a été vérifiée.
 
-Version actuelle du système : **0.3.0** · Statut : **en développement** (étape 3 sur 8 en cours)
+Version actuelle du système : **0.4.0** · Statut : **en développement** (étapes 3 et 4 terminées)
 
 ## Ce que fait le système aujourd'hui
 
@@ -26,8 +26,10 @@ Version actuelle du système : **0.3.0** · Statut : **en développement** (éta
 | Panneau du MJ et « Traits de la chronique » (renommer, masquer, ajouter des traits) | ✅ |
 | Scène et image d'accueil | ✅ |
 | Profils de traits (Livres, Homebrew, profils du monde, export / import) | ✅ |
-| Jets de dés : réserve attribut + capacité, réussites, critiques, spécialité, ajustements, règles réglables par le MJ | ✅ |
-| Malus de santé et Volonté dans les jets, pouvoirs, compendiums | ❌ à venir |
+| Jets de dés : réserve attribut + capacité (ou attribut seul), réussites, critiques, spécialité, ajustements, jets étendus | ✅ |
+| Ressources dans les jets : Volonté, sang, quintessence (max = Avatar + Prime) | ✅ |
+| Santé cliquable et malus de blessure dans les jets ; jet de Volonté | ✅ |
+| Armes et armures dans les jets, pouvoirs, jauges en cases, compendiums | ❌ à venir |
 
 ## Installation (développement)
 
@@ -44,8 +46,8 @@ Redémarrez ensuite Foundry (il ne détecte les nouveaux systèmes qu'au démarr
 
 1. ✅ Modèle de données et fiche simple
 2. ✅ Mise en page de la fiche
-3. ⏳ Jets de dés (réserve de d10, difficulté, succès, échecs critiques)
-4. Malus de santé et dépense de Volonté dans les jets
+3. ✅ Jets de dés (réserve de d10, difficulté, succès, échecs critiques)
+4. ✅ Malus de santé et dépense de Volonté dans les jets
 5. Armes et armures reliées aux jets
 6. Pouvoirs de créature (disciplines, dons, rites, sphères)
 7. Import de personnages depuis des fiches Markdown
@@ -60,6 +62,7 @@ Chaque session de travail se termine par un envoi sur ce dépôt, avec son réca
 | 2026-10-15 | 0.1.0 | Modèle de données des 5 créatures, fiche simple à onglets, objets, interface française |
 | 2026-11-06 | 0.2.0 | Points cliquables, couleurs, listes préfaites, spécialités, Panneau du MJ, Traits de la chronique, scène d'accueil |
 | 2026-11-06 | 0.3.0 | Profils de traits (dont Homebrew), jets de dés avec réussites et règles réglables |
+| 2026-11-07 | 0.4.0 | Volonté, sang et quintessence dans les jets, jets étendus, santé cliquable et malus, jet de Volonté |
 
 ## Développement
 

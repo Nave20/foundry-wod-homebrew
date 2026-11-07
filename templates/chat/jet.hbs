@@ -13,4 +13,8 @@
     {{#if afficherNombre}}<span class="nombre">{{reussites}}</span>{{/if}}
     <span class="texte">{{resultat}}</span>
   </div>
+  {{#if extension}}
+  <div class="wod-jet-cumul">{{localize "WODHOMEBREW.Jets.Extension" n=extension}} · {{localize "WODHOMEBREW.Jets.TotalCumule"}} <b>{{cumul}}</b></div>
+  {{/if}}
+  <button type="button" class="wod-jet-etendre" data-wod-action="etendre"><i class="fa-solid fa-forward" inert></i> {{etendre}}</button>
 </div>

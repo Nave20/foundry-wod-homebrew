@@ -2,6 +2,36 @@
 
 Une entrée par session de travail. Chaque entrée indique le build de Foundry sur lequel la version a été vérifiée.
 
+## 0.4.0 — 2026-11-07 · Session 4 : ressources, jets étendus, santé et Volonté
+
+Vérifié sur **Foundry VTT 14.369**.
+
+### Jets de dés
+- **Ressources dépensées depuis la barre de jet**, retirées de la fiche au lancer :
+  - **Volonté** (tous) : +1 réussite si au moins un dé est réussi, même si des 1 ramènent le total à 0 ;
+  - **sang** (vampires) : +1 dé et −1 difficulté, 1 point par jet ;
+  - **quintessence** (mages) : −1 difficulté par point, 3 points maximum par jet.
+- **Quintessence maximale = Avatar + Prime** : calculée sur la fiche (« x / max »), et non dépassable.
+- **Jets étendus** : bouton « Étendre (+1 diff.) » sur la carte de résultat, réservé au propriétaire du personnage et au MJ. Il relance la même réserve à difficulté +1 par extension, avec le total cumulé, sans redépenser les ressources.
+- **Attribut seul** : confirmé (cliquer seulement sur l'attribut).
+- Règles des jets : sections Ressources, Blessures et Jets étendus ; toutes les valeurs sont réglables par le MJ.
+
+### Santé et Volonté
+- **Cases de santé cliquables** : vide → / contondant → X létal → ✱ aggravé → vide. Les blessures les plus graves sont en haut.
+- **Malus de blessure** appliqué aux jets en dés retirés, avec une case décochable dans la barre de jet. Si le personnage est neutralisé, la barre affiche un avertissement.
+- **Volonté permanente dans l'en-tête** de la fiche, avec les points temporaires (⚡ x / y). Un clic prépare un **jet de Volonté**, seul et sans malus de blessure par défaut.
+
+### Vérifications
+- Vérification statique (`check_system.py`) : 0 erreur, 0 avertissement.
+- Test dans Foundry 14.369, après redémarrage : 13/13 étapes.
+  - Fiches des 5 types (Volonté en en-tête, cases de santé).
+  - Blessure par clic (Blessé, −1).
+  - Jet Force + Bagarre avec malus, sang et Volonté : 5d10 diff. 5, ressources débitées.
+  - Extension (diff. +1, total cumulé), jet de Volonté sans malus.
+  - Quintessence plafonnée à Avatar + Prime, fenêtre Règles des jets.
+  - Aucune erreur ni aucun avertissement d'obsolescence.
+- Tests précédents de la session : Volonté avec dés imposés (7 et 1 → 1 réussite ; 4 et 1 → sans effet), sang, quintessence (plafond à 3 par jet), deux extensions successives.
+
 ## 0.3.0 — 2026-11-06 · Session 3 : profils de traits et jets de dés
 
 Vérifié sur **Foundry VTT 14.369**.

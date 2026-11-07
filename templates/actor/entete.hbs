@@ -14,6 +14,12 @@
              placeholder="{{localize "WODHOMEBREW.Fiche.Nom"}}" {{disabled (not editable)}}>
       <span class="type-creature">{{localize typeLabel}}</span>
     </div>
+    <div class="volonte-entete">
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label="WODHOMEBREW.Actor.FIELDS.volonte.label" name="system.volonte.permanente" value=source.volonte.permanente max=10 editable=editable jet="volonte"}}
+      <span class="volonte-temporaire" data-tooltip="{{localize "WODHOMEBREW.Actor.FIELDS.volonte.fields.temporaire.label"}}">
+        <i class="fa-solid fa-bolt" inert></i> {{source.volonte.temporaire}} / {{source.volonte.permanente}}
+      </span>
+    </div>
     <div class="champs-cles">
       {{#each entete.haut as |c|}}
       <label class="champ-cle">

@@ -294,3 +294,42 @@ body.wod-sans-scene #board { opacity: 0; }
   box-shadow: 0 0 8px rgb(217 180 90 / 0.6);
 }
 .wod-jet.issue-critique-reussite .wod-jet-resultat .texte { text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Barre de jet : ressources (Volonté, sang, quintessence) */
+.wod_homebrew .barre-jet .ressources-jet { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; align-items: center; }
+.wod_homebrew .barre-jet .ressource { display: inline-flex; align-items: center; gap: 0.35rem; margin: 0; cursor: pointer; }
+.wod_homebrew .barre-jet .ressource input { margin: 0; }
+.wod_homebrew .barre-jet .ressource.epuisee { opacity: 0.5; cursor: default; }
+.wod_homebrew .barre-jet .ressource button { width: 1.6rem; height: 1.6rem; padding: 0; line-height: 1; }
+.wod_homebrew .barre-jet .ressource b { min-width: 1.2rem; text-align: center; }
+/* Onglet État : quintessence / maximum */
+.wod_homebrew .form-fields.quintessence { display: flex; align-items: center; gap: 0.35rem; }
+.wod_homebrew .form-fields.quintessence input { width: 3.5rem; flex: 0 0 auto; text-align: center; }
+.wod_homebrew .max-quintessence { font-weight: bold; color: var(--wod-trait); }
+
+/* Carte de jet : extension */
+.wod-jet-cumul { text-align: center; font-size: var(--font-size-12, 0.8rem); }
+.wod-jet-cumul b { font-size: 1rem; }
+.wod-jet .wod-jet-etendre { width: 100%; height: auto; padding: 0.2rem 0.4rem; font-size: var(--font-size-12, 0.8rem); }
+
+/* Santé : cases cliquables */
+.wod_homebrew .niveaux-sante li { margin: 2px 0; }
+.wod_homebrew .niveaux-sante button.case {
+  width: 1.5rem; height: 1.5rem; min-height: 0; padding: 0; line-height: 1; flex: 0 0 auto;
+  font-weight: bold; border: 1.5px solid var(--wod-trait); background: transparent; color: var(--color-text-primary);
+}
+.wod_homebrew .niveaux-sante li.contondant button.case { background: color-mix(in srgb, var(--wod-trait) 25%, transparent); }
+.wod_homebrew .niveaux-sante li.letal button.case { background: color-mix(in srgb, var(--wod-trait) 55%, transparent); }
+.wod_homebrew .niveaux-sante li.aggrave button.case { background: var(--wod-trait); color: #fff; }
+.wod_homebrew .niveaux-sante .malus { min-width: 2rem; text-align: right; }
+
+/* En-tête : Volonté permanente */
+.wod_homebrew .volonte-entete { display: flex; align-items: center; gap: 0.75rem; }
+.wod_homebrew .volonte-entete .form-group.trait { flex: 1; margin: 0; }
+.wod_homebrew .volonte-entete .form-group.trait > .nom-trait { flex: 0 0 auto; font-weight: bold; }
+.wod_homebrew .volonte-entete .form-group.trait > .wod-points { justify-content: flex-start; }
+.wod_homebrew .volonte-temporaire { white-space: nowrap; color: var(--wod-trait); font-weight: bold; }
+
+/* Barre de jet : alerte */
+.wod_homebrew .barre-jet .alerte-jet { color: var(--color-level-error, #e05a47); font-weight: bold; }
+.wod_homebrew .niveaux-sante li.aggrave button.case { background: #8b1a1a; border-color: #c0392b; color: #fff; }

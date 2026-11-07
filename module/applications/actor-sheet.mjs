@@ -48,6 +48,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     form: { submitOnChange: true },
     actions: {
       listeAjouter: WodActorSheet.#onListeAjouter,
+      caseSante: WodActorSheet.#onCaseSante,
       listeRetirer: WodActorSheet.#onListeRetirer,
       point: WodActorSheet.#onPoint,
       specialite: WodActorSheet.#onSpecialite,
@@ -58,7 +59,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
   };
 
   static PARTS = {
-    entete: { template: `${TEMPLATES}/entete.hbs` },
+    entete: { template: `${TEMPLATES}/entete.hbs`, templates: [`${TEMPLATES}/trait.hbs`] },
     tabs: { template: "templates/generic/tab-navigation.hbs" },
     traits: { template: `${TEMPLATES}/traits.hbs`, scrollable: [""], templates: [`${TEMPLATES}/liste-traits.hbs`, `${TEMPLATES}/trait.hbs`] },
     avantages: { template: `${TEMPLATES}/avantages.hbs`, scrollable: [""], templates: [`${TEMPLATES}/liste-traits.hbs`] },
@@ -78,10 +79,10 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
    * Traits sélectionnés pour un jet : un attribut et une capacité au plus ({ name, nom } ou null).
    * Gardés d'un rendu à l'autre.
    */
-  #jet = { attribut: null, capacite: null };
+  #jet = { attribut: null, capacite: null, volonte: null };
 
   /** Options du jet en cours : spécialité utilisée, dés et difficulté ajoutés à la main, réglages dépliés */
-  #optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false };
+  #optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false, volonte: false, sang: false, quintessence: 0, malus: null };
 
   /** Panneau des réglages ouvert ? */
   #reglagesOuverts = false;
@@ -215,8 +216,12 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       libelle.dataset.tooltip = _loc("WODHOMEBREW.Jets.Selectionner");
       libelle.addEventListener("click", () => {
         const cat = ligne.dataset.jet;
-        this.#jet[cat] = this.#jet[cat]?.name === name ? null : { name, nom: libelle.textContent.trim(), categorie: cat };
+        const choix = this.#jet[cat]?.name === name ? null : { name, nom: libelle.textContent.trim(), categorie: cat };
+        // Le jet de Volonté se lance seul ; choisir un attribut ou une capacité le désélectionne
+        if ( cat === "volonte" ) this.#jet = { attribut: null, capacite: null, volonte: choix };
+        else { this.#jet.volonte = null; this.#jet[cat] = choix; }
         this.#optionsJet.specialite = true;   // la case Spécialité repart cochée à chaque nouvelle sélection
+        this.#optionsJet.malus = null;        // malus de blessure : choix automatique selon le jet
         this.#majBarreJet();
       });
     }
@@ -292,7 +297,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
 
   /** Traits sélectionnés avec leur valeur et leur spécialité actuelles */
   #traitsJet() {
-    return ["attribut", "capacite"].map(cat => this.#jet[cat]).filter(Boolean).map(t => {
+    return ["attribut", "capacite", "volonte"].map(cat => this.#jet[cat]).filter(Boolean).map(t => {
       const ligne = this.element.querySelector(`.form-group[data-jet] input[name="${t.name}"]`)?.closest(".form-group");
       const specialite = ligne?.querySelector("input.valeur-specialite")?.value?.trim() || "";
       return { nom: t.nom, categorie: t.categorie, valeur: Number(foundry.utils.getProperty(this.actor, t.name)) || 0, specialite };
@@ -301,12 +306,24 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
 
   /** Jet préparé (réserve, difficulté, modificateurs) à partir de la sélection et des options */
   #jetPrepare() {
-    return preparerJet(this.#traitsJet(), this.#optionsJet);
+    const traits = this.#traitsJet();
+    const etat = this.actor.system.sante?.etat ?? {};
+    const regles = reglesJets();
+    // Malus de blessure : appliqué par défaut, sauf au jet de Volonté (selon les règles) ; la case de la barre décide
+    const seulVolonte = traits.length && traits.every(t => t.categorie === "volonte");
+    const parDefaut = regles.malusBlessure && !(seulVolonte && regles.volonteSansMalus);
+    return preparerJet(traits, {
+      ...this.#optionsJet,
+      malus: Number(etat.malus) || 0,
+      neutralise: etat.malus === null,
+      etatSante: etat.cle ? _loc(`WODHOMEBREW.Sante.Niveaux.${etat.cle}`) : "",
+      appliquerMalus: this.#optionsJet.malus ?? parDefaut
+    }, regles);
   }
 
   #reinitialiserJet() {
-    this.#jet = { attribut: null, capacite: null };
-    this.#optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false };
+    this.#jet = { attribut: null, capacite: null, volonte: null };
+    this.#optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false, volonte: false, sang: false, quintessence: 0, malus: null };
     this.#majBarreJet();
   }
 
@@ -344,6 +361,37 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
         <span class="reglage">${_loc("WODHOMEBREW.Jets.Difficulte")}
           <button type="button" data-jet-action="diff-moins">−</button><b>${jet.difficulte}</b><button type="button" data-jet-action="diff-plus">+</button></span>
       </div>` : "";
+    // Malus de blessure : case cochée si appliqué ; avertissement si le personnage est neutralisé
+    const etat = this.actor.system.sante?.etat ?? {};
+    const blessure = (Number(etat.malus) < 0) ? `
+      <label class="ligne-specialite">
+        <input type="checkbox" data-jet-action="malus" ${jet.malusApplique ? "checked" : ""}>
+        ${_loc("WODHOMEBREW.Jets.MalusBlessure", { etat: e(_loc(`WODHOMEBREW.Sante.Niveaux.${etat.cle}`)), n: Math.abs(etat.malus) })}
+      </label>` : (etat.malus === null ? `<div class="alerte-jet"><i class="fa-solid fa-triangle-exclamation" inert></i> ${_loc("WODHOMEBREW.Jets.Neutralise")}</div>` : "");
+
+    // Ressources dépensables : Volonté (tous), sang (vampires), quintessence (mages)
+    const s = this.actor.system;
+    const ressources = [];
+    if ( s.volonte ) {
+      const reste = s.volonte.temporaire ?? 0;
+      ressources.push(`<label class="ressource ${reste < 1 ? "epuisee" : ""}">
+        <input type="checkbox" data-jet-action="volonte" ${o.volonte ? "checked" : ""} ${reste < 1 ? "disabled" : ""}>
+        ${_loc("WODHOMEBREW.Jets.DepenserVolonte")} <span class="hint">(${_loc("WODHOMEBREW.Jets.Reste", { n: reste })})</span></label>`);
+    }
+    if ( (this.actor.type === "vampire") && s.sang ) {
+      const reste = s.sang.valeur ?? 0;
+      ressources.push(`<label class="ressource ${reste < 1 ? "epuisee" : ""}">
+        <input type="checkbox" data-jet-action="sang" ${o.sang ? "checked" : ""} ${reste < 1 ? "disabled" : ""}>
+        ${_loc("WODHOMEBREW.Jets.DepenserSang")} <span class="hint">(+${regles.sangDes} ${_loc("WODHOMEBREW.Jets.Un_de")}, −${regles.sangDifficulte} ${_loc("WODHOMEBREW.Jets.DifficulteCourte")} · ${_loc("WODHOMEBREW.Jets.Reste", { n: reste })})</span></label>`);
+    }
+    if ( (this.actor.type === "mage") && regles.quintessenceParJet ) {
+      const reste = s.quintessence ?? 0;
+      ressources.push(`<span class="ressource reglage">${_loc("WODHOMEBREW.Jets.Quintessence")}
+        <button type="button" data-jet-action="quint-moins" ${o.quintessence < 1 ? "disabled" : ""}>−</button><b>${o.quintessence}</b>
+        <button type="button" data-jet-action="quint-plus" ${(o.quintessence >= Math.min(regles.quintessenceParJet, reste)) ? "disabled" : ""}>+</button>
+        <span class="hint">(${_loc("WODHOMEBREW.Jets.QuintessenceAide", { max: regles.quintessenceParJet, n: reste })})</span></span>`);
+    }
+    const blocRessources = ressources.length ? `<div class="ressources-jet">${ressources.join("")}</div>` : "";
     const mods = jet.modificateurs.length
       ? `<div class="mods-jet">${jet.modificateurs.map(m => e(texteModificateur(m))).join(" · ")}</div>` : "";
     barre.innerHTML = `
@@ -354,7 +402,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
         <button type="button" class="icone-jet ${o.ouvert ? "actif" : ""}" data-jet-action="reglages" data-tooltip="${_loc("WODHOMEBREW.Jets.Ajuster")}"><i class="fa-solid fa-gear" inert></i></button>
         <button type="button" class="lancer" data-jet-action="lancer"><i class="fa-solid fa-dice" inert></i> ${_loc("WODHOMEBREW.Jets.Lancer")}</button>
         <button type="button" class="icone-jet" data-jet-action="annuler" data-tooltip="${_loc("WODHOMEBREW.Jets.Annuler")}"><i class="fa-solid fa-xmark" inert></i></button>
-      </div>${specialite}${reglages}${mods}`;
+      </div>${blessure}${specialite}${blocRessources}${reglages}${mods}`;
   }
 
   /** Clics et case à cocher de la barre de jet (sans passer par le formulaire de la fiche) */
@@ -363,8 +411,9 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     if ( !barre ) return;
     barre.addEventListener("change", event => {
       event.stopPropagation();   // ne pas enregistrer la fiche
-      if ( event.target.dataset.jetAction === "specialite" ) {
-        this.#optionsJet.specialite = event.target.checked;
+      const action = event.target.dataset.jetAction;
+      if ( ["specialite", "volonte", "sang", "malus"].includes(action) ) {
+        this.#optionsJet[action] = event.target.checked;
         this.#majBarreJet();
       }
     });
@@ -378,6 +427,8 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
         case "des-moins": o.desBonus -= 1; break;
         case "diff-plus": o.diffMod += 1; break;
         case "diff-moins": o.diffMod -= 1; break;
+        case "quint-plus": o.quintessence += 1; break;
+        case "quint-moins": o.quintessence = Math.max(0, o.quintessence - 1); break;
         case "annuler": return this.#reinitialiserJet();
         case "lancer": {
           const roll = await lancerJet(this.actor, this.#jetPrepare());
@@ -440,6 +491,25 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     if ( !liste[index] ) return;
     liste.splice(index, 1);
     return this.actor.update({ [`system.${cle}`]: liste });
+  }
+
+  /**
+   * Clic sur une case de santé : elle s'aggrave (vide → contondant → létal → aggravé → vide).
+   * Les dégâts sont stockés en nombres ; la fiche range les plus graves en haut.
+   */
+  static async #onCaseSante(event, target) {
+    const s = this.actor._source.system.sante;
+    let { contondants: c, letaux: l, aggraves: a } = s;
+    switch ( target.dataset.type ) {
+      case "contondant": c -= 1; l += 1; break;
+      case "letal": l -= 1; a += 1; break;
+      case "aggrave": a -= 1; break;
+      default:
+        if ( c + l + a >= s.niveaux ) return;
+        c += 1;
+    }
+    return this.actor.update({ "system.sante.contondants": Math.max(0, c), "system.sante.letaux": Math.max(0, l),
+      "system.sante.aggraves": Math.max(0, a) });
   }
 
   static async #onListeAjouter(event, target) {

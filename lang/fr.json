@@ -593,7 +593,9 @@
         "estropie": "Estropié",
         "infirme": "Infirme",
         "neutralise": "Neutralisé"
-      }
+      },
+      "AideClic": "Cliquez sur une case pour aggraver la blessure : / contondant, X létal, ✱ aggravé, puis vide.",
+      "Aggraver": "Aggraver (/ → X → ✱ → vide)"
     },
     "Fiche": {
       "Acteur": "Fiche Monde des Ténèbres",
@@ -617,7 +619,8 @@
       "Identite": "Identité",
       "AjouterCapacite": "Ajouter une capacité secondaire",
       "Specialite": "Spécialité",
-      "Renommer": "Double-clic pour renommer"
+      "Renommer": "Double-clic pour renommer",
+      "VolontePermanenteEnTete": "La Volonté permanente est en haut de la fiche (cliquez sur son nom pour la lancer)."
     },
     "Suggestions": {
       "physique": "Physiques",
@@ -713,7 +716,41 @@
       "SeuilCritiqueAide": "0 = pas de réussite critique.",
       "CapaciteNulle": "Difficulté ajoutée quand la capacité est à 0",
       "SpecialiteDes": "Dés ajoutés par une spécialité",
-      "SpecialiteDifficulte": "Difficulté retirée par une spécialité"
+      "SpecialiteDifficulte": "Difficulté retirée par une spécialité",
+      "DepenserVolonte": "Dépenser 1 point de Volonté",
+      "DepenserSang": "Dépenser 1 point de sang",
+      "Quintessence": "Quintessence dépensée",
+      "QuintessenceAide": "{max} max par jet · reste {n}",
+      "QuintessenceMaxAide": "Quintessence maximale : Avatar + Prime",
+      "Reste": "reste {n}",
+      "ModSang": "Point de sang",
+      "ModQuintessence": "Quintessence ({n})",
+      "ModVolonte": "Volonté dépensée : +{n} réussite",
+      "ModVolonteSansEffet": "Volonté dépensée : sans effet (aucun dé réussi)",
+      "PlusDeVolonte": "Plus de Volonté temporaire à dépenser.",
+      "PlusDeSang": "Plus assez de sang à dépenser.",
+      "PlusDeQuintessence": "Plus assez de quintessence à dépenser.",
+      "SectionRessources": "Ressources dépensées pendant un jet",
+      "VolonteReussites": "Réussites données par 1 point de Volonté",
+      "VolonteSiReussite": "La Volonté n'agit que si au moins un dé est réussi",
+      "SangDes": "Dés ajoutés par 1 point de sang (vampires)",
+      "SangDifficulte": "Difficulté retirée par 1 point de sang",
+      "QuintessenceParJet": "Quintessence dépensable par jet (mages)",
+      "QuintessenceDifficulte": "Difficulté retirée par point de quintessence",
+      "QuintessenceAvatarPrime": "Quintessence maximale = Avatar + Prime",
+      "Etendre": "Étendre (+{n} diff.)",
+      "Extension": "Extension n° {n}",
+      "TotalCumule": "total cumulé :",
+      "ModExtension": "Extension n° {n}",
+      "EtendreInterdit": "Seuls le propriétaire du personnage et le MJ peuvent étendre ce jet.",
+      "SectionExtension": "Jets étendus",
+      "ExtensionDifficulte": "Difficulté ajoutée à chaque extension",
+      "MalusBlessure": "Malus de blessure ({etat}) : −{n} dé(s)",
+      "ModBlessure": "Blessure ({etat})",
+      "Neutralise": "Personnage neutralisé : il ne devrait pas pouvoir agir.",
+      "SectionBlessure": "Blessures",
+      "MalusBlessureRegle": "Le malus de santé retire des dés aux jets",
+      "VolonteSansMalus": "Le jet de Volonté ignore le malus de santé"
     }
   }
 }

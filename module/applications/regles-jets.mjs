@@ -35,6 +35,7 @@ export default class ReglesJets extends HandlebarsApplicationMixin(ApplicationV2
 
   static async #onReinitialiser() {
     await game.settings.set("wod_homebrew", "reglesJets", { ...REGLES_DEFAUT });
+    for ( const actor of game.actors.filter(a => a.type === "mage") ) actor.reset();
     this.render();
   }
 
@@ -49,8 +50,23 @@ export default class ReglesJets extends HandlebarsApplicationMixin(ApplicationV2
       seuilCritique: Number(donnees.seuilCritique) || 0,
       capaciteNulle: Number(donnees.capaciteNulle) || 0,
       specialiteDes: Number(donnees.specialiteDes) || 0,
-      specialiteDifficulte: Number(donnees.specialiteDifficulte) || 0
+      specialiteDifficulte: Number(donnees.specialiteDifficulte) || 0,
+      volonteReussites: Number(donnees.volonteReussites) || 0,
+      volonteSiReussite: !!donnees.volonteSiReussite,
+      sangDes: Number(donnees.sangDes) || 0,
+      sangDifficulte: Number(donnees.sangDifficulte) || 0,
+      quintessenceParJet: Number(donnees.quintessenceParJet) || 0,
+      quintessenceDifficulte: Number(donnees.quintessenceDifficulte) || 0,
+      quintessenceAvatarPrime: !!donnees.quintessenceAvatarPrime,
+      extensionDifficulte: Number(donnees.extensionDifficulte) || 0,
+      malusBlessure: !!donnees.malusBlessure,
+      volonteSansMalus: !!donnees.volonteSansMalus
     });
+    // Les fiches de mage recalculent leur quintessence maximale
+    for ( const actor of game.actors.filter(a => a.type === "mage") ) {
+      actor.reset();
+      actor.sheet?.rendered && actor.sheet.render();
+    }
     ui.notifications.info("WODHOMEBREW.Jets.Enregistre", { localize: true });
   }
 }

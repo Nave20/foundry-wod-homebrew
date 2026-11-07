@@ -1,4 +1,5 @@
 import { WODHOMEBREW } from "../config.mjs";
+import { quintessenceMax } from "../des.mjs";
 import ActorBaseData from "./actor-base.mjs";
 import { groupe, jauge, listeTraits, points, texte } from "./fields.mjs";
 
@@ -72,5 +73,12 @@ export class MageData extends ActorBaseData {
       spheres: groupe(WODHOMEBREW.spheres, 0),
       arete: points(1), quintessence: points(1), paradoxe: points(0)
     };
+  }
+
+  /** @inheritDoc */
+  prepareDerivedData() {
+    super.prepareDerivedData();
+    // Quintessence maximale (règle « Avatar + Prime », réglable dans Règles des jets)
+    this.quintessenceMax = quintessenceMax(this);
   }
 }
