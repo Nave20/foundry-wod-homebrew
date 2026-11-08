@@ -469,3 +469,11 @@ body.wod-sans-scene #board { opacity: 0; }
 .wod_homebrew .attributs-forme .baisse { color: #e07c7c; }
 .wod_homebrew .effectif-forme { color: #39ff88; font-weight: bold; margin-left: 0.3rem; }
 @media (prefers-reduced-motion: reduce) { .wod_homebrew .forme-garou.eclair .halo { animation: none; } }
+
+/* Rappel de la forme du garou sous le portrait */
+.wod_homebrew .mini-forme { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: #39ff88; text-decoration: none; margin: 0.15rem 0; }
+.wod_homebrew .mini-forme .halo { display: block; width: 64px; filter: drop-shadow(0 0 2px #39ff88) drop-shadow(0 0 6px #39ff8866); }
+.wod_homebrew .mini-forme .silhouette { display: block; width: 100%; aspect-ratio: 1; background: currentColor;
+  -webkit-mask: var(--silhouette) center / contain no-repeat; mask: var(--silhouette) center / contain no-repeat; }
+.wod_homebrew .mini-forme .nom-forme { font-size: 0.8rem; font-weight: bold; letter-spacing: 0.04em; }
+.wod_homebrew .mini-forme:hover { text-shadow: none; filter: brightness(1.2); }

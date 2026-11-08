@@ -74,6 +74,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       attaquer: WodActorSheet.#onAttaquer,
       formeChoisir: WodActorSheet.#onFormeChoisir,
       formeChanger: WodActorSheet.#onFormeChanger,
+      ouvrirForme: WodActorSheet.#onOuvrirForme,
       equiper: WodActorSheet.#onEquiper
     }
   };
@@ -243,7 +244,13 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     }));
     context.etatSante = `WODHOMEBREW.Sante.Niveaux.${system.sante.etat.cle}`;
     context.combat = this.#contexteCombat();
-    if ( type === "garou" ) context.formes = this.#contexteFormes();
+    if ( type === "garou" ) {
+      context.formes = this.#contexteFormes();
+      // Rappel de la forme actuelle sous le portrait
+      const f = system.forme ?? "homide";
+      context.formeActuelle = { cle: f, nom: _loc(`WODHOMEBREW.Forme.Noms.${f}`),
+        img: foundry.utils.getRoute(`systems/wod_homebrew/assets/formes/${f}.svg`) };
+    }
     return context;
   }
 
@@ -818,6 +825,11 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     const cle = target.dataset.forme;
     this.#formeChoix = (this.#formeChoix === cle) || (cle === this.actor.system.forme) ? null : cle;
     this.render();
+  }
+
+  /** Mini silhouette sous le portrait : ouvre l'onglet Forme */
+  static #onOuvrirForme() {
+    this.changeTab("forme", "primary");
   }
 
   /** « Changer de forme » : applique la forme choisie */

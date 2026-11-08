@@ -1,6 +1,12 @@
 <header class="entete{{#if orbe}} avec-orbe{{/if}}{{#if jaugesGarou}} avec-orbe avec-jauges{{/if}}{{#if roue}} avec-orbe{{/if}}">
   <div class="colonne-portrait">
     <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img">
+    {{#if formeActuelle}}
+    <a class="mini-forme" data-action="ouvrirForme" data-tooltip="{{localize "WODHOMEBREW.Forme.Actuelle" nom=formeActuelle.nom}}">
+      <span class="halo"><span class="silhouette" style="--silhouette: url('{{formeActuelle.img}}')"></span></span>
+      <span class="nom-forme">{{formeActuelle.nom}}</span>
+    </a>
+    {{/if}}
     <details class="reglages" {{#if reglagesOuverts}}open{{/if}}>
       <summary><i class="fa-solid fa-gear" inert></i> {{localize "WODHOMEBREW.Fiche.Reglages"}}</summary>
       <div class="panneau-reglages grille-champs">
