@@ -11,6 +11,7 @@ import { registerHelpers } from "./module/helpers.mjs";
 import { registerTraitsSettings } from "./module/traits.mjs";
 import { registerProfilsHooks, registerProfilsSettings } from "./module/profils.mjs";
 import { registerDesSettings, registerJetsChatHooks } from "./module/des.mjs";
+import { registerCombatHooks } from "./module/combat.mjs";
 import TraitsConfig from "./module/applications/traits-config.mjs";
 import PanneauMJ from "./module/applications/panneau-mj.mjs";
 import { registerAccueilHooks, registerAccueilSettings } from "./module/accueil.mjs";
@@ -90,3 +91,4 @@ registerProfilsHooks();
 
 // Jets : bouton « Étendre » des cartes du chat
 registerJetsChatHooks();
+registerCombatHooks();

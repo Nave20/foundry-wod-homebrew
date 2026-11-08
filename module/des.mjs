@@ -29,7 +29,8 @@ export const REGLES_DEFAUT = {
   sangDes: 1, sangDifficulte: 1,
   quintessenceParJet: 3, quintessenceDifficulte: 1, quintessenceAvatarPrime: true,
   extensionDifficulte: 1,
-  malusBlessure: true, volonteSansMalus: true
+  malusBlessure: true, volonteSansMalus: true,
+  degatsDifficulte: 6, encaissementDifficulte: 6
 };
 
 export function registerDesSettings() {
@@ -58,6 +59,8 @@ export function reglesJets() {
   r.extensionDifficulte = entier(r.extensionDifficulte, REGLES_DEFAUT.extensionDifficulte);
   r.malusBlessure = !!r.malusBlessure;
   r.volonteSansMalus = !!r.volonteSansMalus;
+  r.degatsDifficulte = Math.min(r.de, entier(r.degatsDifficulte, REGLES_DEFAUT.degatsDifficulte, 2));
+  r.encaissementDifficulte = Math.min(r.de, entier(r.encaissementDifficulte, REGLES_DEFAUT.encaissementDifficulte, 2));
   return r;
 }
 
@@ -179,6 +182,37 @@ export function texteModificateur(m) {
  * @returns {Promise<Roll|null>}
  */
 export async function lancerJet(actor, jet, { extension = 0, cumulPrecedent = 0 } = {}) {
+  const r = await effectuerJet(actor, jet);
+  if ( !r ) return null;
+  const { roll, reussites, des, modificateurs, issue, regles } = r;
+  const d = r.depenses;
+  const cumul = extension ? cumulPrecedent + reussites : reussites;
+  const cles = { "critique-reussite": "WODHOMEBREW.Jets.ReussiteCritique", reussite: reussites > 1 ? "WODHOMEBREW.Jets.Reussites" : "WODHOMEBREW.Jets.Reussite",
+    echec: "WODHOMEBREW.Jets.Echec", critique: "WODHOMEBREW.Jets.EchecCritique" };
+  const content = await foundry.applications.handlebars.renderTemplate(TEMPLATE, {
+    traits: jet.traits, reserve: jet.reserve, regles, des, reussites, issue,
+    modificateurs,
+    afficherNombre: reussites > 0,
+    resultat: _loc(cles[issue], { n: reussites }),
+    extension, cumul,
+    etendre: _loc("WODHOMEBREW.Jets.Etendre", { n: regles.extensionDifficulte })
+  });
+  await roll.toMessage({
+    speaker: ChatMessage.implementation.getSpeaker({ actor }),
+    content,
+    flags: { [SYSTEME]: { jet: { traits: jet.traits, reserve: jet.reserve, difficulte: jet.difficulte, reussites, issue,
+      depenses: d, extension, cumul, actorUuid: actor.uuid } } }
+  });
+  return roll;
+}
+
+/**
+ * Lance un jet préparé : dépense les ressources, lance les dés, compte les réussites (Volonté comprise).
+ * Ne crée pas de message.
+ * @returns {Promise<{roll: Roll, reussites: number, des: object[], modificateurs: string[], issue: string,
+ *   regles: object, depenses: object, bonus: number}|null>}
+ */
+export async function effectuerJet(actor, jet) {
   const regles = { ...reglesJets(), difficulte: jet.difficulte };
   if ( jet.reserve <= 0 ) {
     ui.notifications.warn("WODHOMEBREW.Jets.ReserveVide", { localize: true });
@@ -215,24 +249,19 @@ export async function lancerJet(actor, jet, { extension = 0, cumulPrecedent = 0 
       { n: regles.volonteReussites }));
   }
   const issue = issueJet(reussites, regles);
-  const cumul = extension ? cumulPrecedent + reussites : reussites;
-  const cles = { "critique-reussite": "WODHOMEBREW.Jets.ReussiteCritique", reussite: reussites > 1 ? "WODHOMEBREW.Jets.Reussites" : "WODHOMEBREW.Jets.Reussite",
-    echec: "WODHOMEBREW.Jets.Echec", critique: "WODHOMEBREW.Jets.EchecCritique" };
-  const content = await foundry.applications.handlebars.renderTemplate(TEMPLATE, {
-    traits: jet.traits, reserve: jet.reserve, regles, des, reussites, issue,
-    modificateurs,
-    afficherNombre: reussites > 0,
-    resultat: _loc(cles[issue], { n: reussites }),
-    extension, cumul,
-    etendre: _loc("WODHOMEBREW.Jets.Etendre", { n: regles.extensionDifficulte })
-  });
-  await roll.toMessage({
-    speaker: ChatMessage.implementation.getSpeaker({ actor }),
-    content,
-    flags: { [SYSTEME]: { jet: { traits: jet.traits, reserve: jet.reserve, difficulte: jet.difficulte, reussites, issue,
-      depenses: d, extension, cumul, actorUuid: actor.uuid } } }
-  });
-  return roll;
+  return { roll, reussites, des, modificateurs, issue, regles, depenses: d, bonus: reussites - compterReussites(roll.dice[0].results.map(x => x.result), regles).reussites };
+}
+
+/**
+ * Lance n dés à une difficulté donnée, sans message (étapes de la carte de combat).
+ * @returns {{reussites: number, des: Array<{valeur: number, type: string, points: number}>}}
+ */
+export function lancerReserve(n, difficulte) {
+  const regles = { ...reglesJets(), difficulte };
+  if ( n <= 0 ) return { reussites: 0, des: [] };
+  // Roll.evaluateSync refuse les dés (non déterministes) : tirage direct avec le générateur de Foundry
+  const resultats = Array.from({ length: n }, () => Math.ceil(CONFIG.Dice.randomUniform() * regles.de) || 1);
+  return compterReussites(resultats, regles);
 }
 
 /**

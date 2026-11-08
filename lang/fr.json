@@ -804,7 +804,36 @@
       "Resume": "Encaissement : Vigueur {v} + armure {a} = {n} dés",
       "MalusDex": "malus de Dextérité −{n}",
       "AttaqueAvec": "Attaque : {nom}",
-      "Aide": "Ciblez un jeton puis cliquez sur « Attaquer » : la barre de jet se remplit avec l'attribut et la compétence de l'arme. Glissez des objets depuis le compendium pour les ajouter."
+      "Aide": "Ciblez un jeton puis cliquez sur « Attaquer » : la barre de jet se remplit avec l'attribut et la compétence de l'arme. Glissez des objets depuis le compendium pour les ajouter.",
+      "Titre": "{a} attaque {c} · {arme}",
+      "TitreSansCible": "{a} attaque · {arme}",
+      "Attaque": "Attaque",
+      "Degats": "Dégâts",
+      "Encaissement": "Encaissement",
+      "DetailEncaissement": "Vigueur {v} + armure {a}",
+      "Restantes": "{n} réussite(s)",
+      "Defenses": {
+        "esquive": "Esquive",
+        "parade": "Parade",
+        "blocage": "Blocage",
+        "aucune": "Aucune"
+      },
+      "DefenseDe": "Défense de {c} :",
+      "DefenseCiblee": "Défense (ciblez le défenseur) :",
+      "Touche": "Touché · +{n} dé(s) de dégâts",
+      "Rate": "Raté",
+      "Final": "{c} subit des dégâts ({type}) :",
+      "FinalInfini": "{c} subit des dégâts infinis ({type}) :",
+      "Appliquer": "Appliquer",
+      "Applique": "{c} a subi {n} dégât(s) {type}.",
+      "Corriger": "Corriger cette étape",
+      "Des": "Dés",
+      "Relancer": "Relancer",
+      "OuReussites": "ou réussites",
+      "Saisie": "réussites saisies par le MJ",
+      "PasDeCible": "Ciblez d'abord le jeton du défenseur.",
+      "CibleIntrouvable": "Le personnage ciblé n'existe plus.",
+      "PasDeMJ": "Aucun MJ connecté : la carte de combat ne peut pas avancer."
     }
   }
 }

@@ -1,0 +1,50 @@
+<div class="wod-combat {{#if applique}}appliquee{{/if}}">
+  <header class="wod-combat-titre">{{titre}}</header>
+  {{#if requis}}<div class="wod-combat-alerte"><i class="fa-solid fa-triangle-exclamation" inert></i> {{localize "WODHOMEBREW.Combat.Exige" r=requis}}</div>{{/if}}
+
+  {{#each lignes as |l|}}
+  {{#if l.touche}}
+  <div class="wod-combat-touche {{#if l.ok}}ok{{else}}rate{{/if}}"><span>{{l.texte}}</span><span>{{l.nettes}}</span></div>
+  {{else}}
+  <div class="wod-combat-etape" data-etape="{{l.cle}}">
+    <div class="ligne">
+      <span class="libelle"><b>{{l.libelle}}</b> {{#if l.detail}}<span class="detail">{{l.detail}}</span>{{/if}}</span>
+      <span class="reussites {{#if l.manuel}}manuel{{/if}}">{{l.reussites}}</span>
+      {{#unless @root.applique}}<button type="button" class="crayon" data-combat="crayon" data-pour="mj" aria-label="{{localize "WODHOMEBREW.Combat.Corriger"}}"><i class="fa-solid fa-pen" inert></i></button>{{/unless}}
+    </div>
+    <div class="infos">{{l.reserve}}d10 · {{localize "WODHOMEBREW.Jets.DifficulteCourte"}} {{l.difficulte}}{{#each l.mods as |m|}} · {{m}}{{/each}}{{#if l.manuel}} · {{localize "WODHOMEBREW.Combat.Saisie"}}{{/if}}</div>
+    {{#if l.des.length}}<ol class="wod-jet-des petits">{{#each l.des as |d|}}<li class="de {{d.type}}">{{d.valeur}}</li>{{/each}}</ol>{{/if}}
+    <div class="correction replie" data-pour="mj">
+      <label>{{localize "WODHOMEBREW.Combat.Des"}} <input type="number" name="des" value="{{l.ajust.des}}" step="1"></label>
+      <label>{{localize "WODHOMEBREW.Jets.DifficulteCourte"}} <input type="number" name="diff" value="{{l.ajust.diff}}" step="1"></label>
+      <button type="button" data-combat="relancer"><i class="fa-solid fa-rotate" inert></i> {{localize "WODHOMEBREW.Combat.Relancer"}}</button>
+      <label>{{localize "WODHOMEBREW.Combat.OuReussites"}} <input type="number" name="reussites" value="" step="1"></label>
+      <button type="button" data-combat="fixer"><i class="fa-solid fa-check" inert></i></button>
+    </div>
+  </div>
+  {{/if}}
+  {{/each}}
+
+  {{#if attendDefense}}
+  <div class="wod-combat-defense" data-etape="choix" data-pour="defense">
+    <div class="titre">{{#if cibleNom}}{{localize "WODHOMEBREW.Combat.DefenseDe" c=cibleNom}}{{else}}{{localize "WODHOMEBREW.Combat.DefenseCiblee"}}{{/if}}</div>
+    <div class="ajust" data-pour="mj">
+      <label>{{localize "WODHOMEBREW.Combat.Des"}} <input type="number" name="des" value="0" step="1"></label>
+      <label>{{localize "WODHOMEBREW.Jets.DifficulteCourte"}} <input type="number" name="diff" value="0" step="1"></label>
+    </div>
+    <div class="boutons">{{#each defenses as |d|}}<button type="button" data-combat="defendre" data-type="{{d.cle}}">{{d.label}}</button>{{/each}}</div>
+  </div>
+  {{/if}}
+
+  {{#if aFinal}}
+  <div class="wod-combat-final" data-etape="final">
+    {{#if applique}}
+    <span>{{texteApplique}}</span>
+    {{else}}
+    <span class="texte">{{#if infini}}{{localize "WODHOMEBREW.Combat.FinalInfini" c=cibleNom type=type}}{{else}}{{localize "WODHOMEBREW.Combat.Final" c=cibleNom type=type}}{{/if}}</span>
+    <span data-pour="mj" class="saisie">{{#unless infini}}<input type="number" name="final" value="{{final}}" min="0" step="1">{{/unless}}<button type="button" data-combat="appliquer">{{localize "WODHOMEBREW.Combat.Appliquer"}}</button></span>
+    <span class="valeur-joueur">{{#if infini}}∞{{else}}{{final}}{{/if}}</span>
+    {{/if}}
+  </div>
+  {{/if}}
+</div>

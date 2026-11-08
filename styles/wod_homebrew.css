@@ -409,3 +409,33 @@ body.wod-sans-scene #board { opacity: 0; }
 .wod_homebrew .ligne-combat .equiper { display: flex; gap: 0.3rem; align-items: center; white-space: nowrap; }
 .wod_homebrew .resume-combat { margin: 0.5rem 0 0; }
 .wod_homebrew.item fieldset.attaque, .wod_homebrew.item fieldset.protection { margin: 0.4rem 0; }
+
+/* Carte de combat */
+.wod-combat { display: flex; flex-direction: column; gap: 0.3rem; }
+.wod-combat-titre { font-weight: bold; font-size: 1.05em; }
+.wod-combat-alerte { color: #c98a1a; font-size: 0.9em; }
+.wod-combat-etape { border-top: 1px solid var(--color-border, #8884); padding-top: 0.25rem; }
+.wod-combat-etape .ligne { display: flex; align-items: center; gap: 0.4rem; }
+.wod-combat-etape .libelle { flex: 1; }
+.wod-combat-etape .detail, .wod-combat-etape .infos { font-size: 0.85em; opacity: 0.8; }
+.wod-combat-etape .reussites { font-weight: bold; font-size: 1.15em; min-width: 1.5em; text-align: right; }
+.wod-combat-etape .reussites.manuel { text-decoration: underline dotted; }
+.wod-combat .crayon { flex: 0 0 auto; width: 1.6rem; height: 1.6rem; line-height: 1; padding: 0; font-size: 0.75em; }
+.wod-combat .wod-jet-des.petits .de { width: 1.3rem; height: 1.3rem; font-size: 0.75em; }
+.wod-combat .correction, .wod-combat .ajust { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; font-size: 0.85em; margin-top: 0.2rem; }
+.wod-combat .correction.replie { display: none; }
+.wod-combat input[type=number] { width: 3.2rem; height: 1.5rem; }
+.wod-combat .correction button { flex: 0 0 auto; width: auto; height: 1.6rem; line-height: 1; padding: 0 0.4rem; }
+.wod-combat-touche { display: flex; justify-content: space-between; border-top: 1px solid var(--color-border, #8884); padding-top: 0.25rem; font-weight: bold; }
+.wod-combat-touche.ok { color: #3f9a4a; }
+.wod-combat-touche.rate { color: #b4423c; }
+.wod-combat-defense { border-top: 1px solid var(--color-border, #8884); padding-top: 0.3rem; }
+.wod-combat-defense .boutons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; margin-top: 0.3rem; }
+.wod-combat-defense .boutons button { line-height: 1.6rem; padding: 0; }
+.wod-combat-final { display: flex; align-items: center; gap: 0.4rem; border-top: 2px solid var(--color-border, #8886); padding-top: 0.3rem; font-weight: bold; }
+.wod-combat-final .texte { flex: 1; }
+.wod-combat-final .saisie { display: flex; gap: 0.3rem; align-items: center; }
+.wod-combat-final .saisie button { width: auto; line-height: 1.6rem; padding: 0 0.5rem; }
+.wod-combat-final:has(.saisie) .valeur-joueur { display: none; }
+.wod-combat-final .valeur-joueur { font-size: 1.2em; }
+.wod-combat.appliquee .wod-combat-final { opacity: 0.85; font-weight: normal; }

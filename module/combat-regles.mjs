@@ -71,3 +71,83 @@ export function deduireArme(modeAttaque, nom = "") {
   else if ( mode === "lancer" ) arme.competence = "athletisme";
   return arme;
 }
+
+/* -------------------------------------------- */
+/*  État de la carte de combat                  */
+/* -------------------------------------------- */
+
+/**
+ * Une étape lancée de la carte (attaque, défense, dégâts, encaissement).
+ * @param {string} libelle
+ * @param {{reserve: number, difficulte: number}} base   Réserve et difficulté avant les corrections du MJ
+ * @param {(reserve: number, difficulte: number) => {reussites: number, des: object[]}} lancer
+ * @param {number} [bonus]   Réussites ajoutées à chaque lancer (Volonté de l'attaque)
+ */
+export function creerEtape(libelle, base, lancer, bonus = 0) {
+  const etape = { libelle, base: { ...base }, ajust: { des: 0, diff: 0 }, reserve: 0, difficulte: base.difficulte,
+    reussites: 0, des: [], manuel: false, bonus };
+  return relancerEtape(etape, lancer);
+}
+
+/** Relance une étape avec ses corrections (dés et difficulté ajoutés à la base) */
+function relancerEtape(etape, lancer) {
+  etape.reserve = Math.max(0, etape.base.reserve + (etape.ajust.des || 0));
+  etape.difficulte = Math.min(10, Math.max(2, etape.base.difficulte + (etape.ajust.diff || 0)));
+  const r = etape.reserve > 0 ? lancer(etape.reserve, etape.difficulte) : { reussites: 0, des: [] };
+  etape.reussites = r.reussites + (etape.bonus || 0);
+  etape.des = r.des;
+  etape.manuel = false;
+  return etape;
+}
+
+/**
+ * Enchaîne ce qui suit la défense : touche, dégâts (relancés si leur réserve a changé),
+ * encaissement (lancé une fois, sauf dégâts infinis), dégâts finaux.
+ * etat.contexte : { valeurForce, specForce, degatsDifficulte, encaissement: { reserve, difficulte } }
+ */
+export function recalculer(etat, lancer) {
+  if ( !etat.defense ) return etat;
+  const t = resoudreTouche(etat.attaque.reussites, etat.defense.reussites);
+  etat.touche = t.touche;
+  etat.restantes = t.restantes;
+  if ( !t.touche ) {
+    etat.degats = null;
+    etat.encaissement = null;
+    etat.final = etat.finalManuel ?? 0;
+    return etat;
+  }
+  const c = etat.contexte;
+  const reserve = reserveDegats({ ...etat.arme, valeurForce: c.valeurForce, restantes: t.restantes });
+  if ( !etat.degats || (etat.degats.base.reserve !== reserve) ) {
+    const difficulte = difficulteOpposee(c.degatsDifficulte ?? 6, etat.arme.force && c.specForce);
+    const ajust = etat.degats?.ajust;
+    etat.degats = creerEtape("degats", { reserve, difficulte }, lancer);
+    if ( ajust && (ajust.des || ajust.diff) ) { etat.degats.ajust = ajust; relancerEtape(etat.degats, lancer); }
+  }
+  if ( etat.arme.infini ) etat.encaissement = null;
+  else if ( !etat.encaissement ) etat.encaissement = creerEtape("encaissement", c.encaissement, lancer);
+  etat.final = etat.finalManuel ?? degatsFinaux(etat.degats.reussites, etat.encaissement?.reussites ?? 0, etat.arme.infini);
+  return etat;
+}
+
+/**
+ * Correction du MJ sur une étape : nouvelles corrections de dés et de difficulté (l'étape est relancée),
+ * ou réussites saisies à la main. La suite est recalculée ; une valeur finale saisie est oubliée.
+ * @param {object} etat
+ * @param {"attaque"|"defense"|"degats"|"encaissement"} cle
+ * @param {{des?: number, diff?: number, reussites?: number}} correction
+ */
+export function corriger(etat, cle, { des = 0, diff = 0, reussites = null } = {}, lancer) {
+  const etape = etat[cle];
+  if ( !etape ) return etat;
+  if ( Number.isFinite(reussites) ) {
+    etape.reussites = reussites;
+    etape.manuel = true;
+  }
+  else {
+    etape.ajust = { des: Number(des) || 0, diff: Number(diff) || 0 };
+    relancerEtape(etape, lancer);
+  }
+  etat.finalManuel = null;
+  return recalculer(etat, lancer);
+}
