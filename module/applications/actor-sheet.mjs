@@ -82,7 +82,8 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     avantages: { template: `${TEMPLATES}/avantages.hbs`, scrollable: [""], templates: [`${TEMPLATES}/liste-traits.hbs`] },
     etat: { template: `${TEMPLATES}/etat.hbs`, scrollable: [""], templates: [`${TEMPLATES}/trait.hbs`] },
     combat: { template: `${TEMPLATES}/combat.hbs`, scrollable: [""] },
-    biographie: { template: `${TEMPLATES}/biographie.hbs`, scrollable: [""] }
+    biographie: { template: `${TEMPLATES}/biographie.hbs`, scrollable: [""] },
+    barre: { template: `${TEMPLATES}/barre-jet.hbs` }
   };
 
   static TABS = {

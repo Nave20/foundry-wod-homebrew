@@ -227,7 +227,7 @@ body.wod-sans-scene #board { opacity: 0; }
 .wod_homebrew .form-group.trait.selection-jet .libelle { font-weight: bold; color: var(--wod-trait); }
 .wod_homebrew .tab.traits { position: relative; }
 .wod_homebrew .barre-jet {
-  position: sticky; bottom: 0; z-index: 5; margin-top: 0.5rem; padding: 0.45rem 0.6rem;
+  flex: 0 0 auto; padding: 0.45rem 0.6rem;
   display: flex; align-items: center; gap: 0.6rem;
   background: var(--color-cool-5, #0b0a13); border: 1px solid var(--wod-trait); border-radius: 6px;
   box-shadow: 0 -4px 14px rgb(0 0 0 / 0.4);
@@ -398,14 +398,14 @@ body.wod-sans-scene #board { opacity: 0; }
 
 /* Onglet Combat */
 .wod_homebrew .liste-combat { list-style: none; margin: 0; padding: 0; }
-.wod_homebrew .ligne-combat { display: grid; grid-template-columns: 28px minmax(0, 1.4fr) minmax(0, 1.3fr) minmax(0, 1.2fr) 3.5rem auto;
+.wod_homebrew .ligne-combat { display: grid; grid-template-columns: 28px minmax(0, 1.4fr) minmax(0, 1.3fr) minmax(0, 1.2fr) 3.5rem 7.5rem;
   gap: 0.5rem; align-items: center; padding: 0.25rem 0; border-bottom: 1px solid var(--color-border); }
-.wod_homebrew .protections .ligne-combat { grid-template-columns: 28px minmax(0, 1.6fr) 4rem 4rem auto; }
+.wod_homebrew .protections .ligne-combat { grid-template-columns: 28px minmax(0, 1.6fr) 4rem 4rem 7.5rem; }
 .wod_homebrew .ligne-combat img { width: 28px; height: 28px; border: none; }
 .wod_homebrew .ligne-combat .nom-objet { cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wod_homebrew .ligne-combat .alerte { color: var(--color-level-warning, #c98a1a); white-space: nowrap; }
 .wod_homebrew .ligne-combat .degats { font-weight: bold; }
-.wod_homebrew .ligne-combat button.attaquer { white-space: nowrap; padding: 0 0.5rem; }
+.wod_homebrew .ligne-combat button.attaquer { width: 100%; white-space: nowrap; padding: 0 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.35rem; }
 .wod_homebrew .ligne-combat .equiper { display: flex; gap: 0.3rem; align-items: center; white-space: nowrap; }
 .wod_homebrew .resume-combat { margin: 0.5rem 0 0; }
 .wod_homebrew.item fieldset.attaque, .wod_homebrew.item fieldset.protection { margin: 0.4rem 0; }
