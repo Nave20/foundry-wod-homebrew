@@ -7,13 +7,25 @@
     {{formGroup systemFields.categorie value=source.categorie localize=true disabled=(not editable)}}
     {{formGroup systemFields.quantite value=source.quantite localize=true disabled=(not editable)}}
     {{#if estArme}}
-      {{formGroup systemFields.degats value=source.degats localize=true disabled=(not editable)}}
-      {{formGroup systemFields.type_degats value=source.type_degats localize=true blank="" disabled=(not editable)}}
-      {{formGroup systemFields.portee value=source.portee localize=true disabled=(not editable)}}
+      <fieldset class="attaque">
+        <legend>{{localize "WODHOMEBREW.Objet.Attaque"}}</legend>
+        {{formGroup systemFields.degats value=source.degats localize=true disabled=(not editable)}}
+        {{formGroup systemFields.force value=source.force localize=true disabled=(not editable)}}
+        {{formGroup systemFields.infini value=source.infini localize=true disabled=(not editable)}}
+        {{formGroup systemFields.type_degats value=source.type_degats localize=true blank="" disabled=(not editable)}}
+        {{formGroup systemFields.portee value=source.portee localize=true disabled=(not editable)}}
+        {{formGroup systemFields.attribut value=source.attribut localize=true disabled=(not editable)}}
+        {{formGroup systemFields.competence value=source.competence localize=true disabled=(not editable)}}
+        {{formGroup systemFields.requis value=source.requis localize=true disabled=(not editable)}}
+      </fieldset>
     {{/if}}
     {{#if estArmure}}
-      {{formGroup systemFields.armure value=source.armure localize=true disabled=(not editable)}}
-      {{formGroup systemFields.malus value=source.malus localize=true disabled=(not editable)}}
+      <fieldset class="protection">
+        <legend>{{localize "WODHOMEBREW.Objet.Protection"}}</legend>
+        {{formGroup systemFields.armure value=source.armure localize=true disabled=(not editable)}}
+        {{formGroup systemFields.malus value=source.malus localize=true disabled=(not editable)}}
+        {{formGroup systemFields.equipe value=source.equipe localize=true disabled=(not editable)}}
+      </fieldset>
     {{/if}}
     {{formInput systemFields.description enriched=descriptionEnrichie value=source.description toggled=true disabled=(not editable)}}
   </div>

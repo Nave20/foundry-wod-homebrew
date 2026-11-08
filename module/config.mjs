@@ -78,6 +78,7 @@ const niveauxSante = [
 const categoriesObjet = {
   arme: `${L}.Objet.Categorie.arme`,
   armure: `${L}.Objet.Categorie.armure`,
+  artefact: `${L}.Objet.Categorie.artefact`,
   divers: `${L}.Objet.Categorie.divers`
 };
 
@@ -87,6 +88,23 @@ const typesDegats = {
   aggrave: `${L}.Degats.aggrave`
 };
 
+/** Attributs et compétences proposés pour l'attaque d'une arme */
+const attributsCombat = {
+  dexterite: `${L}.Actor.FIELDS.attributs.dexterite.label`,
+  force: `${L}.Actor.FIELDS.attributs.force.label`,
+  perception: `${L}.Actor.FIELDS.attributs.perception.label`
+};
+const competencesCombat = {
+  "": `${L}.Combat.Aucune`,
+  bagarre: `${L}.Actor.FIELDS.capacites.bagarre.label`,
+  melee: `${L}.Actor.FIELDS.capacites.melee.label`,
+  arts_martiaux: `${L}.Actor.FIELDS.capacites.arts_martiaux.label`,
+  armes_a_feu: `${L}.Actor.FIELDS.capacites.armes_a_feu.label`,
+  tir_a_l_arc: `${L}.Actor.FIELDS.capacites.tir_a_l_arc.label`,
+  athletisme: `${L}.Actor.FIELDS.capacites.athletisme.label`
+};
+
 export const WODHOMEBREW = {
-  creatures, jeux, attributs, capacites, toutesCapacites, spheres, niveauxSante, categoriesObjet, typesDegats
+  creatures, jeux, attributs, capacites, toutesCapacites, spheres, niveauxSante, categoriesObjet, typesDegats,
+  attributsCombat, competencesCombat
 };

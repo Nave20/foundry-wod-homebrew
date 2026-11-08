@@ -534,7 +534,8 @@
       "Categorie": {
         "arme": "Arme",
         "armure": "Armure",
-        "divers": "Divers"
+        "divers": "Divers",
+        "artefact": "Artefact"
       },
       "FIELDS": {
         "categorie": {
@@ -547,8 +548,8 @@
           "label": "Quantité"
         },
         "degats": {
-          "label": "Dégâts",
-          "hint": "Ex. : Force +2"
+          "label": "Dés de dégâts",
+          "hint": "Dés de base de l'arme (la Force s'ajoute si la case ci-dessous est cochée)."
         },
         "type_degats": {
           "label": "Type de dégâts"
@@ -557,12 +558,36 @@
           "label": "Portée"
         },
         "armure": {
-          "label": "Protection"
+          "label": "Dés d'encaissement"
         },
         "malus": {
-          "label": "Malus"
+          "label": "Malus de Dextérité",
+          "hint": "Dés retirés aux jets de Dextérité quand la protection est équipée."
+        },
+        "force": {
+          "label": "Ajoute la Force",
+          "hint": "Armes de contact : Force + dés de l'arme."
+        },
+        "infini": {
+          "label": "Dégâts infinis",
+          "hint": "Au-delà de tout encaissement : toute la santé est cochée."
+        },
+        "attribut": {
+          "label": "Attribut d'attaque"
+        },
+        "competence": {
+          "label": "Compétence d'attaque"
+        },
+        "requis": {
+          "label": "Exige",
+          "hint": "Spécialité ou compétence demandée (affichée en alerte sur la carte d'attaque)."
+        },
+        "equipe": {
+          "label": "Équipée"
         }
-      }
+      },
+      "Attaque": "Attaque",
+      "Protection": "Protection"
     },
     "Jeu": {
       "V20": "Vampire V20",
@@ -764,6 +789,9 @@
     "Roue": {
       "Quintessence": "Quint.",
       "Paradoxe": "Parad."
+    },
+    "Combat": {
+      "Aucune": "Aucune (attribut seul)"
     }
   }
 }

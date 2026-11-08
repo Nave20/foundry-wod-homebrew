@@ -20,8 +20,8 @@ export default class WodItemSheet extends HandlebarsApplicationMixin(ItemSheetV2
     context.item = item;
     context.source = item._source.system;
     context.systemFields = item.system.schema.fields;
-    context.estArme = item.system.categorie === "arme";
-    context.estArmure = item.system.categorie === "armure";
+    context.estArme = ["arme", "artefact"].includes(item.system.categorie);
+    context.estArmure = ["armure", "artefact"].includes(item.system.categorie);
     context.descriptionEnrichie = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
       item.system.description, { secrets: item.isOwner, rollData: item.getRollData(), relativeTo: item }
     );
