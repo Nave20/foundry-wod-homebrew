@@ -2,7 +2,8 @@
   <div class="rang-formes">
     {{#each formes.liste as |f|}}
     <a class="forme-garou{{#if f.actuelle}} actuelle{{/if}}{{#if f.choix}} choix{{/if}}" data-action="formeChoisir" data-forme="{{f.cle}}">
-      <span class="silhouette" style="--silhouette: url('{{f.img}}')"></span>
+      {{!-- Le halo est sur l'enveloppe : un filtre posé sur l'élément masqué serait découpé par le masque --}}
+      <span class="halo"><span class="silhouette" style="--silhouette: url('{{f.img}}')"></span></span>
       <span class="nom-forme">{{f.nom}}</span>
     </a>
     {{/each}}
