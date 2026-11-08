@@ -126,10 +126,16 @@ export function recalculer(etat, lancer) {
     etat.degats = creerEtape("degats", { reserve, difficulte }, lancer);
     if ( ajust && (ajust.des || ajust.diff) ) { etat.degats.ajust = ajust; relancerEtape(etat.degats, lancer); }
   }
-  if ( etat.arme.infini ) etat.encaissement = null;
+  // Pas d'encaissement contre des dégâts infinis, ni contre un jet de dégâts raté (0 ou moins)
+  if ( etat.arme.infini || (etat.degats.reussites <= 0) ) etat.encaissement = null;
   else if ( !etat.encaissement ) etat.encaissement = creerEtape("encaissement", c.encaissement, lancer);
   etat.final = etat.finalManuel ?? degatsFinaux(etat.degats.reussites, etat.encaissement?.reussites ?? 0, etat.arme.infini);
   return etat;
+}
+
+/** La défense peut être choisie : pas encore lancée, et l'attaque a au moins une réussite */
+export function defensePossible(etat) {
+  return !etat.defense && (etat.attaque.reussites > 0);
 }
 
 /**

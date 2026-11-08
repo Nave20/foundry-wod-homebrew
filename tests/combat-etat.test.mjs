@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { creerEtape, recalculer, corriger } from "../module/combat-regles.mjs";
+import { creerEtape, recalculer, corriger, defensePossible } from "../module/combat-regles.mjs";
 
 /** Lanceur factice : rend les réussites prévues dans l'ordre et note les réserves demandées */
 function lanceur(...reussites) {
@@ -104,4 +104,35 @@ test("réglage du MJ avant le lancer : rangé dans ajust, la base reste sans le 
   assert.deepEqual(e.base, { reserve: 4, difficulte: 6 });
   assert.deepEqual(e.ajust, { des: 2, diff: -1 });
   assert.deepEqual(appels, [{ r: 6, d: 5 }]);
+});
+
+test("dégâts à 0 ou moins : pas d'encaissement, aucun dégât", () => {
+  const { lancer, appels } = lanceur(-1);
+  const e = etatGlock(5);
+  e.defense = creerEtape("Aucune", { reserve: 0, difficulte: 6 }, () => ({ reussites: 0, des: [] }));
+  e.contexte.encaissement = { reserve: 5, difficulte: 6 };
+  recalculer(e, lancer);
+  assert.equal(appels.length, 1);
+  assert.equal(e.encaissement, null);
+  assert.equal(e.final, 0);
+});
+
+test("dégâts corrigés au-dessus de 0 : l'encaissement est alors lancé", () => {
+  const { lancer, appels } = lanceur(0, 1);
+  const e = etatGlock(5);
+  e.defense = creerEtape("Aucune", { reserve: 0, difficulte: 6 }, () => ({ reussites: 0, des: [] }));
+  e.contexte.encaissement = { reserve: 5, difficulte: 6 };
+  recalculer(e, lancer);
+  corriger(e, "degats", { reussites: 3 }, lancer);
+  assert.equal(appels.length, 2);
+  assert.equal(e.final, 2);
+});
+
+test("attaque à 0 ou moins : pas de défense possible", () => {
+  assert.equal(defensePossible(etatGlock(0)), false);
+  assert.equal(defensePossible(etatGlock(-1)), false);
+  assert.equal(defensePossible(etatGlock(1)), true);
+  const e = etatGlock(3);
+  e.defense = creerEtape("Aucune", { reserve: 0, difficulte: 6 }, () => ({ reussites: 0, des: [] }));
+  assert.equal(defensePossible(e), false);
 });

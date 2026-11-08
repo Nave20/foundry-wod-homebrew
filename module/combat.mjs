@@ -8,7 +8,7 @@
  * exécutées par le MJ actif.
  */
 import { effectuerJet, lancerReserve, preparerJet, reglesJets, texteModificateur } from "./des.mjs";
-import { corriger, creerEtape, difficulteOpposee, malusDexterite, recalculer, reserveEncaissement } from "./combat-regles.mjs";
+import { corriger, creerEtape, defensePossible, difficulteOpposee, malusDexterite, recalculer, reserveEncaissement } from "./combat-regles.mjs";
 
 const SYSTEME = "wod_homebrew";
 const TEMPLATE = "systems/wod_homebrew/templates/chat/combat.hbs";
@@ -118,7 +118,7 @@ export async function executer(message, action, donnees = {}, user = game.user) 
   try {
     switch ( action ) {
       case "defendre": {
-        if ( etat.defense || !(donnees.type in DEFENSES) ) return;
+        if ( !defensePossible(etat) || !(donnees.type in DEFENSES) ) return;
         const uuid = etat.cible ?? donnees.cible;
         const cible = uuid ? fromUuidSync(uuid) : null;
         if ( !cible ) return ui.notifications.warn("WODHOMEBREW.Combat.PasDeCible", { localize: true });
@@ -219,6 +219,9 @@ export async function rendreCarte(etat) {
   const lignes = [
     ligne("attaque", etat.attaque, _loc("WODHOMEBREW.Combat.Attaque"), etat.attaque.detail),
     ligne("defense", etat.defense, etat.defenseType ? _loc(`WODHOMEBREW.Combat.Defenses.${etat.defenseType}`) : "", etat.defense?.detail),
+    // Attaque ratée d'emblée (0 réussite ou moins) : la carte s'arrête là
+    (!etat.defense && (etat.attaque.reussites <= 0))
+      ? { touche: true, ok: false, texte: _loc("WODHOMEBREW.Combat.Rate"), nettes: etat.attaque.reussites } : null,
     etat.touche === null ? null : { touche: true, ok: etat.touche,
       texte: etat.touche ? _loc("WODHOMEBREW.Combat.Touche", { n: etat.restantes }) : _loc("WODHOMEBREW.Combat.Rate"),
       nettes: etat.attaque.reussites - (etat.defense?.reussites ?? 0) },
@@ -230,7 +233,7 @@ export async function rendreCarte(etat) {
     titre: _loc(etat.cibleNom ? "WODHOMEBREW.Combat.Titre" : "WODHOMEBREW.Combat.TitreSansCible",
       { a: etat.attaquantNom, c: etat.cibleNom ?? "", arme: a.nom }),
     requis: a.requis, lignes, type,
-    attendDefense: !etat.defense,
+    attendDefense: defensePossible(etat),
     defenses: Object.keys(DEFENSES).map(k => ({ cle: k, label: _loc(`WODHOMEBREW.Combat.Defenses.${k}`) })),
     final: etat.final, infini: etat.final === "infini", aFinal: (etat.final !== null) && etat.touche,
     applique: etat.applique,
