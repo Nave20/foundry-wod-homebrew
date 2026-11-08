@@ -173,7 +173,8 @@ export async function executer(message, action, donnees = {}, user = game.user) 
         const cible = etat.cible ? await fromUuid(etat.cible) : null;
         if ( !cible ) return ui.notifications.warn("WODHOMEBREW.Combat.CibleIntrouvable", { localize: true });
         const s = cible._source.system.sante;
-        const place = Math.max(0, s.niveaux - (s.contondants + s.letaux + s.aggraves));
+        const niveaux = cible.system.sante.niveaux;   // piste effective (forme du garou comprise)
+        const place = Math.max(0, niveaux - (s.contondants + s.letaux + s.aggraves));
         const n = etat.final === "infini" ? place : Math.min(place, Number(etat.final) || 0);
         const compteur = COMPTEURS[etat.arme.type_degats] ?? "letaux";
         if ( n > 0 ) await cible.update({ [`system.sante.${compteur}`]: s[compteur] + n });

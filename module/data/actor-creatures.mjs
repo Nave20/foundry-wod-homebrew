@@ -1,4 +1,5 @@
-import { FORMES, attributsEnForme } from "../formes.mjs";
+import { FORMES, attributsEnForme, niveauxSanteEnForme } from "../formes.mjs";
+import { reglesJets } from "../des.mjs";
 import { WODHOMEBREW } from "../config.mjs";
 import { quintessenceMax } from "../des.mjs";
 import ActorBaseData from "./actor-base.mjs";
@@ -67,6 +68,12 @@ export class GarouData extends ActorBaseData {
 
   /** @inheritDoc */
   prepareDerivedData() {
+    // Santé dans la forme actuelle (avant le calcul de la liste des niveaux par la classe de base) ;
+    // les dégâts sont gardés tels quels, même s'ils dépassent la nouvelle piste
+    let regle = "double";
+    try { regle = reglesJets().santeForme; } catch { /* réglages pas encore prêts */ }
+    this.sante.niveauxBase = this.sante.niveaux;
+    this.sante.niveaux = niveauxSanteEnForme(this.sante.niveaux, this.forme, regle);
     super.prepareDerivedData();
     // Attributs dans la forme actuelle (les points de la fiche restent ceux de la forme humaine)
     this.attributsBase = { ...this.attributs };

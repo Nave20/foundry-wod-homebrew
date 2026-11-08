@@ -40,3 +40,23 @@ export function attributsEnForme(attributs, cle) {
 export function difficultePerception(cle) {
   return FORMES.find(f => f.cle === cle)?.perception ?? 0;
 }
+
+/**
+ * Règles de santé selon la forme (réglage « santeForme » des Règles des jets) :
+ * - double : la piste de santé double en Crinos (règle de la table)
+ * - v5 : +4 niveaux en Crinos (Werewolf 5e édition)
+ * - aucune : la forme ne change pas la santé (W20)
+ */
+export const REGLES_SANTE_FORME = {
+  double: "WODHOMEBREW.Jets.SanteFormeDouble",
+  v5: "WODHOMEBREW.Jets.SanteFormeV5",
+  aucune: "WODHOMEBREW.Jets.SanteFormeAucune"
+};
+
+/** Nombre de niveaux de santé dans une forme */
+export function niveauxSanteEnForme(niveaux, cle, regle) {
+  if ( cle !== "crinos" ) return niveaux;
+  if ( regle === "double" ) return niveaux * 2;
+  if ( regle === "v5" ) return niveaux + 4;
+  return niveaux;
+}

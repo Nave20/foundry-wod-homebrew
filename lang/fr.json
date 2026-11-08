@@ -626,7 +626,9 @@
         "neutralise": "Neutralisé"
       },
       "AideClic": "Cliquez sur une case pour aggraver la blessure : / contondant, X létal, ✱ aggravé, puis vide.",
-      "Aggraver": "Aggraver (/ → X → ✱ → vide)"
+      "Aggraver": "Aggraver (/ → X → ✱ → vide)",
+      "EnForme": "En {forme} : {n} niveaux de santé (base {base}).",
+      "Depassement": "{n} dégât(s) au-delà de la piste de santé."
     },
     "Fiche": {
       "Acteur": "Fiche Monde des Ténèbres",
@@ -785,7 +787,13 @@
       "SectionBlessure": "Blessures",
       "MalusBlessureRegle": "Le malus de santé retire des dés aux jets",
       "VolonteSansMalus": "Le jet de Volonté ignore le malus de santé",
-      "ModArmure": "Armure"
+      "ModArmure": "Armure",
+      "SectionGarou": "Garous",
+      "SanteForme": "Santé selon la forme",
+      "SanteFormeDouble": "Crinos : la piste de santé double",
+      "SanteFormeV5": "Crinos : +4 niveaux de santé (5e édition)",
+      "SanteFormeAucune": "La forme ne change pas la santé (W20)",
+      "SanteFormeAide": "Les blessures sont gardées au changement de forme, même si elles dépassent la nouvelle piste."
     },
     "Orbe": {
       "Infobulle": "Réserve de sang ({n} par tour)",

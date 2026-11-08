@@ -1,3 +1,4 @@
+import { REGLES_SANTE_FORME } from "../formes.mjs";
 import { REGLES_DEFAUT, reglesJets } from "../des.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -30,6 +31,7 @@ export default class ReglesJets extends HandlebarsApplicationMixin(ApplicationV2
       { type: "button", action: "reinitialiser", icon: "fa-solid fa-rotate-left", label: "WODHOMEBREW.Jets.Reinitialiser" },
       { type: "submit", icon: "fa-solid fa-floppy-disk", label: "WODHOMEBREW.Traits.Enregistrer" }
     ];
+    context.santeFormeChoix = Object.entries(REGLES_SANTE_FORME).map(([cle, label]) => ({ cle, label, choisi: cle === context.regles?.santeForme }));
     return context;
   }
 
@@ -60,8 +62,14 @@ export default class ReglesJets extends HandlebarsApplicationMixin(ApplicationV2
       quintessenceAvatarPrime: !!donnees.quintessenceAvatarPrime,
       extensionDifficulte: Number(donnees.extensionDifficulte) || 0,
       malusBlessure: !!donnees.malusBlessure,
-      volonteSansMalus: !!donnees.volonteSansMalus
+      volonteSansMalus: !!donnees.volonteSansMalus,
+      santeForme: (donnees.santeForme in REGLES_SANTE_FORME) ? donnees.santeForme : REGLES_DEFAUT.santeForme
     });
+    // Les fiches de garou recalculent leur piste de santé selon la forme
+    for ( const actor of game.actors.filter(a => a.type === "garou") ) {
+      actor.reset();
+      actor.sheet?.rendered && actor.sheet.render();
+    }
     // Les fiches de mage recalculent leur quintessence maximale
     for ( const actor of game.actors.filter(a => a.type === "mage") ) {
       actor.reset();

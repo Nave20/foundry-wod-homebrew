@@ -35,6 +35,8 @@
         {{/each}}
       </ol>
       <p class="hint">{{localize "WODHOMEBREW.Sante.Etat"}} : {{localize etatSante}} ({{system.sante.etat.malus}})</p>
+      {{#if santeForme}}<p class="hint sante-forme">{{localize "WODHOMEBREW.Sante.EnForme" forme=santeForme.forme base=santeForme.base n=santeForme.n}}</p>{{/if}}
+      {{#if santeDepassement}}<p class="alerte-sante"><i class="fa-solid fa-triangle-exclamation" inert></i> {{localize "WODHOMEBREW.Sante.Depassement" n=santeDepassement}}</p>{{/if}}
     </fieldset>
 
     {{#if estVampirique}}

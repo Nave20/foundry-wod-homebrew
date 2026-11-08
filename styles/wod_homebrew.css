@@ -477,3 +477,6 @@ body.wod-sans-scene #board { opacity: 0; }
   -webkit-mask: var(--silhouette) center / contain no-repeat; mask: var(--silhouette) center / contain no-repeat; }
 .wod_homebrew .mini-forme .nom-forme { font-size: 0.8rem; font-weight: bold; letter-spacing: 0.04em; }
 .wod_homebrew .mini-forme:hover { text-shadow: none; filter: brightness(1.2); }
+
+.wod_homebrew .sante-forme { color: #39ff88; }
+.wod_homebrew .alerte-sante { color: #e07c7c; font-weight: bold; margin: 0.2rem 0; }

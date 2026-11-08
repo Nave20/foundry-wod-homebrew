@@ -5,6 +5,8 @@
  * (Panneau du MJ → Règles des jets).
  */
 
+import { REGLES_SANTE_FORME } from "./formes.mjs";
+
 const SYSTEME = "wod_homebrew";
 const TEMPLATE = "systems/wod_homebrew/templates/chat/jet.hbs";
 
@@ -30,7 +32,8 @@ export const REGLES_DEFAUT = {
   quintessenceParJet: 3, quintessenceDifficulte: 1, quintessenceAvatarPrime: true,
   extensionDifficulte: 1,
   malusBlessure: true, volonteSansMalus: true,
-  degatsDifficulte: 6, encaissementDifficulte: 6
+  degatsDifficulte: 6, encaissementDifficulte: 6,
+  santeForme: "double"
 };
 
 export function registerDesSettings() {
@@ -61,6 +64,7 @@ export function reglesJets() {
   r.volonteSansMalus = !!r.volonteSansMalus;
   r.degatsDifficulte = Math.min(r.de, entier(r.degatsDifficulte, REGLES_DEFAUT.degatsDifficulte, 2));
   r.encaissementDifficulte = Math.min(r.de, entier(r.encaissementDifficulte, REGLES_DEFAUT.encaissementDifficulte, 2));
+  if ( !(r.santeForme in REGLES_SANTE_FORME) ) r.santeForme = REGLES_DEFAUT.santeForme;
   return r;
 }
 

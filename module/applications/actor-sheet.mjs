@@ -243,6 +243,9 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       malusTexte: n.malus === null ? "" : n.malus === 0 ? "0" : String(n.malus)
     }));
     context.etatSante = `WODHOMEBREW.Sante.Niveaux.${system.sante.etat.cle}`;
+    context.santeDepassement = Math.max(0, system.sante.degats - system.sante.niveaux);
+    context.santeForme = (system.sante.niveauxBase !== undefined) && (system.sante.niveauxBase !== system.sante.niveaux)
+      ? { base: system.sante.niveauxBase, n: system.sante.niveaux, forme: _loc(`WODHOMEBREW.Forme.Noms.${system.forme}`) } : null;
     context.combat = this.#contexteCombat();
     if ( type === "garou" ) {
       context.formes = this.#contexteFormes();
@@ -765,7 +768,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       case "letal": l -= 1; a += 1; break;
       case "aggrave": a -= 1; break;
       default:
-        if ( c + l + a >= s.niveaux ) return;
+        if ( c + l + a >= this.actor.system.sante.niveaux ) return;   // piste effective (forme du garou comprise)
         c += 1;
     }
     return this.actor.update({ "system.sante.contondants": Math.max(0, c), "system.sante.letaux": Math.max(0, l),
