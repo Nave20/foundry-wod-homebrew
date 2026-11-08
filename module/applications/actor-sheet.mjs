@@ -1,6 +1,9 @@
 import { WODHOMEBREW } from "../config.mjs";
 import { CHAMPS_PREFAITS, LISTES_PREFAITES } from "../listes.mjs";
 import MenuSuggestions from "./suggestions.mjs";
+import OrbeSang from "../orbe.mjs";
+import { GriffesRage, LuneGnose } from "../jauges-garou.mjs";
+import RoueMage from "../roue-mage.mjs";
 import { capacitesAffichees, configTraits, nomAttribut } from "../traits.mjs";
 import { lancerJet, preparerJet, reglesJets, texteModificateur } from "../des.mjs";
 
@@ -8,6 +11,12 @@ const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
 const TEMPLATES = "systems/wod_homebrew/templates/actor";
+
+/** Chemin du champ noté d'une ligne jetable (data-champ, sinon l'input caché des points) */
+const champJet = ligne => ligne.dataset.champ || ligne.querySelector(".wod-points input[type=hidden]")?.name;
+
+/** Période du reflet des cases de Volonté (secondes), commune à toutes les fiches pour rester synchronisé */
+const REFLET_PERIODE = 4.5;
 
 /** En-tête compacte : 4 champs clés par créature, sur une ligne */
 const ENTETE = {
@@ -49,6 +58,10 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     actions: {
       listeAjouter: WodActorSheet.#onListeAjouter,
       caseSante: WodActorSheet.#onCaseSante,
+      sang: WodActorSheet.#onSang,
+      volonte: WodActorSheet.#onVolonte,
+      jauge: WodActorSheet.#onJauge,
+      roue: WodActorSheet.#onRoue,
       listeRetirer: WodActorSheet.#onListeRetirer,
       point: WodActorSheet.#onPoint,
       specialite: WodActorSheet.#onSpecialite,
@@ -83,6 +96,18 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
 
   /** Options du jet en cours : spécialité utilisée, dés et difficulté ajoutés à la main, réglages dépliés */
   #optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false, volonte: false, sang: false, quintessence: 0, malus: null };
+
+  /** Orbe de sang affiché (pour animer le passage d'une valeur à l'autre entre deux rendus) */
+  #orbe = null;
+
+  /** Jauges du garou affichées (rage, gnose), même principe que l'orbe */
+  #jaugesGarou = {};
+
+  /** Volonté temporaire affichée au rendu précédent (pour animer les cases ajoutées ou retirées) */
+  #volonteAffichee = null;
+
+  /** Roue du mage affichée (quintessence, paradoxe) */
+  #roue = null;
 
   /** Panneau des réglages ouvert ? */
   #reglagesOuverts = false;
@@ -156,12 +181,26 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       categoriesObjet: WODHOMEBREW.categoriesObjet
     });
 
+    // Volonté : 10 cases, remplies jusqu'à la temporaire, estompées au-delà de la permanente
+    const vol = source.volonte ?? {};
+    context.volonteCases = Array.from({ length: 10 }, (_, i) => ({ on: i < (vol.temporaire ?? 0), hors: i >= (vol.permanente ?? 0) }));
+
     // Vampire / Goule
     if (context.estVampirique) {
+      const sang = source.sang ?? {};
+      context.orbe = { valeur: sang.valeur ?? 0, max: sang.max ?? 0, parTour: sang.par_tour ?? 1 };
       context.vertus = ["conscience", "maitrise_de_soi", "courage"].map(k => champ(k, fields.vertus.fields, source.vertus));
+    }
+    // Garou : jauges de rage et de gnose dans l'en-tête
+    if (context.estGarou) {
+      context.jaugesGarou = ["rage", "gnose"].map(cle => ({
+        cle, label: `WODHOMEBREW.Actor.FIELDS.${cle}.label`,
+        valeur: source[cle]?.temporaire ?? 0, max: source[cle]?.permanente ?? 0
+      }));
     }
     // Mage
     if (context.estMage) {
+      context.roue = { quintessence: source.quintessence ?? 0, paradoxe: source.paradoxe ?? 0, max: system.quintessenceMax };
       context.spheres = WODHOMEBREW.spheres.map(k => champ(k, fields.spheres.fields, source.spheres));
     }
     // Santé (libellés des niveaux)
@@ -209,7 +248,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     await super._onRender(context, options);
     // Jets : un clic sur le nom d'un attribut ou d'une capacité le sélectionne (un par catégorie)
     for ( const ligne of this.element.querySelectorAll(".form-group[data-jet]") ) {
-      const name = ligne.querySelector(".wod-points input[type=hidden]")?.name;
+      const name = champJet(ligne);
       const libelle = ligne.querySelector(".nom-trait .libelle");
       if ( !name || !libelle ) continue;
       libelle.classList.add("jetable");
@@ -227,6 +266,41 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     }
     this.#majBarreJet();
     this.#ecouterBarreJet();
+
+    // Orbe de sang : repart du niveau affiché au rendu précédent pour animer le changement
+    const svgOrbe = this.element.querySelector(".orbe-sang svg");
+    if ( svgOrbe ) {
+      const { valeur, max } = context.orbe;
+      const niveau = max > 0 ? valeur / max : 0;
+      this.#orbe = new OrbeSang(svgOrbe, niveau, this.#orbe?.niveauAffiche ?? null);
+    }
+    // Cases de Volonté : reflet calé sur une horloge commune, animation des cases ajoutées ou retirées
+    const cases = [...this.element.querySelectorAll(".volonte-lames .lame")];
+    const maintenant = performance.now() / 1000;
+    cases.forEach((c, i) => c.style.setProperty("--dl", `${(i * .13 - (maintenant % REFLET_PERIODE)).toFixed(3)}s`));
+    const temp = context.source.volonte?.temporaire ?? 0, avant = this.#volonteAffichee;
+    if ( (avant !== null) && (temp !== avant) ) {
+      const classe = temp > avant ? "ajout" : "retrait";
+      for ( let i = Math.min(temp, avant); i < Math.max(temp, avant); i++ ) {
+        const c = cases[i];
+        if ( !c ) continue;
+        c.classList.add(classe);
+        if ( classe === "retrait" ) this.#cendres(c);
+        setTimeout(() => c.classList.remove(classe), 800);
+      }
+    }
+    this.#volonteAffichee = temp;
+
+    // Roue du mage
+    const svgRoue = this.element.querySelector(".roue-mage svg");
+    if ( svgRoue ) this.#roue = new RoueMage(svgRoue, context.roue, this.#roue?.valeursAffichees ?? null);
+    // Jauges du garou
+    for ( const j of context.jaugesGarou ?? [] ) {
+      const svg = this.element.querySelector(`.jauge-garou[data-cle="${j.cle}"] svg`);
+      if ( !svg ) continue;
+      const Classe = j.cle === "rage" ? GriffesRage : LuneGnose;
+      this.#jaugesGarou[j.cle] = new Classe(svg, j, this.#jaugesGarou[j.cle]?.niveauAffiche ?? null);
+    }
 
     // Le panneau « Réglages de la fiche » reste ouvert d'un rendu à l'autre
     this.element.querySelector("details.reglages")?.addEventListener("toggle", e => this.#reglagesOuverts = e.target.open);
@@ -291,14 +365,16 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     const input = target.closest(".wod-points")?.querySelector("input[type=hidden]");
     if ( !input ) return;
     const i = Number(target.dataset.valeur);
-    input.value = (i === Number(input.value)) ? i - 1 : i;
+    // Minimum du champ (ex. Avatar du mage : au moins 1)
+    const champ = input.name.startsWith("system.") ? this.actor.system.schema.getField(input.name.slice(7)) : null;
+    input.value = Math.max(champ?.min ?? 0, (i === Number(input.value)) ? i - 1 : i);
     input.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
   /** Traits sélectionnés avec leur valeur et leur spécialité actuelles */
   #traitsJet() {
     return ["attribut", "capacite", "volonte"].map(cat => this.#jet[cat]).filter(Boolean).map(t => {
-      const ligne = this.element.querySelector(`.form-group[data-jet] input[name="${t.name}"]`)?.closest(".form-group");
+      const ligne = this.#ligneJet(t.name);
       const specialite = ligne?.querySelector("input.valeur-specialite")?.value?.trim() || "";
       return { nom: t.nom, categorie: t.categorie, valeur: Number(foundry.utils.getProperty(this.actor, t.name)) || 0, specialite };
     });
@@ -327,15 +403,20 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     this.#majBarreJet();
   }
 
+  /** Ligne jetable affichée pour un champ donné */
+  #ligneJet(name) {
+    return [...this.element.querySelectorAll(".form-group[data-jet]")].find(l => champJet(l) === name) ?? null;
+  }
+
   /** Surligne la sélection et redessine la barre de jet */
   #majBarreJet() {
     const barre = this.element.querySelector(".barre-jet");
     // Un trait sélectionné qui n'est plus affiché (masqué, renommé, retiré) est oublié
     for ( const cat of Object.keys(this.#jet) ) {
-      if ( this.#jet[cat] && !this.element.querySelector(`.form-group[data-jet] input[name="${this.#jet[cat].name}"]`) ) this.#jet[cat] = null;
+      if ( this.#jet[cat] && !this.#ligneJet(this.#jet[cat].name) ) this.#jet[cat] = null;
     }
     for ( const ligne of this.element.querySelectorAll(".form-group[data-jet]") ) {
-      const name = ligne.querySelector(".wod-points input[type=hidden]")?.name;
+      const name = champJet(ligne);
       ligne.classList.toggle("selection-jet", Object.values(this.#jet).some(t => t?.name === name));
     }
     if ( !barre ) return;
@@ -497,6 +578,51 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
    * Clic sur une case de santé : elle s'aggrave (vide → contondant → létal → aggravé → vide).
    * Les dégâts sont stockés en nombres ; la fiche range les plus graves en haut.
    */
+  /** Petites cendres qui tombent d'une case de Volonté retirée */
+  #cendres(c) {
+    for ( let i = 0; i < 5; i++ ) {
+      const s = document.createElement("span");
+      s.className = "cendre";
+      s.style.left = `${15 + Math.random() * 70}%`;
+      s.style.animationDelay = `${(.25 + Math.random() * .2).toFixed(2)}s`;
+      s.style.setProperty("--dx", `${((Math.random() - .5) * 10).toFixed(1)}px`);
+      c.appendChild(s);
+      setTimeout(() => s.remove(), 1200);
+    }
+  }
+
+  /** Boutons − et + de la Volonté : points temporaires, entre 0 et la permanente */
+  static async #onVolonte(event, target) {
+    const vol = this.actor.system.volonte;
+    const valeur = Math.max(0, Math.min(vol.permanente, vol.temporaire + Number(target.dataset.delta)));
+    if ( valeur !== vol.temporaire ) await this.actor.update({ "system.volonte.temporaire": valeur });
+  }
+
+  /** Boutons − et + de l'orbe : dépense ou regain d'un point de sang */
+  static async #onSang(event, target) {
+    const sang = this.actor.system.sang;
+    if ( !sang ) return;
+    const valeur = Math.max(0, Math.min(sang.max, sang.valeur + Number(target.dataset.delta)));
+    if ( valeur !== sang.valeur ) await this.actor.update({ "system.sang.valeur": valeur });
+  }
+
+  /** Boutons − et + des jauges du garou : points temporaires de rage ou de gnose, entre 0 et le score permanent */
+  static async #onJauge(event, target) {
+    const cle = target.closest("[data-cle]")?.dataset.cle;
+    const jauge = this.actor.system[cle];
+    if ( !jauge ) return;
+    const valeur = Math.max(0, Math.min(jauge.permanente, jauge.temporaire + Number(target.dataset.delta)));
+    if ( valeur !== jauge.temporaire ) await this.actor.update({ [`system.${cle}.temporaire`]: valeur });
+  }
+
+  /** Boutons de la roue du mage : ±1 quintessence ou paradoxe (les plafonds et la règle du paradoxe sont dans Actor#_preUpdate) */
+  static async #onRoue(event, target) {
+    const cle = target.dataset.cle;
+    const actuel = this.actor.system[cle] ?? 0;
+    const valeur = Math.max(0, Math.min(20, actuel + Number(target.dataset.delta)));
+    if ( valeur !== actuel ) await this.actor.update({ [`system.${cle}`]: valeur });
+  }
+
   static async #onCaseSante(event, target) {
     const s = this.actor._source.system.sante;
     let { contondants: c, letaux: l, aggraves: a } = s;

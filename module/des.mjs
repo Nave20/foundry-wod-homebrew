@@ -231,16 +231,14 @@ export async function lancerJet(actor, jet, { extension = 0, cumulPrecedent = 0 
 
 /**
  * Quintessence maximale d'un mage selon la règle « Avatar + Prime » (null si la règle est désactivée).
- * L'Avatar est la valeur de l'historique dont le nom commence par « Avatar ».
+ * L'Avatar est la caractéristique « avatar » du mage (au moins 1).
  * @param {object} system   Données système (source ou préparées) du mage
  */
 export function quintessenceMax(system) {
   let regles;
   try { regles = reglesJets(); } catch { return null; }   // réglages pas encore prêts
   if ( !regles.quintessenceAvatarPrime ) return null;
-  const normaliser = s => String(s ?? "").normalize("NFD").replace(/\p{Diacritic}/gu, "").trim().toLowerCase();
-  const avatar = (system.historiques ?? []).find(h => normaliser(h.nom).startsWith("avatar"));
-  return (Number(avatar?.valeur) || 0) + (Number(system.spheres?.prime) || 0);
+  return Math.max(1, Number(system.avatar) || 1) + (Number(system.spheres?.prime) || 0);
 }
 
 /**

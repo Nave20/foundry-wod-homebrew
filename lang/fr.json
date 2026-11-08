@@ -518,6 +518,9 @@
         "arete": {
           "label": "Arété"
         },
+        "avatar": {
+          "label": "Avatar"
+        },
         "quintessence": {
           "label": "Quintessence"
         },
@@ -620,7 +623,8 @@
       "AjouterCapacite": "Ajouter une capacité secondaire",
       "Specialite": "Spécialité",
       "Renommer": "Double-clic pour renommer",
-      "VolontePermanenteEnTete": "La Volonté permanente est en haut de la fiche (cliquez sur son nom pour la lancer)."
+      "VolontePermanenteEnTete": "Les points temporaires s'ajustent aussi en haut de la fiche ; cliquez sur « Volonté » pour un jet.",
+      "AvatarAide": "Au moins 1 : un mage a toujours un Avatar. Quintessence maximale = Avatar + Prime."
     },
     "Suggestions": {
       "physique": "Physiques",
@@ -751,6 +755,15 @@
       "SectionBlessure": "Blessures",
       "MalusBlessureRegle": "Le malus de santé retire des dés aux jets",
       "VolonteSansMalus": "Le jet de Volonté ignore le malus de santé"
+    },
+    "Orbe": {
+      "Infobulle": "Réserve de sang ({n} par tour)",
+      "Depenser": "Dépenser 1 point de sang",
+      "Gagner": "Gagner 1 point de sang"
+    },
+    "Roue": {
+      "Quintessence": "Quint.",
+      "Paradoxe": "Parad."
     }
   }
 }

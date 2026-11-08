@@ -71,8 +71,18 @@ export class MageData extends ActorBaseData {
       ...super.defineSchema(),
       tradition: texte(), essence: texte(), cabale: texte(), paradigme: texte(), pratique: texte(), instruments: texte(),
       spheres: groupe(WODHOMEBREW.spheres, 0),
-      arete: points(1), quintessence: points(1), paradoxe: points(0)
+      arete: points(1), avatar: points(1, { min: 1 }), quintessence: points(1, { max: 20 }), paradoxe: points(0, { max: 20 })
     };
+  }
+
+  /** Anciennes fiches : l'Avatar était un historique ; on reprend sa valeur (au moins 1) */
+  static migrateData(source) {
+    if ( (source.avatar === undefined) && Array.isArray(source.historiques) ) {
+      const normaliser = s => String(s ?? "").normalize("NFD").replace(/\p{Diacritic}/gu, "").trim().toLowerCase();
+      const ancien = source.historiques.find(h => normaliser(h.nom) === "avatar");
+      if ( ancien ) source.avatar = Math.max(1, Number(ancien.valeur) || 1);
+    }
+    return super.migrateData(source);
   }
 
   /** @inheritDoc */

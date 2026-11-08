@@ -325,11 +325,73 @@ body.wod-sans-scene #board { opacity: 0; }
 
 /* En-tête : Volonté permanente */
 .wod_homebrew .volonte-entete { display: flex; align-items: center; gap: 0.75rem; }
-.wod_homebrew .volonte-entete .form-group.trait { flex: 1; margin: 0; }
-.wod_homebrew .volonte-entete .form-group.trait > .nom-trait { flex: 0 0 auto; font-weight: bold; }
-.wod_homebrew .volonte-entete .form-group.trait > .wod-points { justify-content: flex-start; }
-.wod_homebrew .volonte-temporaire { white-space: nowrap; color: var(--wod-trait); font-weight: bold; }
 
 /* Barre de jet : alerte */
 .wod_homebrew .barre-jet .alerte-jet { color: var(--color-level-error, #e05a47); font-weight: bold; }
 .wod_homebrew .niveaux-sante li.aggrave button.case { background: #8b1a1a; border-color: #c0392b; color: #fff; }
+
+/* Orbe de sang (vampire, goule) en haut à droite de l'en-tête ; les champs clés passent en 2 × 2 */
+.wod_homebrew .entete.avec-orbe .champs-cles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.wod_homebrew .orbe-sang { flex: 0 0 136px; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
+.wod_homebrew .orbe-sang svg { width: 136px; height: 136px; display: block; }
+.wod_homebrew .orbe-commandes { display: flex; align-items: center; gap: 0.35rem; }
+.wod_homebrew .orbe-commandes .orbe-valeur { font-weight: bold; min-width: 3.2rem; text-align: center; }
+.wod_homebrew .orbe-commandes button { flex: 0 0 auto; width: 1.5rem; height: 1.5rem; min-height: 0; padding: 0; line-height: 1; font-size: 0.7rem; }
+
+/* Jauges du garou (griffes de rage, lune de gnose) côte à côte en haut à droite */
+.wod_homebrew .jauges-garou { flex: 0 0 auto; display: flex; gap: 0.9rem; align-items: flex-start; }
+.wod_homebrew .jauge-garou { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; width: 108px; }
+.wod_homebrew .jauge-garou svg { width: 108px; height: 108px; display: block; }
+.wod_homebrew .jauge-garou .orbe-valeur { min-width: 2.6rem; }
+
+/* Roue du mage (quintessence, paradoxe) en haut à droite */
+.wod_homebrew .roue-mage { flex: 0 0 150px; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
+.wod_homebrew .roue-mage svg { width: 150px; height: 150px; display: block; border-radius: 50%; }
+.wod_homebrew .roue-commandes { display: flex; gap: 0.3rem; }
+.wod_homebrew .roue-libelle { font-size: 0.7rem; font-weight: bold; min-width: 2.4rem; text-align: center; }
+.wod_homebrew .roue-libelle.quintessence { color: #7fc2ff; }
+.wod_homebrew .roue-libelle.paradoxe { color: #b77dff; }
+
+/* Onglet État : Volonté et Avatar (mage) empilés dans la première colonne */
+.wod_homebrew .pile-encarts { display: flex; flex-direction: column; gap: 0.5rem; }
+.wod_homebrew .pile-encarts > fieldset { margin: 0; }
+
+/* Volonté de l'en-tête : 10 lames biseautées à la couleur de la fiche */
+.wod_homebrew.actor { --lame-c: #d39a2c; --lame-cl: #fbe3a6; --lame-cd: #5a3a08; }
+.wod_homebrew.actor.creature-vampire, .wod_homebrew.actor.creature-goule { --lame-c: #d8323c; --lame-cl: #ff9f94; --lame-cd: #5a0c12; }
+.wod_homebrew.actor.creature-garou { --lame-c: #2fb85a; --lame-cl: #b8f5c8; --lame-cd: #0d4a20; }
+.wod_homebrew.actor.creature-mage { --lame-c: #3f86e8; --lame-cl: #c4e0ff; --lame-cd: #0f2f66; }
+.wod_homebrew .volonte-entete { margin: 0; gap: 0.6rem; }
+.wod_homebrew .volonte-entete > .nom-trait { flex: 0 0 auto; font-weight: bold; }
+.wod_homebrew .volonte-lames { flex: 1; display: flex; gap: 5px; padding-left: 4px; min-width: 0; }
+.wod_homebrew .lame { position: relative; flex: 1; max-width: 24px; height: 14px; transform: skewX(-18deg); }
+.wod_homebrew .lame.hors { opacity: .35; }
+.wod_homebrew .lame > span { position: absolute; display: block; }
+.wod_homebrew .lame .cadre { inset: 0; background: linear-gradient(180deg, #6a6278, #24202c); border-radius: 2px; }
+.wod_homebrew .lame .fond { inset: 2px; background: #141118; border-radius: 1px; box-shadow: inset 0 1px 2px #000; }
+.wod_homebrew .lame .in { inset: 2px; border-radius: 1px; overflow: hidden; opacity: 0;
+  background: linear-gradient(180deg, var(--lame-cl) 0%, var(--lame-c) 42%, var(--lame-cd) 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.45), inset 0 -2px 3px rgba(0,0,0,.45); }
+.wod_homebrew .lame.on .in { opacity: 1; }
+.wod_homebrew .lame.on .in::after { content: ""; position: absolute; top: 0; bottom: 0; width: 45%; left: -70%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.4), transparent);
+  animation: wod-reflet 4.5s ease-in-out infinite; animation-delay: var(--dl, 0s); }
+@keyframes wod-reflet { 0%, 72% { left: -70%; } 100% { left: 140%; } }
+.wod_homebrew .lame .fx { inset: -3px; pointer-events: none; border-radius: 3px; }
+/* Ajout : la couleur glisse avec un trait de lumière et un petit sursaut */
+.wod_homebrew .lame.ajout { animation: wod-lame-rebond .45s ease-out; }
+.wod_homebrew .lame.ajout .in { animation: wod-lame-glisse .45s cubic-bezier(.2,.9,.3,1); }
+.wod_homebrew .lame.ajout .fx { animation: wod-lame-tranchant .45s ease-out forwards;
+  background: linear-gradient(90deg, transparent 0, transparent 40%, #fff 48%, transparent 56%) no-repeat; background-size: 200% 100%; }
+@keyframes wod-lame-glisse { 0% { clip-path: inset(0 100% 0 0); } 100% { clip-path: inset(0 0 0 0); } }
+@keyframes wod-lame-tranchant { 0% { background-position: 100% 0; opacity: 1; } 100% { background-position: -60% 0; opacity: 0; } }
+@keyframes wod-lame-rebond { 0%, 60% { transform: skewX(-18deg) translateY(0); } 75% { transform: skewX(-18deg) translateY(-2px); } 100% { transform: skewX(-18deg) translateY(0); } }
+/* Retrait : la lame refroidit, devient grise et tombe en cendres */
+.wod_homebrew .lame.retrait .in { opacity: 1; animation: wod-lame-refroidit .7s ease-in forwards; }
+@keyframes wod-lame-refroidit { 0% { filter: none; } 45% { filter: saturate(0) brightness(.55); } 100% { filter: saturate(0) brightness(.35); opacity: 0; transform: translateY(3px); } }
+.wod_homebrew .lame .cendre { position: absolute; top: 60%; width: 2px; height: 2px; background: #8a8494; border-radius: 1px; animation: wod-cendre .7s ease-in forwards; opacity: 0; }
+@keyframes wod-cendre { 0% { opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(var(--dx), 14px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .wod_homebrew .lame, .wod_homebrew .lame * { animation: none !important; } }
+.wod_homebrew .form-group.volonte-entete > label.nom-trait { flex: 0 0 auto; }
+.wod_homebrew .form-group.volonte-entete > .volonte-lames { flex: 1 1 auto; }
+.wod_homebrew .form-group.volonte-entete > .orbe-commandes { flex: 0 0 auto; }

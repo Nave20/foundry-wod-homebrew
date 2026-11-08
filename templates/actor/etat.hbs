@@ -1,10 +1,20 @@
 <section class="tab etat {{tab.cssClass}}" data-group="primary" data-tab="etat">
   <div class="colonnes deux">
+    <div class="pile-encarts">
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.volonte.label"}}</legend>
-      <p class="hint">{{localize "WODHOMEBREW.Fiche.VolontePermanenteEnTete"}}</p>
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.volonte.fields.permanente.label name="system.volonte.permanente" value=source.volonte.permanente max=10 editable=editable}}
       {{formGroup systemFields.volonte.fields.temporaire value=source.volonte.temporaire localize=true disabled=(not editable)}}
+      <p class="hint">{{localize "WODHOMEBREW.Fiche.VolontePermanenteEnTete"}}</p>
     </fieldset>
+    {{#if estMage}}
+    <fieldset>
+      <legend>{{localize "WODHOMEBREW.Actor.FIELDS.avatar.label"}}</legend>
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.avatar.label name="system.avatar" value=source.avatar max=@root.echelle editable=editable}}
+      <p class="hint">{{localize "WODHOMEBREW.Fiche.AvatarAide"}}</p>
+    </fieldset>
+    {{/if}}
+    </div>
 
     <fieldset class="sante">
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.sante.label"}}</legend>

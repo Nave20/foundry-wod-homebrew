@@ -6,7 +6,7 @@ Système de jeu **maison** pour [Foundry Virtual Tabletop](https://foundryvtt.co
 > Le système est développé et testé sur ce build précis. Le build cible **évoluera** avec les mises à jour de Foundry ;
 > le [CHANGELOG](CHANGELOG.md) indique pour chaque version le build sur lequel elle a été vérifiée.
 
-Version actuelle du système : **0.4.0** · Statut : **en développement** (étapes 3 et 4 terminées)
+Version actuelle du système : **0.5.0** · Statut : **en développement** (étapes 1 à 4 terminées, jauges animées ajoutées)
 
 ## Ce que fait le système aujourd'hui
 
@@ -29,7 +29,8 @@ Version actuelle du système : **0.4.0** · Statut : **en développement** (éta
 | Jets de dés : réserve attribut + capacité (ou attribut seul), réussites, critiques, spécialité, ajustements, jets étendus | ✅ |
 | Ressources dans les jets : Volonté, sang, quintessence (max = Avatar + Prime) | ✅ |
 | Santé cliquable et malus de blessure dans les jets ; jet de Volonté | ✅ |
-| Armes et armures dans les jets, pouvoirs, jauges en cases, compendiums | ❌ à venir |
+| Jauges animées : orbe de sang, griffes de rage et lune de gnose, roue quintessence / paradoxe, lames de Volonté | ✅ |
+| Armes et armures dans les jets, pouvoirs, compendiums | ❌ à venir |
 
 ## Installation (développement)
 
@@ -63,6 +64,7 @@ Chaque session de travail se termine par un envoi sur ce dépôt, avec son réca
 | 2026-11-06 | 0.2.0 | Points cliquables, couleurs, listes préfaites, spécialités, Panneau du MJ, Traits de la chronique, scène d'accueil |
 | 2026-11-06 | 0.3.0 | Profils de traits (dont Homebrew), jets de dés avec réussites et règles réglables |
 | 2026-11-07 | 0.4.0 | Volonté, sang et quintessence dans les jets, jets étendus, santé cliquable et malus, jet de Volonté |
+| 2026-11-08 | 0.5.0 | Jauges animées dans l'en-tête (sang, rage, gnose, quintessence et paradoxe, Volonté), Avatar du mage, règle du paradoxe |
 
 ## Développement
 

@@ -18,7 +18,7 @@ const HISTO_VAMPIRE = ["Alliés", "Contacts", "Domaine", "Fausse identité", "G�
 const HISTO_GOULE = ["Alliés", "Contacts", "Domitor", "Fausse identité", "Influence", "Mentor", "Renommée", "Ressources",
   "Serviteurs", "Statut"];
 const HISTO_GAROU = ["Alliés", "Ancêtres", "Contacts", "Fétiche", "Mentor", "Parentèle", "Race pure", "Ressources", "Rites", "Totem"];
-const HISTO_MAGE = ["Accréditation", "Alliés", "Amélioration", "Arcane", "Armes secrètes", "Avatar", "Bénédiction", "Bibliothèque",
+const HISTO_MAGE = ["Accréditation", "Alliés", "Amélioration", "Arcane", "Armes secrètes", "Bénédiction", "Bibliothèque",
   "Camouflage", "Compagnon", "Contacts", "Culte", "Destinée", "Domaine", "Espions", "Familier", "Fausse identité", "Fondation",
   "Influence", "Légende", "Mécène", "Mentor", "Nœud", "Prodige", "Rang", "Renforts", "Renommée", "Réquisitions", "Ressources",
   "Rêve", "Sanctuaire", "Serviteurs", "Statut", "Totem", "Vies antérieures"];

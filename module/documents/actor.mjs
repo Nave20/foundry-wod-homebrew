@@ -24,6 +24,13 @@ export default class WodActor extends Actor {
       const max = quintessenceMax(apres);
       if ( (max !== null) && (changes.system.quintessence > max) ) changes.system.quintessence = max;
     }
+    // Mage : roue de 20 cases partagée. Le paradoxe l'emporte : s'il empiète sur la quintessence, elle diminue ;
+    // la quintessence, elle, ne peut pas empiéter sur le paradoxe.
+    if ( (this.type === "mage") && ((changes.system?.quintessence !== undefined) || (changes.system?.paradoxe !== undefined)) ) {
+      const apres = foundry.utils.mergeObject(this._source.system, changes.system, { inplace: false });
+      const paradoxe = Math.min(20, apres.paradoxe ?? 0);
+      if ( (apres.quintessence ?? 0) + paradoxe > 20 ) changes.system.quintessence = 20 - paradoxe;
+    }
   }
 
   /** @inheritDoc */

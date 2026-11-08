@@ -2,6 +2,34 @@
 
 Une entrée par session de travail. Chaque entrée indique le build de Foundry sur lequel la version a été vérifiée.
 
+## 0.5.0 — 2026-11-08 · Session 5 : jauges animées
+
+Vérifié sur **Foundry VTT 14.369**.
+
+### Jauges animées dans l'en-tête des fiches
+- **Vampire et goule : orbe de sang.** Globe de verre réaliste (reflet diffus, épaisseur du verre, effet de lentille) rempli de sang qui ondule. Une vague apparaît à chaque changement ; quand le sang baisse, un film reste sur la paroi et des coulures descendent. Boutons − / + en dessous.
+- **Garou : griffes de rage et lune de gnose.**
+  - Trois griffures en arc qui se remplissent de feu de bas en haut (temporaire / permanente). Le feu est de plus en plus violent avec la rage : flammes plus hautes, braises, tremblement à partir de 7, sursaut à chaque point gagné.
+  - Une lune pleine au maximum de gnose, qui perd des croissants jusqu'à la nouvelle lune.
+- **Mage : roue de quintessence et de paradoxe** (20 cases, façon astrolabe avec chiffres romains).
+  - La quintessence est une comète qui part du milieu gauche dans le sens horaire, avec sa traînée de lumière.
+  - Le paradoxe est une traînée de vide violet qui part dans l'autre sens, d'où se dégagent particules et volutes.
+  - Quand le paradoxe grignote la quintessence, des étincelles grésillent ; quand il la dévore entièrement, la comète éclate.
+- **Volonté (toutes les fiches) : 10 lames biseautées** à la couleur de la fiche, à la place de la ligne de points. La couleur glisse à l'ajout d'un point ; la lame refroidit et tombe en cendres au retrait. Un reflet discret les traverse, synchronisé. Un clic sur « Volonté » lance toujours le jet.
+- Les jauges repartent de la valeur affichée au rendu précédent, pour animer chaque changement. Elles respectent le réglage « réduire les animations » du système d'exploitation.
+- Les 4 champs clés de l'en-tête passent en 2 × 2 pour laisser la place aux jauges.
+
+### Règles et données
+- **Mage : nouvelle caractéristique Avatar** (au moins 1), dans l'onglet État. La quintessence maximale vaut Avatar + Prime. Les anciennes fiches reprennent la valeur de l'historique « Avatar », qui disparaît des suggestions.
+- **Le paradoxe l'emporte sur la quintessence** : la roue compte 20 cases au total ; si le paradoxe empiète sur la quintessence, celle-ci diminue. La règle s'applique à toute modification (boutons, onglet État, jets). Quintessence et paradoxe sont limités à 20.
+- **Volonté permanente** : se règle désormais dans l'onglet État, dans l'encart Volonté.
+- Un clic sur les points ne descend plus sous le minimum d'un champ (par exemple l'Avatar).
+
+### Vérifications
+- Vérification statique (`check_system.py`) : 0 erreur, 0 avertissement.
+- Tests dans Foundry 14.369 au fil de la session : boutons et plafonds de chaque jauge, règle du paradoxe (6 / 14 + 1 paradoxe → 5 / 15 ; 1 / 19 → 0 / 20 avec extinction), Avatar minimum 1 et migration, Volonté (−1, +1 bloqué à la permanente, jet 7d10), couleurs par créature.
+- Test final dans Foundry redémarré : 21/21 (version, 10 lames sur les 5 fiches, orbe vampire et goule, griffes et lune, roue du mage, aucune jauge sur le mortel, sang −1, rage +1, gnose plafonnée, quintessence max 6, paradoxe qui l'emporte, Avatar ≥ 1, Volonté −1 et jet, nettoyage). Aucune erreur du système ni avertissement d'obsolescence.
+
 ## 0.4.0 — 2026-11-07 · Session 4 : ressources, jets étendus, santé et Volonté
 
 Vérifié sur **Foundry VTT 14.369**.

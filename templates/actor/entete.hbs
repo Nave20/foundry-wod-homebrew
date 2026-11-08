@@ -1,4 +1,4 @@
-<header class="entete">
+<header class="entete{{#if orbe}} avec-orbe{{/if}}{{#if jaugesGarou}} avec-orbe avec-jauges{{/if}}{{#if roue}} avec-orbe{{/if}}">
   <div class="colonne-portrait">
     <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img">
     <details class="reglages" {{#if reglagesOuverts}}open{{/if}}>
@@ -14,11 +14,16 @@
              placeholder="{{localize "WODHOMEBREW.Fiche.Nom"}}" {{disabled (not editable)}}>
       <span class="type-creature">{{localize typeLabel}}</span>
     </div>
-    <div class="volonte-entete">
-      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label="WODHOMEBREW.Actor.FIELDS.volonte.label" name="system.volonte.permanente" value=source.volonte.permanente max=10 editable=editable jet="volonte"}}
-      <span class="volonte-temporaire" data-tooltip="{{localize "WODHOMEBREW.Actor.FIELDS.volonte.fields.temporaire.label"}}">
-        <i class="fa-solid fa-bolt" inert></i> {{source.volonte.temporaire}} / {{source.volonte.permanente}}
-      </span>
+    <div class="form-group trait volonte-entete" data-jet="volonte" data-champ="system.volonte.permanente">
+      <label class="nom-trait"><span class="libelle">{{localize "WODHOMEBREW.Actor.FIELDS.volonte.label"}}</span></label>
+      <div class="volonte-lames" role="img" aria-label="{{localize "WODHOMEBREW.Actor.FIELDS.volonte.label"}} {{source.volonte.temporaire}} / {{source.volonte.permanente}}">
+        {{#each volonteCases as |c|}}<span class="lame{{#if c.on}} on{{/if}}{{#if c.hors}} hors{{/if}}"><span class="cadre"></span><span class="fond"></span><span class="in"></span><span class="fx"></span></span>{{/each}}
+      </div>
+      <div class="orbe-commandes">
+        {{#if editable}}<button type="button" data-action="volonte" data-delta="-1" aria-label="−1"><i class="fa-solid fa-minus" inert></i></button>{{/if}}
+        <span class="orbe-valeur">{{source.volonte.temporaire}} / {{source.volonte.permanente}}</span>
+        {{#if editable}}<button type="button" data-action="volonte" data-delta="1" aria-label="+1"><i class="fa-solid fa-plus" inert></i></button>{{/if}}
+      </div>
     </div>
     <div class="champs-cles">
       {{#each entete.haut as |c|}}
@@ -29,4 +34,45 @@
       {{/each}}
     </div>
   </div>
+  {{#if orbe}}
+  <div class="orbe-sang" data-tooltip="{{localize "WODHOMEBREW.Orbe.Infobulle" n=orbe.parTour}}">
+    <svg viewBox="16 8 208 208" role="img" aria-label="{{localize "WODHOMEBREW.Actor.FIELDS.sang.label"}} {{orbe.valeur}} / {{orbe.max}}"></svg>
+    <div class="orbe-commandes">
+      {{#if editable}}<button type="button" data-action="sang" data-delta="-1" aria-label="{{localize "WODHOMEBREW.Orbe.Depenser"}}"><i class="fa-solid fa-minus" inert></i></button>{{/if}}
+      <span class="orbe-valeur">{{orbe.valeur}} / {{orbe.max}}</span>
+      {{#if editable}}<button type="button" data-action="sang" data-delta="1" aria-label="{{localize "WODHOMEBREW.Orbe.Gagner"}}"><i class="fa-solid fa-plus" inert></i></button>{{/if}}
+    </div>
+  </div>
+  {{/if}}
+  {{#if roue}}
+  <div class="roue-mage">
+    <svg viewBox="0 0 200 200" role="img" aria-label="{{localize "WODHOMEBREW.Actor.FIELDS.quintessence.label"}} {{roue.quintessence}}, {{localize "WODHOMEBREW.Actor.FIELDS.paradoxe.label"}} {{roue.paradoxe}}"></svg>
+    <div class="roue-commandes">
+      <div class="orbe-commandes" data-tooltip="{{localize "WODHOMEBREW.Actor.FIELDS.quintessence.label"}}{{#if roue.max}} (max {{roue.max}}){{/if}}">
+        {{#if editable}}<button type="button" data-action="roue" data-cle="quintessence" data-delta="-1" aria-label="−1"><i class="fa-solid fa-minus" inert></i></button>{{/if}}
+        <span class="roue-libelle quintessence">{{localize "WODHOMEBREW.Roue.Quintessence"}}</span>
+        {{#if editable}}<button type="button" data-action="roue" data-cle="quintessence" data-delta="1" aria-label="+1"><i class="fa-solid fa-plus" inert></i></button>{{/if}}
+      </div>
+      <div class="orbe-commandes" data-tooltip="{{localize "WODHOMEBREW.Actor.FIELDS.paradoxe.label"}}">
+        {{#if editable}}<button type="button" data-action="roue" data-cle="paradoxe" data-delta="-1" aria-label="−1"><i class="fa-solid fa-minus" inert></i></button>{{/if}}
+        <span class="roue-libelle paradoxe">{{localize "WODHOMEBREW.Roue.Paradoxe"}}</span>
+        {{#if editable}}<button type="button" data-action="roue" data-cle="paradoxe" data-delta="1" aria-label="+1"><i class="fa-solid fa-plus" inert></i></button>{{/if}}
+      </div>
+    </div>
+  </div>
+  {{/if}}
+  {{#if jaugesGarou}}
+  <div class="jauges-garou">
+    {{#each jaugesGarou as |j|}}
+    <div class="jauge-garou" data-cle="{{j.cle}}" data-tooltip="{{localize j.label}}">
+      <svg viewBox="0 0 200 200" role="img" aria-label="{{localize j.label}} {{j.valeur}} / {{j.max}}"></svg>
+      <div class="orbe-commandes">
+        {{#if @root.editable}}<button type="button" data-action="jauge" data-delta="-1" aria-label="−1"><i class="fa-solid fa-minus" inert></i></button>{{/if}}
+        <span class="orbe-valeur">{{j.valeur}} / {{j.max}}</span>
+        {{#if @root.editable}}<button type="button" data-action="jauge" data-delta="1" aria-label="+1"><i class="fa-solid fa-plus" inert></i></button>{{/if}}
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
 </header>
