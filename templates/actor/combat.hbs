@@ -6,7 +6,7 @@
       <li class="ligne-combat" data-item-id="{{a.id}}">
         <img src="{{a.img}}" alt="">
         {{#if a.objet}}<a class="nom-objet" data-action="objetEditer">{{a.nom}}</a>{{else}}<span class="nom-objet">{{a.nom}}</span>{{/if}}
-        <span class="hint competence">{{a.competence}}{{#if a.requis}} <span class="alerte" data-tooltip="{{localize "WODHOMEBREW.Combat.Exige" r=a.requis}}"><i class="fa-solid fa-triangle-exclamation" inert></i> {{a.requis}}</span>{{/if}}</span>
+        <span class="hint competence">{{a.competence}}{{#if a.requis}} <span class="alerte"><i class="fa-solid fa-triangle-exclamation" inert></i> {{a.requis}}</span>{{/if}}</span>
         <span class="degats">{{a.degatsTexte}}</span>
         <span class="hint portee">{{a.portee}}</span>
         {{#if @root.editable}}<button type="button" class="attaquer" data-action="attaquer"><i class="fa-solid fa-hand-fist" inert></i> {{localize "WODHOMEBREW.Combat.Attaquer"}}</button>{{/if}}

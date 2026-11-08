@@ -97,3 +97,11 @@ test("ajustement de dés et de difficulté appliqué à la réserve de base", ()
   assert.deepEqual(appels[2], { reserve: 7, difficulte: 8 });
   assert.equal(e.final, 1);
 });
+
+test("réglage du MJ avant le lancer : rangé dans ajust, la base reste sans le bonus", () => {
+  const appels = [];
+  const e = creerEtape("defense", { reserve: 4, difficulte: 6 }, (r, d) => { appels.push({ r, d }); return { reussites: 1, des: [] }; }, 0, { des: 2, diff: -1 });
+  assert.deepEqual(e.base, { reserve: 4, difficulte: 6 });
+  assert.deepEqual(e.ajust, { des: 2, diff: -1 });
+  assert.deepEqual(appels, [{ r: 6, d: 5 }]);
+});

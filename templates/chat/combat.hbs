@@ -15,8 +15,8 @@
     <div class="infos">{{l.reserve}}d10 · {{localize "WODHOMEBREW.Jets.DifficulteCourte"}} {{l.difficulte}}{{#each l.mods as |m|}} · {{m}}{{/each}}{{#if l.manuel}} · {{localize "WODHOMEBREW.Combat.Saisie"}}{{/if}}</div>
     {{#if l.des.length}}<ol class="wod-jet-des petits">{{#each l.des as |d|}}<li class="de {{d.type}}">{{d.valeur}}</li>{{/each}}</ol>{{/if}}
     <div class="correction replie" data-pour="mj">
-      <label>{{localize "WODHOMEBREW.Combat.Des"}} <input type="number" name="des" value="{{l.ajust.des}}" step="1"></label>
-      <label>{{localize "WODHOMEBREW.Jets.DifficulteCourte"}} <input type="number" name="diff" value="{{l.ajust.diff}}" step="1"></label>
+      <label>{{localize "WODHOMEBREW.Combat.Des"}} <input type="number" name="des" value="0" step="1"></label>
+      <label>{{localize "WODHOMEBREW.Jets.DifficulteCourte"}} <input type="number" name="diff" value="0" step="1"></label>
       <button type="button" data-combat="relancer"><i class="fa-solid fa-rotate" inert></i> {{localize "WODHOMEBREW.Combat.Relancer"}}</button>
       <label>{{localize "WODHOMEBREW.Combat.OuReussites"}} <input type="number" name="reussites" value="" step="1"></label>
       <button type="button" data-combat="fixer"><i class="fa-solid fa-check" inert></i></button>

@@ -130,18 +130,18 @@ export async function executer(message, action, donnees = {}, user = game.user) 
         const ajust = user.isGM ? { des: Number(donnees.ajust?.des) || 0, diff: Number(donnees.ajust?.diff) || 0 } : { des: 0, diff: 0 };
         const protections = protectionsDe(cible);
         if ( donnees.type === "aucune" ) {
-          etat.defense = creerEtape("defense", { reserve: 0, difficulte: regles.difficulte }, lancerReserve);
+          etat.defense = creerEtape("defense", { reserve: 0, difficulte: regles.difficulte }, lancerReserve, 0, ajust);
           etat.defense.detail = "";
           etat.defense.mods = [];
         }
         else {
           const sante = cible.system.sante?.etat ?? {};
           const traits = [traitActeur(cible, "dexterite", "attribut"), traitActeur(cible, DEFENSES[donnees.type], "capacite")];
-          const jet = preparerJet(traits, { specialite: true, desBonus: ajust.des, diffMod: ajust.diff,
+          const jet = preparerJet(traits, { specialite: true,
             malus: Number(sante.malus) || 0, appliquerMalus: regles.malusBlessure,
             etatSante: sante.cle ? _loc(`WODHOMEBREW.Sante.Niveaux.${sante.cle}`) : "",
             malusArmure: malusDexterite(protections) }, regles);
-          etat.defense = creerEtape("defense", { reserve: jet.reserve, difficulte: jet.difficulte }, lancerReserve);
+          etat.defense = creerEtape("defense", { reserve: jet.reserve, difficulte: jet.difficulte }, lancerReserve, 0, ajust);
           etat.defense.detail = traits.map(t => `${t.nom} ${t.valeur}`).join(" + ");
           etat.defense.mods = jet.modificateurs.map(texteModificateur);
         }
@@ -194,7 +194,7 @@ export async function executer(message, action, donnees = {}, user = game.user) 
 async function demander(message, action, donnees) {
   if ( game.user.isGM ) return executer(message, action, donnees, game.user);
   if ( !game.users.activeGM ) return ui.notifications.warn("WODHOMEBREW.Combat.PasDeMJ", { localize: true });
-  game.socket.emit(CANAL, { type: "combat", message: message.id, action, donnees, user: game.user.id });
+  game.socket.emit(CANAL, { type: "combat", message: message.id, action, donnees });
 }
 
 /* -------------------------------------------- */
@@ -255,6 +255,13 @@ export function registerCombatHooks() {
     // Sans cible enregistrée, tout le monde voit les boutons ; la défense vise alors la cible de celui qui clique
     const defenseur = mj || (cible ? cible.isOwner : true);
     if ( !mj ) carte.querySelectorAll("[data-pour='mj']").forEach(e => e.remove());
+    else for ( const zone of carte.querySelectorAll(".wod-combat-etape[data-etape]") ) {
+      const ajust = etat[zone.dataset.etape]?.ajust ?? {};
+      for ( const nom of ["des", "diff"] ) {
+        const champ = zone.querySelector(`.correction [name='${nom}']`);
+        if ( champ ) champ.value = ajust[nom] ?? 0;
+      }
+    }
     if ( !defenseur ) carte.querySelectorAll("[data-pour='defense']").forEach(e => e.remove());
 
     carte.addEventListener("click", async event => {
@@ -284,10 +291,11 @@ export function registerCombatHooks() {
   });
 
   Hooks.once("ready", () => {
-    game.socket.on(CANAL, data => {
+    // L'expéditeur est fourni par le serveur (2e argument) : ne jamais le lire dans les données reçues
+    game.socket.on(CANAL, (data, expediteur) => {
       if ( (data?.type !== "combat") || !game.users.activeGM?.isSelf ) return;
       const message = game.messages.get(data.message);
-      const user = game.users.get(data.user);
+      const user = game.users.get(expediteur);
       if ( message && user ) executer(message, data.action, data.donnees, user);
     });
   });

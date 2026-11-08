@@ -82,9 +82,11 @@ export function deduireArme(modeAttaque, nom = "") {
  * @param {{reserve: number, difficulte: number}} base   Réserve et difficulté avant les corrections du MJ
  * @param {(reserve: number, difficulte: number) => {reussites: number, des: object[]}} lancer
  * @param {number} [bonus]   Réussites ajoutées à chaque lancer (Volonté de l'attaque)
+ * @param {{des: number, diff: number}} [ajust]   Réglage du MJ appliqué dès le premier lancer
  */
-export function creerEtape(libelle, base, lancer, bonus = 0) {
-  const etape = { libelle, base: { ...base }, ajust: { des: 0, diff: 0 }, reserve: 0, difficulte: base.difficulte,
+export function creerEtape(libelle, base, lancer, bonus = 0, ajust = null) {
+  const etape = { libelle, base: { ...base }, ajust: { des: Number(ajust?.des) || 0, diff: Number(ajust?.diff) || 0 },
+    reserve: 0, difficulte: base.difficulte,
     reussites: 0, des: [], manuel: false, bonus };
   return relancerEtape(etape, lancer);
 }

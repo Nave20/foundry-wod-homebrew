@@ -2,6 +2,34 @@
 
 Une entrée par session de travail. Chaque entrée indique le build de Foundry sur lequel la version a été vérifiée.
 
+## 0.6.0 — 2026-11-08 · Session 6 : armes, armures et combat
+
+Vérifié sur **Foundry VTT 14.369**.
+
+### Objets
+- **Dégâts chiffrés** : dés de base de l'arme, case « Ajoute la Force » (armes de contact), case « Dégâts infinis » (au-delà de tout encaissement). Les anciens dégâts saisis en texte (« Force + 2 ») sont convertis automatiquement.
+- **Attaque** : attribut (Dextérité par défaut), compétence (Bagarre, Mêlée, Arts martiaux, Armes à feu, Tir à l'arc, Athlétisme) et compétence ou spécialité exigée (affichée en alerte).
+- **Protection** : dés d'encaissement, malus de Dextérité, case « Équipée ».
+- Nouvelle catégorie **Artefact** : peut porter des champs d'arme et de protection.
+
+### Fiche : onglet Combat
+- Armes (et **Mains nues**, toujours disponibles) avec compétence, dégâts, portée et bouton **Attaquer** ; protections avec la case « Équipée » ; résumé de l'encaissement (Vigueur + armure) et du malus de Dextérité.
+- « Attaquer » remplit la barre de jet habituelle (attribut + compétence, spécialité, dés et difficulté ajustables, Volonté…). Les protections équipées retirent leur malus aux jets de Dextérité.
+
+### Carte de combat
+- Une seule carte qui avance dans le chat : **attaque → défense (Esquive, Parade, Blocage ou Aucune) → dégâts → encaissement → santé**.
+- Règles de la table : attaque − défense, la première réussite nette valide le coup et les suivantes deviennent des dés de dégâts ; dégâts = dés de l'arme (+ Force) + réussites restantes ; encaissement = Vigueur + protections équipées, contre tous les types ; un résultat négatif (échec critique) s'ajoute à l'adversaire. Difficulté 6, 5 avec une spécialité de Force (dégâts au contact) ou de Vigueur (encaissement).
+- **Le MJ intervient à chaque moment** : réglage de dés et de difficulté avant la défense, crayon sur chaque ligne pour relancer avec des dés ou une difficulté corrigés ou saisir directement les réussites (la suite se recalcule), dégâts finaux modifiables. Rien ne touche la santé avant le clic sur « Appliquer ».
+- Le joueur propriétaire de la cible choisit sa défense ; ses clics passent par le MJ connecté (socket du système). Les corrections ne sont visibles que du MJ.
+
+### Compendium
+- Outils d'import (`tools/`) : un script Python lit les armes et armures d'une vault Obsidian et produit un fichier d'objets ; un script lancé dans Foundry remplit un **compendium du monde** « Armes et armures » (dossiers Armes, Armures, Artefacts). Les objets et leurs images restent sur la machine du MJ : ils ne sont pas publiés avec le système.
+
+### Vérifications
+- Tests automatiques des calculs et de l'enchaînement de la carte (Node, `node --test "tests/*.test.mjs"`).
+- Vérification statique (`check_system.py`) : 0 erreur, 0 avertissement.
+- Tests dans Foundry 14.369 : voir le journal de session.
+
 ## 0.5.0 — 2026-11-08 · Session 5 : jauges animées
 
 Vérifié sur **Foundry VTT 14.369**.
