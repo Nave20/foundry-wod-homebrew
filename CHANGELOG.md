@@ -2,7 +2,7 @@
 
 Une entrée par session de travail. Chaque entrée indique le build de Foundry sur lequel la version a été vérifiée.
 
-## 0.6.0 — 2026-11-08 · Session 6 : armes, armures et combat
+## 0.6.0 — 2026-11-08 · Session 6 : armes, armures, combat et formes des garous
 
 Vérifié sur **Foundry VTT 14.369**.
 
@@ -21,14 +21,23 @@ Vérifié sur **Foundry VTT 14.369**.
 - Règles de la table : attaque − défense, la première réussite nette valide le coup et les suivantes deviennent des dés de dégâts ; dégâts = dés de l'arme (+ Force) + réussites restantes ; encaissement = Vigueur + protections équipées, contre tous les types ; un résultat négatif (échec critique) s'ajoute à l'adversaire. Difficulté 6, 5 avec une spécialité de Force (dégâts au contact) ou de Vigueur (encaissement).
 - **Le MJ intervient à chaque moment** : réglage de dés et de difficulté avant la défense, crayon sur chaque ligne pour relancer avec des dés ou une difficulté corrigés ou saisir directement les réussites (la suite se recalcule), dégâts finaux modifiables. Rien ne touche la santé avant le clic sur « Appliquer ».
 - Le joueur propriétaire de la cible choisit sa défense ; ses clics passent par le MJ connecté (socket du système). Les corrections ne sont visibles que du MJ.
+- La carte s'arrête dès qu'il n'y a plus rien à jouer : une attaque à 0 réussite ou moins affiche « Raté » sans défense ; des dégâts à 0 ou moins ne déclenchent pas d'encaissement (une correction du MJ relance la suite).
+- La barre de jet est désormais en bas de la fiche, hors des onglets : elle reste visible depuis l'onglet Combat (et pour un jet de Volonté lancé depuis n'importe quel onglet).
+
+### Garous : formes
+- Nouvel onglet **Forme** (fiches de garou seulement) : les cinq formes (Homidé, Glabro, Crinos, Hispo, Lupus) en silhouettes. La forme actuelle brille en vert néon ; un clic sur une autre forme l'affiche en vert pâle avec ses effets (« ancienne valeur → nouvelle valeur ») ; le bouton **Changer de forme** l'applique, avec un éclair lumineux.
+- Les attributs suivent la forme partout (jets, attaque, dégâts, défense, encaissement). Les points de la fiche restent ceux de la forme humaine, avec la valeur de la forme affichée en vert à côté. La difficulté de Perception baisse en Lupus (−2) et en Hispo (−1).
+- **Santé selon la forme** (réglage des Règles des jets, section Garous) : en Crinos la piste double (règle par défaut), ou +4 niveaux (5e édition), ou aucun changement (W20). Les blessures sont gardées au changement de forme, avec une alerte si elles dépassent la piste.
+- Rappel de la forme actuelle en mini silhouette sous le portrait ; un clic ouvre l'onglet Forme.
 
 ### Compendium
 - Outils d'import (`tools/`) : un script Python lit les armes et armures d'une vault Obsidian et produit un fichier d'objets ; un script lancé dans Foundry remplit un **compendium du monde** « Armes et armures » (dossiers Armes, Armures, Artefacts). Les objets et leurs images restent sur la machine du MJ : ils ne sont pas publiés avec le système.
 
 ### Vérifications
-- Tests automatiques des calculs et de l'enchaînement de la carte (Node, `node --test "tests/*.test.mjs"`).
+- Tests automatiques (Node, `node --test "tests/*.test.mjs"`) : 27 sur 27 (calculs du combat, enchaînement de la carte, formes et santé).
 - Vérification statique (`check_system.py`) : 0 erreur, 0 avertissement.
-- Tests dans Foundry 14.369 : voir le journal de session.
+- Relecture indépendante de la carte de combat : expéditeur des demandes de joueur fourni par le serveur (non falsifiable), réglage secret du MJ masqué aux joueurs, texte d'objet affiché sans interprétation HTML.
+- Tests dans Foundry 14.369 : test complet après redémarrage (15 étapes), puis test de contrôle avant publication (13 étapes : onglets par créature, barre visible depuis Combat, carte qui s'arrête, Crinos Force 7 et santé 14, blessures gardées au retour), aucune erreur.
 
 ## 0.5.0 — 2026-11-08 · Session 5 : jauges animées
 
