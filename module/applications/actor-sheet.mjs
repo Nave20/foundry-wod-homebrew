@@ -6,6 +6,8 @@ import { GriffesRage, LuneGnose } from "../jauges-garou.mjs";
 import RoueMage from "../roue-mage.mjs";
 import { capacitesAffichees, configTraits, nomAttribut } from "../traits.mjs";
 import { lancerJet, preparerJet, reglesJets, texteModificateur } from "../des.mjs";
+import { armeDe, MAINS_NUES, lancerAttaque } from "../combat.mjs";
+import { malusDexterite, reserveEncaissement } from "../combat-regles.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -67,7 +69,9 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       specialite: WodActorSheet.#onSpecialite,
       objetCreer: WodActorSheet.#onObjetCreer,
       objetEditer: WodActorSheet.#onObjetEditer,
-      objetSupprimer: WodActorSheet.#onObjetSupprimer
+      objetSupprimer: WodActorSheet.#onObjetSupprimer,
+      attaquer: WodActorSheet.#onAttaquer,
+      equiper: WodActorSheet.#onEquiper
     }
   };
 
@@ -77,12 +81,13 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     traits: { template: `${TEMPLATES}/traits.hbs`, scrollable: [""], templates: [`${TEMPLATES}/liste-traits.hbs`, `${TEMPLATES}/trait.hbs`] },
     avantages: { template: `${TEMPLATES}/avantages.hbs`, scrollable: [""], templates: [`${TEMPLATES}/liste-traits.hbs`] },
     etat: { template: `${TEMPLATES}/etat.hbs`, scrollable: [""], templates: [`${TEMPLATES}/trait.hbs`] },
+    combat: { template: `${TEMPLATES}/combat.hbs`, scrollable: [""] },
     biographie: { template: `${TEMPLATES}/biographie.hbs`, scrollable: [""] }
   };
 
   static TABS = {
     primary: {
-      tabs: [{ id: "traits" }, { id: "avantages" }, { id: "etat" }, { id: "biographie" }],
+      tabs: [{ id: "traits" }, { id: "avantages" }, { id: "etat" }, { id: "combat" }, { id: "biographie" }],
       initial: "traits",
       labelPrefix: "WODHOMEBREW.Fiche.Onglets"
     }
@@ -96,6 +101,9 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
 
   /** Options du jet en cours : spécialité utilisée, dés et difficulté ajoutés à la main, réglages dépliés */
   #optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false, volonte: false, sang: false, quintessence: 0, malus: null };
+
+  /** Arme de l'attaque en préparation dans la barre de jet ({ id, nom, absente? }) ou null */
+  #arme = null;
 
   /** Orbe de sang affiché (pour animer le passage d'une valeur à l'autre entre deux rendus) */
   #orbe = null;
@@ -210,6 +218,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       malusTexte: n.malus === null ? "" : n.malus === 0 ? "0" : String(n.malus)
     }));
     context.etatSante = `WODHOMEBREW.Sante.Niveaux.${system.sante.etat.cle}`;
+    context.combat = this.#contexteCombat();
     return context;
   }
 
@@ -230,6 +239,33 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       }
     }
     return context;
+  }
+
+  /** Onglet Combat : armes (avec Mains nues), protections et résumé de l'encaissement */
+  #contexteCombat() {
+    const objets = this.actor.items.filter(i => i.type === "objet");
+    const types = CONFIG.WODHOMEBREW.typesDegats;
+    const ligneArme = (id, img, objet, a) => ({
+      id, img, objet,
+      nom: a.nom,
+      competence: _loc(CONFIG.WODHOMEBREW.competencesCombat[a.competence] ?? "WODHOMEBREW.Combat.Aucune"),
+      requis: a.requis,
+      degatsTexte: [a.infini ? "∞" : [a.force ? _loc("WODHOMEBREW.Actor.FIELDS.attributs.force.label") : "", a.degats || (a.force ? "" : "0")]
+        .filter(Boolean).join(" + "), a.type_degats ? _loc(types[a.type_degats]) : ""].filter(Boolean).join(" · "),
+      portee: a.portee ? `${a.portee}${/^\d+$/.test(a.portee) ? " m" : ""}` : ""
+    });
+    const armes = objets.filter(i => i.system.estOffensif).map(i => ligneArme(i.id, i.img, true, armeDe(i)));
+    armes.push(ligneArme(MAINS_NUES, "icons/svg/combat.svg", false, armeDe(MAINS_NUES)));
+    const protections = objets.filter(i => i.system.estProtection).map(i => ({
+      id: i.id, img: i.img, nom: i.name, armure: i.system.armure, malus: i.system.malus, equipe: i.system.equipe
+    }));
+    const vigueur = Number(this.actor.system.attributs?.vigueur) || 0;
+    const listeProtections = protections.map(p => ({ armure: p.armure, malus: p.malus, equipe: p.equipe }));
+    const total = reserveEncaissement(vigueur, listeProtections);
+    const malus = malusDexterite(listeProtections);
+    return { armes, protections,
+      resume: _loc("WODHOMEBREW.Combat.Resume", { v: vigueur, a: total - vigueur, n: total })
+        + (malus ? ` · ${_loc("WODHOMEBREW.Combat.MalusDex", { n: malus })}` : "") };
   }
 
   /** Données d'affichage d'une liste libre { nom, valeur } */
@@ -257,6 +293,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
         const cat = ligne.dataset.jet;
         const choix = this.#jet[cat]?.name === name ? null : { name, nom: libelle.textContent.trim(), categorie: cat };
         // Le jet de Volonté se lance seul ; choisir un attribut ou une capacité le désélectionne
+        this.#arme = null;
         if ( cat === "volonte" ) this.#jet = { attribut: null, capacite: null, volonte: choix };
         else { this.#jet.volonte = null; this.#jet[cat] = choix; }
         this.#optionsJet.specialite = true;   // la case Spécialité repart cochée à chaque nouvelle sélection
@@ -377,7 +414,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       const ligne = this.#ligneJet(t.name);
       const specialite = ligne?.querySelector("input.valeur-specialite")?.value?.trim() || "";
       return { nom: t.nom, categorie: t.categorie, valeur: Number(foundry.utils.getProperty(this.actor, t.name)) || 0, specialite };
-    });
+    }).concat(this.#arme?.absente ? [{ nom: this.#arme.absente, categorie: "capacite", valeur: 0, specialite: "" }] : []);
   }
 
   /** Jet préparé (réserve, difficulté, modificateurs) à partir de la sélection et des options */
@@ -393,11 +430,20 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       malus: Number(etat.malus) || 0,
       neutralise: etat.malus === null,
       etatSante: etat.cle ? _loc(`WODHOMEBREW.Sante.Niveaux.${etat.cle}`) : "",
-      appliquerMalus: this.#optionsJet.malus ?? parDefaut
+      appliquerMalus: this.#optionsJet.malus ?? parDefaut,
+      // Protections équipées : malus aux jets de Dextérité
+      malusArmure: (this.#jet.attribut?.name === "system.attributs.dexterite") ? this.#malusArmure() : 0
     }, regles);
   }
 
+  /** Malus de Dextérité des protections équipées */
+  #malusArmure() {
+    return malusDexterite(this.actor.items.filter(i => (i.type === "objet") && i.system.estProtection)
+      .map(i => ({ malus: i.system.malus, equipe: i.system.equipe })));
+  }
+
   #reinitialiserJet() {
+    this.#arme = null;
     this.#jet = { attribut: null, capacite: null, volonte: null };
     this.#optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false, volonte: false, sang: false, quintessence: 0, malus: null };
     this.#majBarreJet();
@@ -427,7 +473,8 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     const o = this.#optionsJet;
     const e = foundry.utils.escapeHTML;
     const signe = n => (n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : "0");
-    const composition = jet.traits.map(t => `${e(t.nom)} (${t.valeur})`).join(" + ");
+    const composition = (this.#arme ? `<b>${e(_loc("WODHOMEBREW.Combat.AttaqueAvec", { nom: this.#arme.nom }))}</b> · ` : "")
+      + jet.traits.map(t => `${e(t.nom)} (${t.valeur})`).join(" + ");
     // La case Spécialité n'apparaît que si un des traits choisis en a une
     const specialite = jet.specialites.length ? `
       <label class="ligne-specialite">
@@ -512,8 +559,10 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
         case "quint-moins": o.quintessence = Math.max(0, o.quintessence - 1); break;
         case "annuler": return this.#reinitialiserJet();
         case "lancer": {
-          const roll = await lancerJet(this.actor, this.#jetPrepare());
-          if ( roll ) this.#reinitialiserJet();
+          const resultat = this.#arme
+            ? await lancerAttaque(this.actor, this.#jetPrepare(), this.#arme.id)
+            : await lancerJet(this.actor, this.#jetPrepare());
+          if ( resultat ) this.#reinitialiserJet();
           return;
         }
       }
@@ -664,6 +713,32 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
 
   static async #onObjetEditer(event, target) {
     return WodActorSheet.#objet.call(this, target)?.sheet.render({ force: true });
+  }
+
+  /** « Attaquer » : la barre de jet se remplit avec l'attribut et la compétence de l'arme */
+  static #onAttaquer(event, target) {
+    const id = target.closest("[data-item-id]")?.dataset.itemId;
+    const arme = armeDe(id === MAINS_NUES ? MAINS_NUES : this.actor.items.get(id));
+    if ( !arme ) return;
+    const choix = (name, categorie) => {
+      const ligne = this.#ligneJet(name);
+      return ligne ? { name, nom: ligne.querySelector(".nom-trait .libelle")?.textContent.trim() || name, categorie } : null;
+    };
+    const attribut = choix(`system.attributs.${arme.attribut}`, "attribut");
+    let capacite = null;
+    if ( arme.competence ) capacite = choix(`system.capacites.${arme.competence}`, "capacite")
+      ?? choix(`system.capacites_ajoutees.${arme.competence}.valeur`, "capacite");
+    this.#jet = { attribut, capacite, volonte: null };
+    this.#arme = { id, nom: arme.nom,
+      absente: (arme.competence && !capacite) ? _loc(CONFIG.WODHOMEBREW.competencesCombat[arme.competence]) : null };
+    this.#optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false, volonte: false, sang: false, quintessence: 0, malus: null };
+    this.#majBarreJet();
+  }
+
+  /** Case « Équipée » d'une protection */
+  static async #onEquiper(event, target) {
+    const item = WodActorSheet.#objet.call(this, target);
+    if ( item ) await item.update({ "system.equipe": !item.system.equipe });
   }
 
   static async #onObjetSupprimer(event, target) {

@@ -395,3 +395,17 @@ body.wod-sans-scene #board { opacity: 0; }
 .wod_homebrew .form-group.volonte-entete > label.nom-trait { flex: 0 0 auto; }
 .wod_homebrew .form-group.volonte-entete > .volonte-lames { flex: 1 1 auto; }
 .wod_homebrew .form-group.volonte-entete > .orbe-commandes { flex: 0 0 auto; }
+
+/* Onglet Combat */
+.wod_homebrew .liste-combat { list-style: none; margin: 0; padding: 0; }
+.wod_homebrew .ligne-combat { display: grid; grid-template-columns: 28px minmax(0, 1.4fr) minmax(0, 1.3fr) minmax(0, 1.2fr) 3.5rem auto;
+  gap: 0.5rem; align-items: center; padding: 0.25rem 0; border-bottom: 1px solid var(--color-border); }
+.wod_homebrew .protections .ligne-combat { grid-template-columns: 28px minmax(0, 1.6fr) 4rem 4rem auto; }
+.wod_homebrew .ligne-combat img { width: 28px; height: 28px; border: none; }
+.wod_homebrew .ligne-combat .nom-objet { cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wod_homebrew .ligne-combat .alerte { color: var(--color-level-warning, #c98a1a); white-space: nowrap; }
+.wod_homebrew .ligne-combat .degats { font-weight: bold; }
+.wod_homebrew .ligne-combat button.attaquer { white-space: nowrap; padding: 0 0.5rem; }
+.wod_homebrew .ligne-combat .equiper { display: flex; gap: 0.3rem; align-items: center; white-space: nowrap; }
+.wod_homebrew .resume-combat { margin: 0.5rem 0 0; }
+.wod_homebrew.item fieldset.attaque, .wod_homebrew.item fieldset.protection { margin: 0.4rem 0; }

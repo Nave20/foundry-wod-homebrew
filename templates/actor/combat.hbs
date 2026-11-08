@@ -1,0 +1,36 @@
+<section class="tab combat {{tab.cssClass}}" data-group="primary" data-tab="combat">
+  <fieldset class="armes">
+    <legend>{{localize "WODHOMEBREW.Combat.Armes"}}</legend>
+    <ol class="liste-combat">
+      {{#each combat.armes as |a|}}
+      <li class="ligne-combat" data-item-id="{{a.id}}">
+        <img src="{{a.img}}" alt="">
+        {{#if a.objet}}<a class="nom-objet" data-action="objetEditer">{{a.nom}}</a>{{else}}<span class="nom-objet">{{a.nom}}</span>{{/if}}
+        <span class="hint competence">{{a.competence}}{{#if a.requis}} <span class="alerte" data-tooltip="{{localize "WODHOMEBREW.Combat.Exige" r=a.requis}}"><i class="fa-solid fa-triangle-exclamation" inert></i> {{a.requis}}</span>{{/if}}</span>
+        <span class="degats">{{a.degatsTexte}}</span>
+        <span class="hint portee">{{a.portee}}</span>
+        {{#if @root.editable}}<button type="button" class="attaquer" data-action="attaquer"><i class="fa-solid fa-hand-fist" inert></i> {{localize "WODHOMEBREW.Combat.Attaquer"}}</button>{{/if}}
+      </li>
+      {{/each}}
+    </ol>
+  </fieldset>
+
+  <fieldset class="protections">
+    <legend>{{localize "WODHOMEBREW.Combat.Protections"}}</legend>
+    <ol class="liste-combat">
+      {{#each combat.protections as |p|}}
+      <li class="ligne-combat" data-item-id="{{p.id}}">
+        <img src="{{p.img}}" alt="">
+        <a class="nom-objet" data-action="objetEditer">{{p.nom}}</a>
+        <span class="degats">+{{p.armure}} {{localize "WODHOMEBREW.Jets.Des"}}</span>
+        <span class="hint">{{#if p.malus}}{{localize "WODHOMEBREW.Combat.MalusCourt" n=p.malus}}{{else}}—{{/if}}</span>
+        <label class="equiper"><input type="checkbox" data-action="equiper" {{checked p.equipe}} {{disabled (not @root.editable)}}> {{localize "WODHOMEBREW.Objet.FIELDS.equipe.label"}}</label>
+      </li>
+      {{else}}
+      <li class="vide hint">{{localize "WODHOMEBREW.Combat.AucuneProtection"}}</li>
+      {{/each}}
+    </ol>
+    <p class="hint resume-combat">{{combat.resume}}</p>
+  </fieldset>
+  <p class="hint">{{localize "WODHOMEBREW.Combat.Aide"}}</p>
+</section>

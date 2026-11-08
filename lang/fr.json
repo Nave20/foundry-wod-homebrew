@@ -642,7 +642,8 @@
         "traits": "Traits",
         "avantages": "Avantages",
         "etat": "État",
-        "biographie": "Biographie"
+        "biographie": "Biographie",
+        "combat": "Combat"
       },
       "Identite": "Identité",
       "AjouterCapacite": "Ajouter une capacité secondaire",
@@ -779,7 +780,8 @@
       "Neutralise": "Personnage neutralisé : il ne devrait pas pouvoir agir.",
       "SectionBlessure": "Blessures",
       "MalusBlessureRegle": "Le malus de santé retire des dés aux jets",
-      "VolonteSansMalus": "Le jet de Volonté ignore le malus de santé"
+      "VolonteSansMalus": "Le jet de Volonté ignore le malus de santé",
+      "ModArmure": "Armure"
     },
     "Orbe": {
       "Infobulle": "Réserve de sang ({n} par tour)",
@@ -791,7 +793,18 @@
       "Paradoxe": "Parad."
     },
     "Combat": {
-      "Aucune": "Aucune (attribut seul)"
+      "Aucune": "Aucune (attribut seul)",
+      "Armes": "Armes",
+      "Protections": "Protections",
+      "Attaquer": "Attaquer",
+      "MainsNues": "Mains nues",
+      "Exige": "Exige : {r}",
+      "MalusCourt": "Dex −{n}",
+      "AucuneProtection": "Aucune protection.",
+      "Resume": "Encaissement : Vigueur {v} + armure {a} = {n} dés",
+      "MalusDex": "malus de Dextérité −{n}",
+      "AttaqueAvec": "Attaque : {nom}",
+      "Aide": "Ciblez un jeton puis cliquez sur « Attaquer » : la barre de jet se remplit avec l'attribut et la compétence de l'arme. Glissez des objets depuis le compendium pour les ajouter."
     }
   }
 }
