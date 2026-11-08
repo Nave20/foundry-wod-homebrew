@@ -1,9 +1,10 @@
+import { FORMES, attributsEnForme } from "../formes.mjs";
 import { WODHOMEBREW } from "../config.mjs";
 import { quintessenceMax } from "../des.mjs";
 import ActorBaseData from "./actor-base.mjs";
 import { groupe, jauge, listeTraits, points, texte } from "./fields.mjs";
 
-const { SchemaField } = foundry.data.fields;
+const { StringField, SchemaField } = foundry.data.fields;
 
 /* -------------------------------------------- */
 /*  Blocs partagés                              */
@@ -58,8 +59,18 @@ export class GarouData extends ActorBaseData {
       race: texte(), auspice: texte(), tribu: texte(), meute: texte(), totem: texte(), rang: points(1),
       dons: listeTraits(), rites: listeTraits(), fetiches: listeTraits(),
       rage: jauge(1), gnose: jauge(1),
-      renommee: new SchemaField({ gloire: jauge(0), honneur: jauge(0), sagesse: jauge(0) })
+      renommee: new SchemaField({ gloire: jauge(0), honneur: jauge(0), sagesse: jauge(0) }),
+      forme: new StringField({ required: true, blank: false, initial: "homide", choices: () => Object.fromEntries(
+        FORMES.map(f => [f.cle, `WODHOMEBREW.Forme.Noms.${f.cle}`])) })
     };
+  }
+
+  /** @inheritDoc */
+  prepareDerivedData() {
+    super.prepareDerivedData();
+    // Attributs dans la forme actuelle (les points de la fiche restent ceux de la forme humaine)
+    this.attributsBase = { ...this.attributs };
+    this.attributs = attributsEnForme(this.attributs, this.forme);
   }
 }
 

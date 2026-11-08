@@ -439,3 +439,32 @@ body.wod-sans-scene #board { opacity: 0; }
 .wod-combat-final:has(.saisie) .valeur-joueur { display: none; }
 .wod-combat-final .valeur-joueur { font-size: 1.2em; }
 .wod-combat.appliquee .wod-combat-final { opacity: 0.85; font-weight: normal; }
+
+/* Onglet Forme (garou) */
+.wod_homebrew .rang-formes { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.25rem; align-items: end; margin-top: 0.5rem; }
+.wod_homebrew .forme-garou { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: #5f5a6a; text-decoration: none; }
+.wod_homebrew .forme-garou .silhouette { display: block; width: 100%; aspect-ratio: 1; background: currentColor;
+  -webkit-mask: var(--silhouette) center / contain no-repeat; mask: var(--silhouette) center / contain no-repeat;
+  transition: color .5s, filter .5s; }
+.wod_homebrew .forme-garou:hover { color: #8a8596; text-shadow: none; }
+.wod_homebrew .forme-garou.choix { color: #3f9a64; }
+.wod_homebrew .forme-garou.actuelle { color: #39ff88; }
+.wod_homebrew .forme-garou.actuelle .silhouette { filter: drop-shadow(0 0 2px #39ff88) drop-shadow(0 0 9px #39ff8877); }
+.wod_homebrew .forme-garou.eclair .silhouette { animation: wod-forme-eclair 1s ease-out; }
+@keyframes wod-forme-eclair {
+  0% { filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 22px #39ff88) brightness(2); }
+  100% { filter: drop-shadow(0 0 2px #39ff88) drop-shadow(0 0 9px #39ff8877); }
+}
+.wod_homebrew .forme-garou .nom-forme { font-weight: bold; margin-top: 0.2rem; color: #8c879a; }
+.wod_homebrew .forme-garou.choix .nom-forme { color: #7fc79a; }
+.wod_homebrew .forme-garou.actuelle .nom-forme { color: #39ff88; }
+.wod_homebrew .detail-forme { margin-top: 0.6rem; border-top: 1px solid var(--color-border); padding-top: 0.5rem; }
+.wod_homebrew .ligne-forme { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.wod_homebrew .ligne-forme .titre { font-weight: bold; color: #7fc79a; }
+.wod_homebrew .changer-forme { margin-left: auto; flex: 0 0 auto; width: auto; padding: 0 0.8rem; border-color: #39ff88; color: #9dffc4; }
+.wod_homebrew .attributs-forme { display: flex; flex-wrap: wrap; gap: 0.3rem 1.1rem; margin-top: 0.4rem; }
+.wod_homebrew .attributs-forme s { opacity: 0.55; }
+.wod_homebrew .attributs-forme .hausse { color: #39ff88; }
+.wod_homebrew .attributs-forme .baisse { color: #e07c7c; }
+.wod_homebrew .effectif-forme { color: #39ff88; font-weight: bold; margin-left: 0.3rem; }
+@media (prefers-reduced-motion: reduce) { .wod_homebrew .forme-garou.eclair .silhouette { animation: none; } }

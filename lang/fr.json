@@ -526,6 +526,9 @@
         },
         "paradoxe": {
           "label": "Paradoxe"
+        },
+        "forme": {
+          "label": "Forme"
         }
       }
     },
@@ -643,7 +646,8 @@
         "avantages": "Avantages",
         "etat": "État",
         "biographie": "Biographie",
-        "combat": "Combat"
+        "combat": "Combat",
+        "forme": "Forme"
       },
       "Identite": "Identité",
       "AjouterCapacite": "Ajouter une capacité secondaire",
@@ -834,6 +838,25 @@
       "PasDeCible": "Ciblez d'abord le jeton du défenseur.",
       "CibleIntrouvable": "Le personnage ciblé n'existe plus.",
       "PasDeMJ": "Aucun MJ connecté : la carte de combat ne peut pas avancer."
+    },
+    "Forme": {
+      "Noms": {
+        "homide": "Homidé",
+        "glabro": "Glabro",
+        "crinos": "Crinos",
+        "hispo": "Hispo",
+        "lupus": "Lupus"
+      },
+      "Changer": "Changer de forme",
+      "Actuelle": "Forme actuelle : {nom}",
+      "Aide": "cliquez sur une autre forme pour voir ses effets",
+      "AucunChangement": "Aucun changement",
+      "Diff": "Diff. {n}",
+      "Perception": "Perception {n} diff.",
+      "Delire": "Provoque le Délire chez les humains",
+      "Morsure": "Morsure +1 dé de dégâts",
+      "ModForme": "Forme {nom}",
+      "Effectif": "Valeur dans la forme actuelle"
     }
   }
 }

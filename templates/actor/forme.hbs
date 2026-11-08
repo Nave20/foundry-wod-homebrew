@@ -1,0 +1,26 @@
+<section class="tab forme {{tab.cssClass}}" data-group="primary" data-tab="forme">
+  <div class="rang-formes">
+    {{#each formes.liste as |f|}}
+    <a class="forme-garou{{#if f.actuelle}} actuelle{{/if}}{{#if f.choix}} choix{{/if}}" data-action="formeChoisir" data-forme="{{f.cle}}">
+      <span class="silhouette" style="--silhouette: url('{{f.img}}')"></span>
+      <span class="nom-forme">{{f.nom}}</span>
+    </a>
+    {{/each}}
+  </div>
+  <div class="detail-forme">
+    {{#if formes.choix}}
+    <div class="ligne-forme">
+      <span class="titre">{{formes.choix.nom}}</span>
+      <span class="hint">{{formes.choix.effets}}</span>
+      {{#if editable}}<button type="button" class="changer-forme" data-action="formeChanger"><i class="fa-solid fa-moon" inert></i> {{localize "WODHOMEBREW.Forme.Changer"}}</button>{{/if}}
+    </div>
+    {{else}}
+    <div class="ligne-forme"><span class="hint">{{localize "WODHOMEBREW.Forme.Actuelle" nom=formes.actuelleNom}} · {{localize "WODHOMEBREW.Forme.Aide"}}</span></div>
+    {{/if}}
+    <div class="attributs-forme">
+      {{#each formes.lignes as |l|}}
+      <span>{{l.nom}} {{#if l.change}}<s>{{l.avant}}</s> → <b class="{{l.sens}}">{{l.apres}}</b>{{else}}<b>{{l.apres}}</b>{{/if}}</span>
+      {{/each}}
+    </div>
+  </div>
+</section>

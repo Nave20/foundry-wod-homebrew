@@ -78,7 +78,7 @@ export function reglesJets() {
  * @returns {{traits: object[], reserve: number, difficulte: number, specialites: string[], modificateurs: Array<{label: string, des?: number, diff?: number}>}}
  */
 export function preparerJet(traits, { specialite = true, desBonus = 0, diffMod = 0, volonte = false, sang = false,
-  quintessence = 0, malus = 0, appliquerMalus = false, etatSante = "", malusArmure = 0 } = {}, regles = reglesJets()) {
+  quintessence = 0, malus = 0, appliquerMalus = false, etatSante = "", malusArmure = 0, autres = [] } = {}, regles = reglesJets()) {
   const modificateurs = [];
   let reserve = traits.reduce((n, t) => n + (Number(t.valeur) || 0), 0);
   let difficulte = regles.difficulte;
@@ -104,6 +104,13 @@ export function preparerJet(traits, { specialite = true, desBonus = 0, diffMod =
   if ( malusApplique ) {
     reserve += malus;
     modificateurs.push({ label: _loc("WODHOMEBREW.Jets.ModBlessure", { etat: etatSante }), des: malus });
+  }
+
+  // Autres modificateurs (forme du garou…) : [{ label, des?, diff? }]
+  for ( const m of autres ) {
+    reserve += m.des || 0;
+    difficulte += m.diff || 0;
+    modificateurs.push(m);
   }
 
   // Protections équipées (jets de Dextérité)

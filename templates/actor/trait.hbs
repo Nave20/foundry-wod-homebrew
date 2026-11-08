@@ -5,6 +5,7 @@
   <label class="nom-trait">
     <span class="libelle">{{localize label}}</span>
     {{#if spec.value}}<span class="specialite">· {{spec.value}}</span>{{/if}}
+    {{#if (ne effectif null)}}{{#if (ne effectif undefined)}}<span class="effectif-forme" data-tooltip="{{localize "WODHOMEBREW.Forme.Effectif"}}">→ {{effectif}}</span>{{/if}}{{/if}}
     {{#if (and spec editable)}}
     <a class="editer-specialite" data-action="specialite" data-tooltip="{{localize "WODHOMEBREW.Fiche.Specialite"}}"><i class="fa-solid fa-pen" inert></i></a>
     {{/if}}

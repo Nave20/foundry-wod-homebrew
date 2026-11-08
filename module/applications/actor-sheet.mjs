@@ -8,6 +8,7 @@ import { capacitesAffichees, configTraits, nomAttribut } from "../traits.mjs";
 import { lancerJet, preparerJet, reglesJets, texteModificateur } from "../des.mjs";
 import { armeDe, MAINS_NUES, lancerAttaque } from "../combat.mjs";
 import { malusDexterite, reserveEncaissement } from "../combat-regles.mjs";
+import { FORMES, attributsEnForme, difficultePerception, forme as donneesForme } from "../formes.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -71,6 +72,8 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       objetEditer: WodActorSheet.#onObjetEditer,
       objetSupprimer: WodActorSheet.#onObjetSupprimer,
       attaquer: WodActorSheet.#onAttaquer,
+      formeChoisir: WodActorSheet.#onFormeChoisir,
+      formeChanger: WodActorSheet.#onFormeChanger,
       equiper: WodActorSheet.#onEquiper
     }
   };
@@ -82,13 +85,14 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     avantages: { template: `${TEMPLATES}/avantages.hbs`, scrollable: [""], templates: [`${TEMPLATES}/liste-traits.hbs`] },
     etat: { template: `${TEMPLATES}/etat.hbs`, scrollable: [""], templates: [`${TEMPLATES}/trait.hbs`] },
     combat: { template: `${TEMPLATES}/combat.hbs`, scrollable: [""] },
+    forme: { template: `${TEMPLATES}/forme.hbs`, scrollable: [""] },
     biographie: { template: `${TEMPLATES}/biographie.hbs`, scrollable: [""] },
     barre: { template: `${TEMPLATES}/barre-jet.hbs` }
   };
 
   static TABS = {
     primary: {
-      tabs: [{ id: "traits" }, { id: "avantages" }, { id: "etat" }, { id: "combat" }, { id: "biographie" }],
+      tabs: [{ id: "traits" }, { id: "avantages" }, { id: "etat" }, { id: "combat" }, { id: "forme" }, { id: "biographie" }],
       initial: "traits",
       labelPrefix: "WODHOMEBREW.Fiche.Onglets"
     }
@@ -102,6 +106,10 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
 
   /** Options du jet en cours : spécialité utilisée, dés et difficulté ajoutés à la main, réglages dépliés */
   #optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false, volonte: false, sang: false, quintessence: 0, malus: null };
+
+  /** Forme du garou choisie pour voir ses effets (pas encore appliquée), et forme affichée au rendu précédent */
+  #formeChoix = null;
+  #formeAffichee = null;
 
   /** Arme de l'attaque en préparation dans la barre de jet ({ id, nom, absente? }) ou null */
   #arme = null;
@@ -120,6 +128,20 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
 
   /** Panneau des réglages ouvert ? */
   #reglagesOuverts = false;
+
+  /** L'onglet Forme n'existe que pour les garous */
+  _configureRenderParts(options) {
+    const parts = super._configureRenderParts(options);
+    if ( this.document.type !== "garou" ) delete parts.forme;
+    return parts;
+  }
+
+  /** @inheritDoc */
+  _prepareTabs(group) {
+    const tabs = super._prepareTabs(group);
+    if ( (group === "primary") && (this.document.type !== "garou") ) delete tabs.forme;
+    return tabs;
+  }
 
   /** @inheritDoc */
   _initializeApplicationOptions(options) {
@@ -168,7 +190,8 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
         label: `WODHOMEBREW.Attributs.${groupe}`,
         traits: cles.map(k => ({
           ...avecSpecialite(champ(k, fields.attributs.fields, source.attributs)),
-          nom: nomAttribut(k, traitsChronique), name: `system.attributs.${k}`
+          nom: nomAttribut(k, traitsChronique), name: `system.attributs.${k}`,
+          effectif: (system.attributs?.[k] !== source.attributs?.[k]) ? system.attributs[k] : null
         }))
       })),
       // Capacités du jeu, avec les noms, masques et ajouts des « Traits de la chronique »
@@ -220,6 +243,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     }));
     context.etatSante = `WODHOMEBREW.Sante.Niveaux.${system.sante.etat.cle}`;
     context.combat = this.#contexteCombat();
+    if ( type === "garou" ) context.formes = this.#contexteFormes();
     return context;
   }
 
@@ -240,6 +264,40 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       }
     }
     return context;
+  }
+
+  /** Onglet Forme : silhouettes, forme actuelle, forme choisie et ses effets sur les attributs */
+  #contexteFormes() {
+    const actuelle = this.actor.system.forme ?? "homide";
+    if ( this.#formeChoix === actuelle ) this.#formeChoix = null;
+    const nom = cle => _loc(`WODHOMEBREW.Forme.Noms.${cle}`);
+    const base = this.actor._source.system.attributs ?? {};
+    const libelle = k => _loc(`WODHOMEBREW.Actor.FIELDS.attributs.${k}.label`);
+    const visibles = ["force", "dexterite", "vigueur", "manipulation", "apparence", "perception"];
+    const avant = attributsEnForme(base, actuelle);
+    const cible = this.#formeChoix;
+    const apres = cible ? attributsEnForme(base, cible) : avant;
+    let choix = null;
+    if ( cible ) {
+      const f = donneesForme(cible);
+      const signe = n => (n > 0 ? `+${n}` : `−${Math.abs(n)}`);
+      const effets = [
+        ...Object.entries(f.mods).map(([k, n]) => `${libelle(k)} ${signe(n)}`),
+        ...(f.zero ?? []).map(k => `${libelle(k)} 0`),
+        _loc("WODHOMEBREW.Forme.Diff", { n: f.difficulte }),
+        ...(f.perception ? [_loc("WODHOMEBREW.Forme.Perception", { n: signe(f.perception) })] : []),
+        ...(f.notes ?? []).map(n => _loc(`WODHOMEBREW.Forme.${n}`))
+      ];
+      if ( !Object.keys(f.mods).length ) effets.unshift(_loc("WODHOMEBREW.Forme.AucunChangement"));
+      choix = { cle: cible, nom: nom(cible), effets: effets.join(" · ") };
+    }
+    return {
+      actuelleNom: nom(actuelle), choix,
+      liste: FORMES.map(f => ({ cle: f.cle, nom: nom(f.cle), img: foundry.utils.getRoute(`systems/wod_homebrew/assets/formes/${f.cle}.svg`),   // absolu : une url() dans une variable CSS se lit depuis la feuille de style
+        actuelle: f.cle === actuelle, choix: f.cle === cible })),
+      lignes: visibles.map(k => ({ nom: libelle(k), avant: avant[k], apres: apres[k], change: avant[k] !== apres[k],
+        sens: apres[k] > avant[k] ? "hausse" : "baisse" }))
+    };
   }
 
   /** Onglet Combat : armes (avec Mains nues), protections et résumé de l'encaissement */
@@ -312,6 +370,15 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       const niveau = max > 0 ? valeur / max : 0;
       this.#orbe = new OrbeSang(svgOrbe, niveau, this.#orbe?.niveauAffiche ?? null);
     }
+    // Forme du garou : éclair sur la silhouette quand la forme vient de changer
+    if ( this.actor.type === "garou" ) {
+      const f = this.actor.system.forme;
+      if ( (this.#formeAffichee !== null) && (this.#formeAffichee !== f) ) {
+        this.element.querySelector(".forme-garou.actuelle")?.classList.add("eclair");
+      }
+      this.#formeAffichee = f;
+    }
+
     // Cases de Volonté : reflet calé sur une horloge commune, animation des cases ajoutées ou retirées
     const cases = [...this.element.querySelectorAll(".volonte-lames .lame")];
     const maintenant = performance.now() / 1000;
@@ -432,9 +499,19 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       neutralise: etat.malus === null,
       etatSante: etat.cle ? _loc(`WODHOMEBREW.Sante.Niveaux.${etat.cle}`) : "",
       appliquerMalus: this.#optionsJet.malus ?? parDefaut,
+      // Garou : difficulté de Perception selon la forme
+      autres: this.#modsForme(),
       // Protections équipées : malus aux jets de Dextérité
       malusArmure: (this.#jet.attribut?.name === "system.attributs.dexterite") ? this.#malusArmure() : 0
     }, regles);
+  }
+
+  /** Modificateurs de la forme du garou pour le jet en cours (Perception en Lupus et en Hispo) */
+  #modsForme() {
+    if ( this.actor.type !== "garou" ) return [];
+    const diff = difficultePerception(this.actor.system.forme);
+    if ( !diff || (this.#jet.attribut?.name !== "system.attributs.perception") ) return [];
+    return [{ label: _loc("WODHOMEBREW.Forme.ModForme", { nom: _loc(`WODHOMEBREW.Forme.Noms.${this.actor.system.forme}`) }), diff }];
   }
 
   /** Malus de Dextérité des protections équipées */
@@ -734,6 +811,21 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       absente: (arme.competence && !capacite) ? _loc(CONFIG.WODHOMEBREW.competencesCombat[arme.competence]) : null };
     this.#optionsJet = { specialite: true, desBonus: 0, diffMod: 0, ouvert: false, volonte: false, sang: false, quintessence: 0, malus: null };
     this.#majBarreJet();
+  }
+
+  /** Clic sur une silhouette : montre ses effets (un second clic, ou un clic sur la forme actuelle, les cache) */
+  static #onFormeChoisir(event, target) {
+    const cle = target.dataset.forme;
+    this.#formeChoix = (this.#formeChoix === cle) || (cle === this.actor.system.forme) ? null : cle;
+    this.render();
+  }
+
+  /** « Changer de forme » : applique la forme choisie */
+  static async #onFormeChanger() {
+    const cle = this.#formeChoix;
+    if ( !cle ) return;
+    this.#formeChoix = null;
+    await this.actor.update({ "system.forme": cle });
   }
 
   /** Case « Équipée » d'une protection */

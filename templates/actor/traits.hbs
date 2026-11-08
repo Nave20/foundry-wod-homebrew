@@ -4,7 +4,7 @@
     {{#each attributs as |groupe|}}
     <fieldset>
       <legend>{{localize groupe.label}}</legend>
-      {{#each groupe.traits as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.nom name=c.name value=c.value spec=c.spec max=@root.echelle editable=@root.editable jet="attribut"}}{{/each}}
+      {{#each groupe.traits as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.nom name=c.name value=c.value spec=c.spec max=@root.echelle editable=@root.editable jet="attribut" effectif=c.effectif}}{{/each}}
     </fieldset>
     {{/each}}
   </div>
