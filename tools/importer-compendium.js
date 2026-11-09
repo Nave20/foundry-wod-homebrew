@@ -18,12 +18,14 @@ export async function importerCompendium(url, { nom = "armes-et-armures", titre 
   if ( anciens.size ) await Item.deleteDocuments(anciens.map(i => i._id), { pack: pack.collection });
   if ( pack.folders.size ) await Folder.deleteDocuments(pack.folders.map(f => f.id), { pack: pack.collection });
 
-  const libelles = { arme: "Armes", armure: "Armures", artefact: "Artefacts" };
+  // Dossiers : par catégorie pour les objets, par discipline (system.groupe) pour les pouvoirs
+  const cleDossier = o => (o.type === "pouvoir") ? (o.system.groupe || "Autres pouvoirs") : o.system.categorie;
+  const libelles = { arme: "Armes", armure: "Armures", artefact: "Artefacts", divers: "Divers" };
   const dossiers = {};
-  for ( const [cle, name] of Object.entries(libelles) ) {
-    dossiers[cle] = (await Folder.create({ name, type: "Item" }, { pack: pack.collection })).id;
+  for ( const cle of [...new Set(objets.map(cleDossier))].sort((a, b) => a.localeCompare(b, "fr")) ) {
+    dossiers[cle] = (await Folder.create({ name: libelles[cle] ?? cle, type: "Item" }, { pack: pack.collection })).id;
   }
-  const docs = objets.map(o => ({ ...o, folder: dossiers[o.system.categorie] ?? null }));
+  const docs = objets.map(o => ({ ...o, folder: dossiers[cleDossier(o)] ?? null }));
   const crees = await Item.createDocuments(docs, { pack: pack.collection });
   ui.notifications.info(`${titre} : ${crees.length} objets importés.`);
   return crees.length;
