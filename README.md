@@ -6,7 +6,7 @@ Système de jeu **maison** pour [Foundry Virtual Tabletop](https://foundryvtt.co
 > Le système est développé et testé sur ce build précis. Le build cible **évoluera** avec les mises à jour de Foundry ;
 > le [CHANGELOG](CHANGELOG.md) indique pour chaque version le build sur lequel elle a été vérifiée.
 
-Version actuelle du système : **0.6.0** · Statut : **en développement** (étapes 1 à 4 terminées, jauges animées, armes, combat et formes des garous ajoutés)
+Version actuelle du système : **0.7.0** · Statut : **en développement** (étapes 1 à 4 terminées, jauges animées, armes, combat et formes des garous ajoutés)
 
 ## Ce que fait le système aujourd'hui
 
@@ -33,7 +33,9 @@ Version actuelle du système : **0.6.0** · Statut : **en développement** (éta
 | Armes, armures et artefacts reliés aux jets : onglet Combat, carte de combat (défense, dégâts, encaissement, corrections du MJ) | ✅ |
 | Import des armes et armures d'une vault vers un compendium du monde (`tools/`) | ✅ |
 | Garous : onglet Forme (5 silhouettes, changement de forme, attributs et santé selon la forme) | ✅ |
-| Pouvoirs, import des personnages | ❌ à venir |
+| Combat : les joueurs lancent eux-mêmes défense, dégâts et encaissement (réglable) | ✅ |
+| Pouvoirs suivis sur la fiche (objet Pouvoir, glisser-déposer), sphères et Arété jetables, import des disciplines vers un compendium | ✅ |
+| Import des personnages | ❌ à venir |
 
 ## Installation (développement)
 
@@ -68,6 +70,7 @@ Chaque session de travail se termine par un envoi sur ce dépôt, avec son réca
 | 2026-11-06 | 0.3.0 | Profils de traits (dont Homebrew), jets de dés avec réussites et règles réglables |
 | 2026-11-07 | 0.4.0 | Volonté, sang et quintessence dans les jets, jets étendus, santé cliquable et malus, jet de Volonté |
 | 2026-11-08 | 0.5.0 | Jauges animées dans l'en-tête (sang, rage, gnose, quintessence et paradoxe, Volonté), Avatar du mage, règle du paradoxe |
+| 2026-11-09 | 0.7.0 | Jets de combat lancés par les joueurs, pouvoirs suivis sur la fiche, sphères jetables, import des disciplines |
 | 2026-11-08 | 0.6.0 | Armes et armures dans les jets, onglet Combat, carte de combat avec corrections du MJ, import vers un compendium, formes des garous |
 
 ## Développement

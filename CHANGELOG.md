@@ -2,6 +2,27 @@
 
 Une entrée par session de travail. Chaque entrée indique le build de Foundry sur lequel la version a été vérifiée.
 
+## 0.7.0 — 2026-11-09 · Session 7 : jets des joueurs et pouvoirs
+
+Vérifié sur **Foundry VTT 14.369**.
+
+### Combat : les joueurs lancent leurs dés
+- Nouveau réglage **« Les joueurs lancent eux-mêmes défense, dégâts et encaissement »** (Panneau du MJ → Règles des jets → Combat), coché par défaut.
+- Chaque étape de la carte de combat attend un clic sur **Lancer** : la défense et l'encaissement par le joueur de la cible, les dégâts par celui de l'attaquant. La réserve, la difficulté et le nom du lanceur s'affichent ; les dés sont lancés sur l'ordinateur de celui qui clique (bruit des dés, dés 3D si un module les affiche) et les faces apparaissent sur la carte.
+- Le MJ peut lancer à la place de n'importe qui ; le crayon, le bonus secret et « Appliquer » restent à lui seul. Décoché, tout se lance automatiquement comme avant.
+- Fenêtre des Règles des jets : hauteur bornée, liste défilante, boutons fixes en bas.
+
+### Pouvoirs
+- Nouveau type d'objet **Pouvoir** (discipline, don, rite, autre) : discipline ou famille, niveau, édition (V20, V5, autre), coût et jet indicatifs, description, nom anglais, sources. Aucune automatisation : il sert au suivi et à la relecture.
+- Onglet **Avantages** : liste « Pouvoirs » groupée par discipline et triée par niveau ; clic pour relire, corbeille, bouton « + » ; on y glisse les pouvoirs du compendium.
+- **Mage** : les sphères et l'Arété se sélectionnent dans la barre de jet (sphère + Arété, ou Arété seule) ; la difficulté se règle avec la roue.
+- Outil d'import (`tools/import_pouvoirs_vault.py`) : lit les notes de disciplines d'une vault (pouvoirs classiques par niveau, tableaux V5, formules d'alchimie, disciplines combinées) ; le compendium du monde « Pouvoirs » est rempli avec `tools/importer-compendium.js` (un dossier par discipline). Il n'est pas publié avec le système.
+
+### Vérifications
+- Tests automatiques : Node 32 sur 32 (combat, jets des joueurs, formes) ; Python 7 sur 7 (import des pouvoirs).
+- Relecture indépendante des pouvoirs : aucun défaut bloquant ; les pouvoirs combinés, d'abord ignorés, sont maintenant importés.
+- Tests dans Foundry 14.369 : déroulement complet de la carte en mode joueurs (défense, dégâts, encaissement), droits par étape, mode automatique ; pouvoirs créés, glissés, groupés ; Sphère + Arété ; compendium de 1 043 pouvoirs en 42 dossiers.
+
 ## 0.6.0 — 2026-11-08 · Session 6 : armes, armures, combat et formes des garous
 
 Vérifié sur **Foundry VTT 14.369**.
