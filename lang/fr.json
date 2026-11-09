@@ -8,7 +8,8 @@
       "mage": "Mage"
     },
     "Item": {
-      "objet": "Objet"
+      "objet": "Objet",
+      "pouvoir": "Pouvoir"
     }
   },
   "WODHOMEBREW": {
@@ -869,6 +870,51 @@
       "Morsure": "Morsure +1 dé de dégâts",
       "ModForme": "Forme {nom}",
       "Effectif": "Valeur dans la forme actuelle"
+    },
+    "Pouvoir": {
+      "Nouveau": "Nouveau pouvoir",
+      "Categorie": {
+        "discipline": "Discipline",
+        "don": "Don",
+        "rite": "Rite",
+        "autre": "Autre"
+      },
+      "Edition": {
+        "autre": "Autre"
+      },
+      "FIELDS": {
+        "categorie": {
+          "label": "Catégorie"
+        },
+        "groupe": {
+          "label": "Discipline ou famille",
+          "hint": "Par exemple Auspex, ou Rite d'accord."
+        },
+        "niveau": {
+          "label": "Niveau ou rang"
+        },
+        "edition": {
+          "label": "Édition"
+        },
+        "cout": {
+          "label": "Coût"
+        },
+        "jet": {
+          "label": "Jet"
+        },
+        "description": {
+          "label": "Description"
+        },
+        "nomAnglais": {
+          "label": "Nom anglais"
+        },
+        "sources": {
+          "label": "Sources"
+        }
+      },
+      "Titre": "Pouvoirs",
+      "SansGroupe": "Autres pouvoirs",
+      "Aucun": "Aucun pouvoir. Glissez-en depuis le compendium « Pouvoirs », ou créez-en un."
     }
   }
 }

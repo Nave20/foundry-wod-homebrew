@@ -491,3 +491,12 @@ body.wod-sans-scene #board { opacity: 0; }
 .wod_homebrew.regles-jets .window-content { display: flex; flex-direction: column; overflow: hidden; }
 .wod_homebrew.regles-jets .regles-corps { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 0.4rem; }
 .wod_homebrew.regles-jets .form-footer { flex: 0 0 auto; }
+
+/* Pouvoirs (onglet Avantages) */
+.wod_homebrew fieldset.pouvoirs { margin-top: 0.6rem; }
+.wod_homebrew .groupe-pouvoirs { margin: 0.4rem 0 0.1rem; border-bottom: 1px solid var(--color-border); font-size: 0.95rem; }
+.wod_homebrew .liste-pouvoirs { list-style: none; margin: 0; padding: 0; }
+.wod_homebrew .ligne-pouvoir { display: flex; align-items: center; gap: 0.5rem; padding: 0.15rem 0; }
+.wod_homebrew .ligne-pouvoir .niveau-pouvoir { flex: 0 0 1.4rem; text-align: center; font-weight: bold; color: var(--wod-trait); }
+.wod_homebrew .ligne-pouvoir .nom-objet { flex: 1; cursor: pointer; }
+.wod_homebrew .ligne-pouvoir button.icone { flex: 0 0 auto; width: 1.6rem; height: 1.6rem; padding: 0; }

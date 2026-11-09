@@ -4,4 +4,28 @@
       {{> "systems/wod_homebrew/templates/actor/liste-traits.hbs" liste=liste editable=@root.editable}}
     {{/each}}
   </div>
+
+  <fieldset class="pouvoirs">
+    <legend>{{localize "WODHOMEBREW.Pouvoir.Titre"}}</legend>
+    {{#each pouvoirs as |g|}}
+    <h4 class="groupe-pouvoirs">{{g.groupe}}</h4>
+    <ol class="liste-pouvoirs">
+      {{#each g.lignes as |p|}}
+      <li class="ligne-pouvoir draggable" data-item-id="{{p.id}}">
+        <span class="niveau-pouvoir">{{p.niveau}}</span>
+        <a class="nom-objet" data-action="objetEditer">{{p.nom}}</a>
+        <span class="hint">{{p.categorie}} · {{p.edition}}</span>
+        {{#if @root.editable}}
+        <button type="button" class="icone" data-action="objetSupprimer" data-tooltip="{{localize "WODHOMEBREW.Fiche.Retirer"}}"><i class="fa-solid fa-trash" inert></i></button>
+        {{/if}}
+      </li>
+      {{/each}}
+    </ol>
+    {{else}}
+    <p class="hint">{{localize "WODHOMEBREW.Pouvoir.Aucun"}}</p>
+    {{/each}}
+    {{#if editable}}
+    <button type="button" class="ajouter" data-action="pouvoirCreer"><i class="fa-solid fa-plus" inert></i> {{localize "WODHOMEBREW.Pouvoir.Nouveau"}}</button>
+    {{/if}}
+  </fieldset>
 </section>

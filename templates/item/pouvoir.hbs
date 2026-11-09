@@ -1,0 +1,21 @@
+<div class="fiche-objet fiche-pouvoir">
+  <header class="entete">
+    <img class="portrait" src="{{item.img}}" alt="{{item.name}}" data-action="editImage" data-edit="img">
+    <input class="nom" type="text" name="name" value="{{document._source.name}}" {{disabled (not editable)}}>
+  </header>
+  <div class="details">
+    <div class="grille-champs">
+      {{formGroup systemFields.categorie value=source.categorie localize=true disabled=(not editable)}}
+      {{formGroup systemFields.groupe value=source.groupe localize=true disabled=(not editable)}}
+      {{formGroup systemFields.niveau value=source.niveau localize=true disabled=(not editable)}}
+      {{formGroup systemFields.edition value=source.edition localize=true disabled=(not editable)}}
+      {{formGroup systemFields.cout value=source.cout localize=true disabled=(not editable)}}
+      {{formGroup systemFields.jet value=source.jet localize=true disabled=(not editable)}}
+    </div>
+    {{formInput systemFields.description enriched=descriptionEnrichie value=source.description toggled=true disabled=(not editable)}}
+    <div class="grille-champs">
+      {{formGroup systemFields.nomAnglais value=source.nomAnglais localize=true disabled=(not editable)}}
+      {{formGroup systemFields.sources value=source.sources localize=true disabled=(not editable)}}
+    </div>
+  </div>
+</div>

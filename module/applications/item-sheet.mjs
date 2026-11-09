@@ -10,8 +10,17 @@ export default class WodItemSheet extends HandlebarsApplicationMixin(ItemSheetV2
   };
 
   static PARTS = {
-    fiche: { template: "systems/wod_homebrew/templates/item/objet.hbs", scrollable: [".details"] }
+    fiche: { template: "systems/wod_homebrew/templates/item/objet.hbs", scrollable: [".details"] },
+    pouvoir: { template: "systems/wod_homebrew/templates/item/pouvoir.hbs", scrollable: [".details"] }
   };
+
+  /** Un gabarit par type d'objet */
+  _configureRenderParts(options) {
+    const parts = super._configureRenderParts(options);
+    if ( this.document.type === "pouvoir" ) delete parts.fiche;
+    else delete parts.pouvoir;
+    return parts;
+  }
 
   /** @inheritDoc */
   async _prepareContext(options) {

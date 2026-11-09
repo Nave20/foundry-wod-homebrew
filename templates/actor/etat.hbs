@@ -79,11 +79,11 @@
     {{#if estMage}}
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.spheres.label"}}</legend>
-      {{#each spheres as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.field.label name=c.field.fieldPath value=c.value max=@root.echelle editable=@root.editable}}{{/each}}
+      {{#each spheres as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.field.label name=c.field.fieldPath value=c.value max=@root.echelle editable=@root.editable jet="capacite"}}{{/each}}
     </fieldset>
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Fiche.Magie"}}</legend>
-      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.arete.label name="system.arete" value=source.arete max=10 editable=editable}}
+      {{> "systems/wod_homebrew/templates/actor/trait.hbs" label=systemFields.arete.label name="system.arete" value=source.arete max=10 editable=editable jet="attribut"}}
       <div class="form-group">
         <label>{{localize systemFields.quintessence.label}}</label>
         <div class="form-fields quintessence">

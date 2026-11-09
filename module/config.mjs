@@ -104,7 +104,16 @@ const competencesCombat = {
   athletisme: `${L}.Actor.FIELDS.capacites.athletisme.label`
 };
 
+/** Pouvoirs : catégories et éditions (V20 et V5 cohabitent) */
+const categoriesPouvoir = {
+  discipline: `${L}.Pouvoir.Categorie.discipline`,
+  don: `${L}.Pouvoir.Categorie.don`,
+  rite: `${L}.Pouvoir.Categorie.rite`,
+  autre: `${L}.Pouvoir.Categorie.autre`
+};
+const editionsPouvoir = { V20: "V20", V5: "V5", autre: `${L}.Pouvoir.Edition.autre` };
+
 export const WODHOMEBREW = {
   creatures, jeux, attributs, capacites, toutesCapacites, spheres, niveauxSante, categoriesObjet, typesDegats,
-  attributsCombat, competencesCombat
+  attributsCombat, competencesCombat, categoriesPouvoir, editionsPouvoir
 };

@@ -69,6 +69,7 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       point: WodActorSheet.#onPoint,
       specialite: WodActorSheet.#onSpecialite,
       objetCreer: WodActorSheet.#onObjetCreer,
+      pouvoirCreer: WodActorSheet.#onPouvoirCreer,
       objetEditer: WodActorSheet.#onObjetEditer,
       objetSupprimer: WodActorSheet.#onObjetSupprimer,
       attaquer: WodActorSheet.#onAttaquer,
@@ -210,7 +211,8 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
         secondaires: this.#liste("capacites_secondaires").lignes.filter(l => l.categorie === groupe)
       })),
       listesAvantages: [...LISTES_AVANTAGES.commun, ...(LISTES_AVANTAGES[type] ?? [])].map(cle => this.#liste(cle)),
-      objets: actor.items.contents.sort((a, b) => a.sort - b.sort),
+      objets: actor.items.filter(i => i.type === "objet").sort((a, b) => a.sort - b.sort),
+      pouvoirs: this.#contextePouvoirs(),
       categoriesObjet: WODHOMEBREW.categoriesObjet
     });
 
@@ -308,6 +310,21 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       lignes: visibles.map(k => ({ nom: libelle(k), avant: avant[k], apres: apres[k], change: avant[k] !== apres[k],
         sens: apres[k] > avant[k] ? "hausse" : "baisse" }))
     };
+  }
+
+  /** Pouvoirs du personnage, groupés par discipline ou famille, triés par niveau puis par nom */
+  #contextePouvoirs() {
+    const groupes = new Map();
+    const sansGroupe = _loc("WODHOMEBREW.Pouvoir.SansGroupe");
+    for ( const p of this.actor.items.filter(i => i.type === "pouvoir") ) {
+      const g = p.system.groupe?.trim() || sansGroupe;
+      if ( !groupes.has(g) ) groupes.set(g, []);
+      groupes.get(g).push({ id: p.id, nom: p.name, niveau: p.system.niveau, edition: p.system.edition, img: p.img,
+        categorie: _loc(CONFIG.WODHOMEBREW.categoriesPouvoir[p.system.categorie] ?? "") });
+    }
+    return [...groupes.entries()].sort(([a], [b]) => a.localeCompare(b, "fr"))
+      .map(([groupe, lignes]) => ({ groupe,
+        lignes: lignes.sort((a, b) => (a.niveau - b.niveau) || a.nom.localeCompare(b.nom, "fr")) }));
   }
 
   /** Onglet Combat : armes (avec Mains nues), protections et résumé de l'encaissement */
@@ -793,6 +810,10 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
 
   static async #onObjetCreer() {
     return Item.implementation.create({ name: _loc("WODHOMEBREW.Objet.Nouveau"), type: "objet" }, { parent: this.actor });
+  }
+
+  static async #onPouvoirCreer() {
+    return Item.implementation.create({ name: _loc("WODHOMEBREW.Pouvoir.Nouveau"), type: "pouvoir" }, { parent: this.actor });
   }
 
   static #objet(target) {

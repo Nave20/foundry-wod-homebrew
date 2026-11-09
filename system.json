@@ -94,6 +94,11 @@
         "htmlFields": [
           "description"
         ]
+      },
+      "pouvoir": {
+        "htmlFields": [
+          "description"
+        ]
       }
     }
   },
