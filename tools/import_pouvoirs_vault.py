@@ -121,10 +121,46 @@ def lire_discipline(texte: str, groupe: str) -> list:
     return resultat
 
 
+def lire_combinees(texte: str) -> list:
+    """Note « Disciplines combinées » : blocs « ## Nom », ligne « **Prérequis** : … », effet, « *Source : … * ».
+    Le niveau est le plus haut prérequis."""
+    resultat, courant = [], None
+
+    def clore():
+        if courant:
+            niveaux = [int(n) for n in re.findall(r"\b(\d+)\b", courant["prerequis"]) if int(n) <= 10]
+            lignes = [f"Prérequis : {courant['prerequis']}"] + courant["lignes"]
+            resultat.append(pouvoir(courant["nom"], "Disciplines combinées", max(niveaux, default=0), "V20", lignes,
+                                    sources=courant["sources"]))
+
+    for brut in texte.splitlines():
+        ligne = brut.strip()
+        m = re.match(r"^##\s+(.*)$", ligne)
+        if m and not ligne.startswith("###"):
+            clore()
+            courant = {"nom": m.group(1), "prerequis": "", "lignes": [], "sources": ""}
+            continue
+        if not courant or not ligne:
+            continue
+        p = re.match(r"^\*\*Prérequis\*\*\s*:\s*(.*)$", ligne)
+        s = re.match(r"^\*Sources?\s*:\s*(.*?)\*?$", ligne)
+        if p:
+            courant["prerequis"] = nettoyer(p.group(1))
+        elif s:
+            courant["sources"] = s.group(1)
+        else:
+            courant["lignes"].append(ligne)
+    clore()
+    return resultat
+
+
 def main(dossier: str, sortie: str):
     tous, ignorees = [], []
     for note in sorted(Path(dossier).glob("*.md")):
-        if note.stem in ("Disciplines", "Disciplines combinées"):
+        if note.stem == "Disciplines":   # index des disciplines, sans pouvoir
+            continue
+        if note.stem == "Disciplines combinées":
+            tous.extend(lire_combinees(note.read_text(encoding="utf-8")))
             continue
         p = lire_discipline(note.read_text(encoding="utf-8"), note.stem)
         (tous.extend(p) if p else ignorees.append(note.stem))

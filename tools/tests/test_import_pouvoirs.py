@@ -3,7 +3,7 @@ import sys
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from import_pouvoirs_vault import lire_discipline  # noqa: E402
+from import_pouvoirs_vault import lire_combinees, lire_discipline  # noqa: E402
 
 CLASSIQUE = """---
 type: note
@@ -111,6 +111,39 @@ class TestFormatsParticuliers(unittest.TestCase):
         self.assertEqual((p[0]["name"], s["edition"], s["niveau"], s["cout"]), ("Brouillard", "V5", 1, "un test d'Exaltation"))
         self.assertIn("Ingrédients : la vitae", s["description"])
         self.assertIn("Durée : une scène", s["description"])
+
+COMBINEES = """# Disciplines combinées
+
+Intro.
+
+## Acier Noir
+
+**Prérequis** : [[Obténébration]] 3 + [[Puissance]] 3
+
+Manipulation+Occultisme SR 7, 2 Sang.
+
+Deuxième paragraphe.
+
+*Source : Libellus Sanguinis I (2807) p33*
+
+## Ami distant
+
+**Prérequis** : [[Auspex]] 2 ou [[Présence]] 4
+
+Effet.
+"""
+
+
+class TestCombinees(unittest.TestCase):
+    def test_pouvoirs_combines(self):
+        p = lire_combinees(COMBINEES)
+        self.assertEqual([x["name"] for x in p], ["Acier Noir", "Ami distant"])
+        s = p[0]["system"]
+        self.assertEqual((s["groupe"], s["niveau"], s["edition"]), ("Disciplines combinées", 3, "V20"))
+        self.assertIn("Prérequis : Obténébration 3 + Puissance 3", s["description"])
+        self.assertIn("Deuxième paragraphe.", s["description"])
+        self.assertEqual(s["sources"], "Libellus Sanguinis I (2807) p33")
+        self.assertEqual(p[1]["system"]["niveau"], 4)
 
 
 if __name__ == "__main__":
