@@ -19,7 +19,11 @@ export async function importerCompendium(url, { nom = "armes-et-armures", titre 
   if ( pack.folders.size ) await Folder.deleteDocuments(pack.folders.map(f => f.id), { pack: pack.collection });
 
   // Dossiers : par catégorie pour les objets, par discipline (system.groupe) pour les pouvoirs
-  const cleDossier = o => (o.type === "pouvoir") ? (o.system.groupe || "Autres pouvoirs") : o.system.categorie;
+  const cleDossier = o => {
+    if ( o.type !== "pouvoir" ) return o.system.categorie;
+    const groupe = o.system.groupe || "Autres pouvoirs";
+    return (o.system.categorie === "don") ? `Dons - ${groupe}` : groupe;
+  };
   const libelles = { arme: "Armes", armure: "Armures", artefact: "Artefacts", divers: "Divers" };
   const dossiers = {};
   for ( const cle of [...new Set(objets.map(cleDossier))].sort((a, b) => a.localeCompare(b, "fr")) ) {

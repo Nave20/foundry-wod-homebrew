@@ -111,7 +111,7 @@ const categoriesPouvoir = {
   rite: `${L}.Pouvoir.Categorie.rite`,
   autre: `${L}.Pouvoir.Categorie.autre`
 };
-const editionsPouvoir = { V20: "V20", V5: "V5", autre: `${L}.Pouvoir.Edition.autre` };
+const editionsPouvoir = { V20: "V20", V5: "V5", W20: "W20", M20: "M20", autre: `${L}.Pouvoir.Edition.autre` };
 
 export const WODHOMEBREW = {
   creatures, jeux, attributs, capacites, toutesCapacites, spheres, niveauxSante, categoriesObjet, typesDegats,

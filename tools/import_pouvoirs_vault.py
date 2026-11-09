@@ -2,13 +2,15 @@
 Import des pouvoirs de disciplines d'une vault Obsidian vers un fichier JSON d'objets « pouvoir » (wod_homebrew).
 
 Usage (Windows) :
-    PYTHONUTF8=1 python tools/import_pouvoirs_vault.py "<dossier des notes de disciplines>" "<fichier JSON de sortie>"
+    PYTHONUTF8=1 python tools/import_pouvoirs_vault.py "<fichier JSON de sortie>" "<dossier des disciplines>" ["<dossier des dons>" …]
 
 Lit dans chaque note :
 - les pouvoirs des éditions classiques : sections « ### Niveau N », lignes « - **Nom** (*nom anglais*) : effet »,
   lignes de suite indentées, puis « *Sources : … * » ; édition « V20 » ;
 - le tableau « ### Pouvoirs V5 » (Niveau | Pouvoir | Effet | Coût | Dés | Durée | Amalgame) ; édition « V5 ».
 Les sections « Généralités » et « Pouvoirs combinés » sont ignorées.
+La note « Disciplines combinées » donne un pouvoir par bloc « ## Nom » (niveau = plus haut prérequis).
+Les notes « Dons - Groupe » (W20) donnent un don par « ### Nom » sous « ## Niveau N » ; édition « W20 ».
 Le fichier de sortie doit être placé dans le dossier Data de Foundry (hors du système), puis importé avec
 tools/importer-compendium.js. Les pouvoirs ne sont pas publiés avec le système.
 """
@@ -33,9 +35,9 @@ def paragraphes(lignes) -> str:
     return "\n".join(f"<p>{html.escape(nettoyer(l))}</p>" for l in lignes if nettoyer(l))
 
 
-def pouvoir(nom, groupe, niveau, edition, description_lignes, cout="", jet="", en="", sources=""):
+def pouvoir(nom, groupe, niveau, edition, description_lignes, cout="", jet="", en="", sources="", categorie="discipline"):
     return {"name": nettoyer(nom), "type": "pouvoir", "system": {
-        "categorie": "discipline", "groupe": groupe, "niveau": niveau, "edition": edition,
+        "categorie": categorie, "groupe": groupe, "niveau": niveau, "edition": edition,
         "cout": nettoyer(cout), "jet": nettoyer(jet), "description": paragraphes(description_lignes),
         "nomAnglais": nettoyer(en), "sources": nettoyer(sources)}}
 
@@ -154,26 +156,63 @@ def lire_combinees(texte: str) -> list:
     return resultat
 
 
-def main(dossier: str, sortie: str):
+COUT_DON = re.compile(r"dépense\s+(\d+\s+points?\s+de\s+(?:Rage|Gnose|Volonté))", re.I)
+
+
+def lire_dons(texte: str, groupe: str) -> list:
+    """Note « Dons - Groupe » (W20) : « ## Niveau N », puis « ### Nom », description, « **Système** : … »,
+    éventuellement « Aussi chez : … ». Le coût est repris du système (« dépense 1 point de Rage »)."""
+    resultat, niveau, courant = [], None, None
+
+    def clore():
+        if courant:
+            m = COUT_DON.search(" ".join(courant["lignes"]))
+            resultat.append(pouvoir(courant["nom"], groupe, niveau, "W20", courant["lignes"],
+                                    cout=m.group(1) if m else "", categorie="don"))
+
+    for brut in texte.splitlines():
+        ligne = brut.strip()
+        n = re.match(r"^##\s+Niveau\s+(\d+)", ligne)
+        if n:
+            clore()
+            courant, niveau = None, int(n.group(1))
+            continue
+        d = re.match(r"^###\s+(.*)$", ligne)
+        if d and niveau is not None:
+            clore()
+            courant = {"nom": d.group(1), "lignes": []}
+            continue
+        if ligne.startswith("#"):
+            clore()
+            courant = None
+            continue
+        if courant and ligne:
+            courant["lignes"].append(ligne)
+    clore()
+    return resultat
+
+
+def main(sortie: str, *dossiers: str):
     tous, ignorees = [], []
-    for note in sorted(Path(dossier).glob("*.md")):
-        if note.stem == "Disciplines":   # index des disciplines, sans pouvoir
+    for note in sorted(n for d in dossiers for n in Path(d).glob("*.md")):
+        if note.stem in ("Disciplines", "Dons"):   # index, sans pouvoir
             continue
+        texte = note.read_text(encoding="utf-8")
         if note.stem == "Disciplines combinées":
-            tous.extend(lire_combinees(note.read_text(encoding="utf-8")))
+            tous.extend(lire_combinees(texte))
             continue
-        p = lire_discipline(note.read_text(encoding="utf-8"), note.stem)
+        p = lire_dons(texte, note.stem[len("Dons - "):]) if note.stem.startswith("Dons - ") else lire_discipline(texte, note.stem)
         (tous.extend(p) if p else ignorees.append(note.stem))
     Path(sortie).parent.mkdir(parents=True, exist_ok=True)
     Path(sortie).write_text(json.dumps(tous, ensure_ascii=False, indent=1), encoding="utf-8")
-    par_ed = {e: sum(1 for x in tous if x["system"]["edition"] == e) for e in ("V20", "V5")}
+    par_ed = {e: sum(1 for x in tous if x["system"]["edition"] == e) for e in ("V20", "V5", "W20")}
     groupes = len({x["system"]["groupe"] for x in tous})
-    print(f"{len(tous)} pouvoirs ({par_ed}) dans {groupes} disciplines → {sortie}")
+    print(f"{len(tous)} pouvoirs ({par_ed}) dans {groupes} groupes → {sortie}")
     if ignorees:
         print(f"- notes sans pouvoir reconnu ({len(ignorees)}) : {', '.join(ignorees)}")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
+    if len(sys.argv) < 3:
         sys.exit(__doc__)
-    main(sys.argv[1], sys.argv[2])
+    main(sys.argv[1], *sys.argv[2:])

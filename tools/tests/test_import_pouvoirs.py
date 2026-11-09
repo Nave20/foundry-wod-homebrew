@@ -3,7 +3,7 @@ import sys
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from import_pouvoirs_vault import lire_combinees, lire_discipline  # noqa: E402
+from import_pouvoirs_vault import lire_combinees, lire_discipline, lire_dons  # noqa: E402
 
 CLASSIQUE = """---
 type: note
@@ -144,6 +144,50 @@ class TestCombinees(unittest.TestCase):
         self.assertIn("Deuxième paragraphe.", s["description"])
         self.assertEqual(s["sources"], "Libellus Sanguinis I (2807) p33")
         self.assertEqual(p[1]["system"]["niveau"], 4)
+
+DONS = """# Dons - Ahroun
+
+Index : [[Dons]] · auspice
+
+Texte d'introduction.
+
+## Niveau 1
+
+### Dards
+
+Description du don.
+
+**Système** : le personnage dépense 1 point de Rage. La cible subit +2 diff.
+
+### Griffes acérées
+
+Autre description.
+
+**Système** : le joueur dépense 2 points de Gnose et l'Ahroun aiguise ses griffes.
+
+Aussi chez : [[Dons - Fils de Fenris|Fils de Fenris]]
+
+## Niveau 2
+
+### Vraie peur
+
+**Système** : le joueur fait un jet de Force + Intimidation.
+"""
+
+
+class TestDons(unittest.TestCase):
+    def test_dons(self):
+        p = lire_dons(DONS, "Ahroun")
+        self.assertEqual([x["name"] for x in p], ["Dards", "Griffes acérées", "Vraie peur"])
+        s = p[0]["system"]
+        self.assertEqual((s["categorie"], s["groupe"], s["niveau"], s["edition"]), ("don", "Ahroun", 1, "W20"))
+        self.assertIn("Description du don.", s["description"])
+        self.assertIn("Système : le personnage dépense 1 point de Rage.", s["description"])
+        self.assertEqual(s["cout"], "1 point de Rage")
+        self.assertEqual(p[1]["system"]["cout"], "2 points de Gnose")
+        self.assertIn("Aussi chez : Fils de Fenris", p[1]["system"]["description"])
+        self.assertEqual((p[2]["system"]["niveau"], p[2]["system"]["cout"]), (2, ""))
+        self.assertNotIn("introduction", " ".join(x["system"]["description"] for x in p))
 
 
 if __name__ == "__main__":
