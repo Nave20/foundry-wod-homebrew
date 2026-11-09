@@ -9,7 +9,8 @@
     },
     "Item": {
       "objet": "Objet",
-      "pouvoir": "Pouvoir"
+      "pouvoir": "Pouvoir",
+      "avantage": "Atout ou handicap"
     }
   },
   "WODHOMEBREW": {
@@ -914,7 +915,30 @@
       },
       "Titre": "Pouvoirs",
       "SansGroupe": "Autres pouvoirs",
-      "Aucun": "Aucun pouvoir. Glissez-en depuis le compendium « Pouvoirs », ou créez-en un."
+      "Aucun": "Aucun pouvoir. Glissez-en depuis le compendium « Disciplines » ou « Dons », ou créez-en un.",
+      "TitreDisciplines": "Pouvoirs de disciplines",
+      "TitreDons": "Dons"
+    },
+    "Avantage": {
+      "Categorie": {
+        "atout": "Atout",
+        "handicap": "Handicap"
+      },
+      "Aide": "Glissé sur une fiche, cet élément ajoute une ligne « nom + coût » à la liste Atouts ou Handicaps.",
+      "FIELDS": {
+        "categorie": {
+          "label": "Catégorie"
+        },
+        "groupe": {
+          "label": "Groupe"
+        },
+        "cout": {
+          "label": "Coût"
+        },
+        "description": {
+          "label": "Description"
+        }
+      }
     }
   }
 }

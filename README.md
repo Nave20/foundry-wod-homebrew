@@ -34,7 +34,8 @@ Version actuelle du système : **0.7.0** · Statut : **en développement** (éta
 | Import des armes et armures d'une vault vers un compendium du monde (`tools/`) | ✅ |
 | Garous : onglet Forme (5 silhouettes, changement de forme, attributs et santé selon la forme) | ✅ |
 | Combat : les joueurs lancent eux-mêmes défense, dégâts et encaissement (réglable) | ✅ |
-| Pouvoirs suivis sur la fiche (objet Pouvoir, glisser-déposer), sphères et Arété jetables, import des disciplines vers un compendium | ✅ |
+| Pouvoirs suivis sur la fiche (objet Pouvoir, glisser-déposer), sphères et Arété jetables, import des disciplines et des dons vers des compendiums | ✅ |
+| Atouts et handicaps : compendium de référence, glissés sur la fiche ils ajoutent une ligne | ✅ |
 | Import des personnages | ❌ à venir |
 
 ## Installation (développement)

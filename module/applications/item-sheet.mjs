@@ -11,14 +11,15 @@ export default class WodItemSheet extends HandlebarsApplicationMixin(ItemSheetV2
 
   static PARTS = {
     fiche: { template: "systems/wod_homebrew/templates/item/objet.hbs", scrollable: [".details"] },
-    pouvoir: { template: "systems/wod_homebrew/templates/item/pouvoir.hbs", scrollable: [".details"] }
+    pouvoir: { template: "systems/wod_homebrew/templates/item/pouvoir.hbs", scrollable: [".details"] },
+    avantage: { template: "systems/wod_homebrew/templates/item/avantage.hbs", scrollable: [".details"] }
   };
 
   /** Un gabarit par type d'objet */
   _configureRenderParts(options) {
     const parts = super._configureRenderParts(options);
-    if ( this.document.type === "pouvoir" ) delete parts.fiche;
-    else delete parts.pouvoir;
+    const garder = { objet: "fiche", pouvoir: "pouvoir", avantage: "avantage" }[this.document.type] ?? "fiche";
+    for ( const cle of ["fiche", "pouvoir", "avantage"] ) if ( cle !== garder ) delete parts[cle];
     return parts;
   }
 

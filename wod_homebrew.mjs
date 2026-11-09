@@ -39,7 +39,7 @@ Hooks.once("init", () => {
     garou: data.GarouData,
     mage: data.MageData
   };
-  CONFIG.Item.dataModels = { objet: data.ObjetData, pouvoir: data.PouvoirData };
+  CONFIG.Item.dataModels = { objet: data.ObjetData, pouvoir: data.PouvoirData, avantage: data.AvantageData };
 
   // Jetons : Volonté affichable en valeur
   CONFIG.Actor.trackableAttributes = Object.fromEntries(Object.keys(CONFIG.Actor.dataModels).map(type => [
@@ -54,7 +54,7 @@ Hooks.once("init", () => {
   });
   DocumentSheetConfig.unregisterSheet(Item, "core", foundry.appv1.sheets.ItemSheet);
   DocumentSheetConfig.registerSheet(Item, "wod_homebrew", WodItemSheet, {
-    types: ["objet", "pouvoir"], makeDefault: true, label: "WODHOMEBREW.Fiche.Objet"
+    types: ["objet", "pouvoir", "avantage"], makeDefault: true, label: "WODHOMEBREW.Fiche.Objet"
   });
 });
 

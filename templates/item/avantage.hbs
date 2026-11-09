@@ -1,0 +1,15 @@
+<div class="fiche-objet fiche-avantage">
+  <header class="entete">
+    <img class="portrait" src="{{item.img}}" alt="{{item.name}}" data-action="editImage" data-edit="img">
+    <input class="nom" type="text" name="name" value="{{document._source.name}}" {{disabled (not editable)}}>
+  </header>
+  <div class="details">
+    <div class="grille-champs">
+      {{formGroup systemFields.categorie value=source.categorie localize=true disabled=(not editable)}}
+      {{formGroup systemFields.cout value=source.cout localize=true disabled=(not editable)}}
+      {{formGroup systemFields.groupe value=source.groupe localize=true disabled=(not editable)}}
+    </div>
+    <p class="hint">{{localize "WODHOMEBREW.Avantage.Aide"}}</p>
+    {{formInput systemFields.description enriched=descriptionEnrichie value=source.description toggled=true disabled=(not editable)}}
+  </div>
+</div>

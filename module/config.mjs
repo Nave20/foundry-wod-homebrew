@@ -111,9 +111,10 @@ const categoriesPouvoir = {
   rite: `${L}.Pouvoir.Categorie.rite`,
   autre: `${L}.Pouvoir.Categorie.autre`
 };
+const categoriesAvantage = { atout: `${L}.Avantage.Categorie.atout`, handicap: `${L}.Avantage.Categorie.handicap` };
 const editionsPouvoir = { V20: "V20", V5: "V5", W20: "W20", M20: "M20", autre: `${L}.Pouvoir.Edition.autre` };
 
 export const WODHOMEBREW = {
   creatures, jeux, attributs, capacites, toutesCapacites, spheres, niveauxSante, categoriesObjet, typesDegats,
-  attributsCombat, competencesCombat, categoriesPouvoir, editionsPouvoir
+  attributsCombat, competencesCombat, categoriesPouvoir, editionsPouvoir, categoriesAvantage
 };

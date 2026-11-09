@@ -99,6 +99,11 @@
         "htmlFields": [
           "description"
         ]
+      },
+      "avantage": {
+        "htmlFields": [
+          "description"
+        ]
       }
     }
   },

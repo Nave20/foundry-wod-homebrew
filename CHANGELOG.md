@@ -16,13 +16,19 @@ Vérifié sur **Foundry VTT 14.369**.
 - Nouveau type d'objet **Pouvoir** (discipline, don, rite, autre) : discipline ou famille, niveau, édition (V20, V5, autre), coût et jet indicatifs, description, nom anglais, sources. Aucune automatisation : il sert au suivi et à la relecture.
 - Onglet **Avantages** : liste « Pouvoirs » groupée par discipline et triée par niveau ; clic pour relire, corbeille, bouton « + » ; on y glisse les pouvoirs du compendium.
 - **Mage** : les sphères et l'Arété se sélectionnent dans la barre de jet (sphère + Arété, ou Arété seule) ; la difficulté se règle avec la roue.
-- Outil d'import (`tools/import_pouvoirs_vault.py`) : lit les notes de disciplines d'une vault (pouvoirs classiques par niveau, tableaux V5, formules d'alchimie, disciplines combinées) et les notes de dons de loup-garou W20 (un don par titre sous chaque niveau, coût en Rage, Gnose ou Volonté repris du système) ; le compendium du monde « Pouvoirs » est rempli avec `tools/importer-compendium.js` (un dossier par discipline, « Dons - Groupe » pour les dons). Il n'est pas publié avec le système.
+- Outil d'import (`tools/import_pouvoirs_vault.py`) : lit les notes de disciplines d'une vault (pouvoirs classiques par niveau, tableaux V5, formules d'alchimie, disciplines combinées) et les notes de dons de loup-garou W20 (un don par titre sous chaque niveau, coût en Rage, Gnose ou Volonté repris du système) ; deux compendiums du monde, « Disciplines » et « Dons », sont remplis avec `tools/importer-compendium.js` (option `filtre`, un dossier par discipline ou par race, auspice et tribu). Ils ne sont pas publiés avec le système.
+- La liste de la fiche s'intitule « Pouvoirs de disciplines » (vampire, goule), « Dons » (garou) ou « Pouvoirs ».
+
+### Atouts et handicaps
+- Nouveau type d'objet **Atout ou handicap** (catégorie, coût en texte, groupe, description), pour un compendium de référence.
+- Glissé sur une fiche, il **ajoute une ligne « nom + coût »** à la liste Atouts ou Handicaps (premier nombre du coût, en positif) au lieu de devenir un objet.
+- Outil d'import (`tools/import_avantages_vault.py`) : lit les notes d'avantages et inconvénients d'une vault (sections Avantages, Inconvénients, « selon le niveau ») ; compendium du monde « Atouts et handicaps », un dossier par note.
 - Éditions des pouvoirs : V20, V5, W20, M20, autre.
 
 ### Vérifications
-- Tests automatiques : Node 32 sur 32 (combat, jets des joueurs, formes) ; Python 8 sur 8 (import des pouvoirs et des dons).
+- Tests automatiques : Node 32 sur 32 (combat, jets des joueurs, formes) ; Python 10 sur 10 (import des pouvoirs, des dons, des atouts et handicaps).
 - Relecture indépendante des pouvoirs : aucun défaut bloquant ; les pouvoirs combinés, d'abord ignorés, sont maintenant importés.
-- Tests dans Foundry 14.369 : déroulement complet de la carte en mode joueurs (défense, dégâts, encaissement), droits par étape, mode automatique ; pouvoirs créés, glissés, groupés ; Sphère + Arété ; compendium de 1 463 pouvoirs en 63 dossiers (dont 420 dons de garou en 21 dossiers).
+- Tests dans Foundry 14.369 : déroulement complet de la carte en mode joueurs (défense, dégâts, encaissement), droits par étape, mode automatique ; pouvoirs créés, glissés, groupés ; Sphère + Arété ; compendiums « Disciplines » (1 043 pouvoirs, 42 dossiers), « Dons » (420 dons, 21 dossiers) et « Atouts et handicaps » (601 éléments, 36 dossiers) ; atout et handicap déposés sur une fiche → lignes ajoutées.
 
 ## 0.6.0 — 2026-11-08 · Session 6 : armes, armures, combat et formes des garous
 

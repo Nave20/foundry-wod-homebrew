@@ -213,6 +213,8 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       listesAvantages: [...LISTES_AVANTAGES.commun, ...(LISTES_AVANTAGES[type] ?? [])].map(cle => this.#liste(cle)),
       objets: actor.items.filter(i => i.type === "objet").sort((a, b) => a.sort - b.sort),
       pouvoirs: this.#contextePouvoirs(),
+      titrePouvoirs: { vampire: "WODHOMEBREW.Pouvoir.TitreDisciplines", goule: "WODHOMEBREW.Pouvoir.TitreDisciplines",
+        garou: "WODHOMEBREW.Pouvoir.TitreDons" }[type] ?? "WODHOMEBREW.Pouvoir.Titre",
       categoriesObjet: WODHOMEBREW.categoriesObjet
     });
 
@@ -310,6 +312,21 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
       lignes: visibles.map(k => ({ nom: libelle(k), avant: avant[k], apres: apres[k], change: avant[k] !== apres[k],
         sens: apres[k] > avant[k] ? "hausse" : "baisse" }))
     };
+  }
+
+  /**
+   * Dépôt d'un objet : un atout ou un handicap du compendium ajoute une ligne « nom + coût » à la liste
+   * correspondante au lieu de devenir un objet de la fiche.
+   * @inheritDoc
+   */
+  async _onDropItem(event, item) {
+    if ( item?.type !== "avantage" ) return super._onDropItem(event, item);
+    if ( !this.isEditable ) return null;
+    const cle = item.system.liste;
+    const liste = foundry.utils.deepClone(this.actor._source.system[cle] ?? []);
+    liste.push({ nom: item.name, valeur: item.system.valeur });
+    await this.actor.update({ [`system.${cle}`]: liste });
+    return null;
   }
 
   /** Pouvoirs du personnage, groupés par discipline ou famille, triés par niveau puis par nom */
