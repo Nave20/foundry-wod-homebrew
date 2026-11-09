@@ -486,3 +486,8 @@ body.wod-sans-scene #board { opacity: 0; }
 .wod-combat-attente .texte { flex: 1; }
 .wod-combat-attente .detail, .wod-combat-attente .infos { display: block; font-size: 0.85em; opacity: 0.8; }
 .wod-combat-attente button.lancer { flex: 0 0 auto; width: auto; line-height: 1.7rem; padding: 0 0.7rem; }
+
+/* Règles des jets : la liste défile, le pied de fenêtre reste en place */
+.wod_homebrew.regles-jets .window-content { display: flex; flex-direction: column; overflow: hidden; }
+.wod_homebrew.regles-jets .regles-corps { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 0.4rem; }
+.wod_homebrew.regles-jets .form-footer { flex: 0 0 auto; }

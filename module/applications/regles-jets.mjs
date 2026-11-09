@@ -12,14 +12,15 @@ export default class ReglesJets extends HandlebarsApplicationMixin(ApplicationV2
     id: "wod-regles-jets",
     tag: "form",
     classes: ["wod_homebrew", "regles-jets", "standard-form"],
-    window: { title: "WODHOMEBREW.Jets.Titre", icon: "fa-solid fa-dice-d20" },
-    position: { width: 520, height: "auto" },
+    window: { title: "WODHOMEBREW.Jets.Titre", icon: "fa-solid fa-dice-d20", resizable: true },
+    // Hauteur bornée : les réglages défilent, les boutons restent visibles en bas
+    position: { width: 540, height: Math.min(760, Math.round(window.innerHeight * 0.85)) },
     form: { handler: ReglesJets.#onSubmit, closeOnSubmit: true },
     actions: { reinitialiser: ReglesJets.#onReinitialiser }
   };
 
   static PARTS = {
-    form: { template: "systems/wod_homebrew/templates/apps/regles-jets.hbs" },
+    form: { template: "systems/wod_homebrew/templates/apps/regles-jets.hbs", scrollable: [".regles-corps"] },
     footer: { template: "templates/generic/form-footer.hbs" }
   };
 
