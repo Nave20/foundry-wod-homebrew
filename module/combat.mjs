@@ -7,8 +7,8 @@
  * modifier un message qui n'est pas le sien : ses demandes passent par le socket du système et sont
  * exécutées par le MJ actif.
  */
-import { effectuerJet, lancerReserve, preparerJet, reglesJets, texteModificateur } from "./des.mjs";
-import { corriger, creerEtape, defensePossible, difficulteOpposee, malusDexterite, recalculer, reserveEncaissement } from "./combat-regles.mjs";
+import { compterReussites, effectuerJet, lancerReserve, preparerJet, reglesJets, texteModificateur } from "./des.mjs";
+import { corriger, creerEtape, defensePossible, difficulteOpposee, lancerAttente, mettreEnAttente, malusDexterite, recalculer, reserveEncaissement } from "./combat-regles.mjs";
 
 const SYSTEME = "wod_homebrew";
 const TEMPLATE = "systems/wod_homebrew/templates/chat/combat.hbs";
@@ -90,6 +90,8 @@ export async function lancerAttaque(actor, jet, armeId) {
     attaque: { libelle: "attaque", base: { reserve: jet.reserve, difficulte: jet.difficulte }, ajust: { des: 0, diff: 0 },
       reserve: jet.reserve, difficulte: jet.difficulte, reussites: r.reussites, des: r.des, manuel: false, bonus: r.bonus,
       detail: jet.traits.map(t => `${t.nom} ${t.valeur}`).join(" + "), mods: r.modificateurs },
+    // Réglage « les joueurs lancent eux-mêmes » : chaque étape attend un clic sur « Lancer »
+    parJoueurs: !!r.regles.lancerParJoueurs, attente: null,
     defenseType: null, defense: null, degats: null, encaissement: null,
     touche: null, restantes: 0, final: null, finalManuel: null, applique: false, appliques: 0
   };
@@ -129,6 +131,13 @@ export async function executer(message, action, donnees = {}, user = game.user) 
         // Défense : Dextérité + capacité, malus de blessure et d'armure ; réglage du MJ ajouté avant le lancer
         const ajust = user.isGM ? { des: Number(donnees.ajust?.des) || 0, diff: Number(donnees.ajust?.diff) || 0 } : { des: 0, diff: 0 };
         const protections = protectionsDe(cible);
+        // Encaissement de la cible : Vigueur + protections équipées (−1 diff. avec une spécialité de Vigueur)
+        const vigueur = traitActeur(cible, "vigueur", "attribut");
+        const reserveEnc = reserveEncaissement(vigueur.valeur, protections);
+        etat.contexte.encaissement = { reserve: reserveEnc,
+          difficulte: difficulteOpposee(regles.encaissementDifficulte, !!vigueur.specialite) };
+        etat.contexte.vigueur = vigueur.valeur;
+        etat.contexte.armure = reserveEnc - vigueur.valeur;
         if ( donnees.type === "aucune" ) {
           etat.defense = creerEtape("defense", { reserve: 0, difficulte: regles.difficulte }, lancerReserve, 0, ajust);
           etat.defense.detail = "";
@@ -141,18 +150,33 @@ export async function executer(message, action, donnees = {}, user = game.user) 
             malus: Number(sante.malus) || 0, appliquerMalus: regles.malusBlessure,
             etatSante: sante.cle ? _loc(`WODHOMEBREW.Sante.Niveaux.${sante.cle}`) : "",
             malusArmure: malusDexterite(protections) }, regles);
+          const extra = { ajust, detail: traits.map(t => `${t.nom} ${t.valeur}`).join(" + "),
+            mods: jet.modificateurs.map(texteModificateur) };
+          // Les joueurs lancent eux-mêmes : la défense attend le clic du défenseur
+          if ( etat.parJoueurs ) {
+            mettreEnAttente(etat, "defense", { reserve: jet.reserve, difficulte: jet.difficulte }, extra);
+            break;
+          }
           etat.defense = creerEtape("defense", { reserve: jet.reserve, difficulte: jet.difficulte }, lancerReserve, 0, ajust);
-          etat.defense.detail = traits.map(t => `${t.nom} ${t.valeur}`).join(" + ");
-          etat.defense.mods = jet.modificateurs.map(texteModificateur);
+          etat.defense.detail = extra.detail;
+          etat.defense.mods = extra.mods;
         }
-        // Encaissement de la cible : Vigueur + protections équipées (−1 diff. avec une spécialité de Vigueur)
-        const vigueur = traitActeur(cible, "vigueur", "attribut");
-        const reserve = reserveEncaissement(vigueur.valeur, protections);
-        etat.contexte.encaissement = { reserve,
-          difficulte: difficulteOpposee(regles.encaissementDifficulte, !!vigueur.specialite) };
-        etat.contexte.vigueur = vigueur.valeur;
-        etat.contexte.armure = reserve - vigueur.valeur;
         recalculer(etat, lancerReserve);
+        break;
+      }
+      case "lancer": {
+        // Étape en attente lancée par un joueur (ou le MJ) : les faces des dés viennent de son client
+        const a = etat.attente;
+        if ( !a || (a.etape !== donnees.etape) || etat.applique ) return;
+        if ( !peutLancer(etat, a.etape, user) ) return;
+        const faces = Array.isArray(donnees.faces) ? donnees.faces.map(Number) : [];
+        if ( (faces.length !== a.reserve) || faces.some(f => !Number.isInteger(f) || (f < 1) || (f > regles.de)) ) return;
+        let utilisees = false;
+        lancerAttente(etat, (n, difficulte) => {
+          if ( utilisees ) return lancerReserve(n, difficulte);
+          utilisees = true;
+          return compterReussites(faces, { ...regles, difficulte });
+        });
         break;
       }
       case "corriger": {
@@ -189,6 +213,28 @@ export async function executer(message, action, donnees = {}, user = game.user) 
   finally {
     enCours.delete(message.id);
   }
+}
+
+/** Le MJ, le propriétaire de la cible (défense, encaissement) ou de l'attaquant (dégâts) peut lancer l'étape */
+function peutLancer(etat, etape, user) {
+  if ( user.isGM ) return true;
+  const uuid = etape === "degats" ? etat.attaquant : etat.cible;
+  const acteur = uuid ? fromUuidSync(uuid) : null;
+  return !!acteur?.testUserPermission(user, "OWNER");
+}
+
+/** Lance les dés de l'étape en attente sur ce client (son des dés, dés 3D si un module les affiche) */
+async function lancerMesDes(message, etat) {
+  const a = etat.attente;
+  if ( !a ) return;
+  const faces = [];
+  if ( a.reserve > 0 ) {
+    const roll = await new Roll(`${a.reserve}d${reglesJets().de}`).evaluate();
+    faces.push(...roll.dice[0].results.map(r => r.result));
+    if ( game.dice3d ) await game.dice3d.showForRoll(roll, game.user, true);
+    else foundry.audio.AudioHelper.play({ src: CONFIG.sounds.dice, volume: 0.8, autoplay: true, loop: false }, false);
+  }
+  return demander(message, "lancer", { etape: a.etape, faces });
 }
 
 /** Demande une action : exécutée ici pour le MJ, envoyée au MJ actif pour un joueur */
@@ -235,6 +281,15 @@ export async function rendreCarte(etat) {
       { a: etat.attaquantNom, c: etat.cibleNom ?? "", arme: a.nom }),
     requis: a.requis, lignes, type,
     attendDefense: defensePossible(etat),
+    attente: etat.attente ? {
+      etape: etat.attente.etape, reserve: etat.attente.reserve, difficulte: etat.attente.difficulte,
+      libelle: etat.attente.etape === "defense" ? _loc(`WODHOMEBREW.Combat.Defenses.${etat.defenseType}`)
+        : _loc(etat.attente.etape === "degats" ? "WODHOMEBREW.Combat.Degats" : "WODHOMEBREW.Combat.Encaissement"),
+      detail: etat.attente.etape === "defense" ? etat.attente.detail
+        : etat.attente.etape === "degats" ? partsDegats.join(" + ")
+        : _loc("WODHOMEBREW.Combat.DetailEncaissement", { v: c.vigueur ?? 0, a: c.armure ?? 0 }),
+      qui: _loc("WODHOMEBREW.Combat.AttenteDe", { nom: (etat.attente.etape === "degats" ? etat.attaquantNom : etat.cibleNom) ?? "" })
+    } : null,
     defenses: Object.keys(DEFENSES).map(k => ({ cle: k, label: _loc(`WODHOMEBREW.Combat.Defenses.${k}`) })),
     final: etat.final, infini: etat.final === "infini", aFinal: (etat.final !== null) && etat.touche,
     applique: etat.applique,
@@ -267,6 +322,8 @@ export function registerCombatHooks() {
       }
     }
     if ( !defenseur ) carte.querySelectorAll("[data-pour='defense']").forEach(e => e.remove());
+    // Bouton « Lancer » : seulement pour celui qui doit lancer cette étape (ou le MJ)
+    if ( etat.attente && !peutLancer(etat, etat.attente.etape, game.user) ) carte.querySelectorAll("[data-pour='lanceur']").forEach(e => e.remove());
 
     carte.addEventListener("click", async event => {
       const bouton = event.target.closest("[data-combat]");
@@ -281,6 +338,9 @@ export function registerCombatHooks() {
           return demander(message, "defendre", { type: bouton.dataset.type, cible: jeton?.actor?.uuid, cibleNom: jeton?.name,
             ajust: { des: champ("des"), diff: champ("diff") } });
         }
+        case "lancer":
+          bouton.disabled = true;
+          return lancerMesDes(message, etat);
         case "crayon":
           zone.querySelector(".correction")?.classList.toggle("replie");
           return;

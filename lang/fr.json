@@ -793,7 +793,10 @@
       "SanteFormeDouble": "Crinos : la piste de santé double",
       "SanteFormeV5": "Crinos : +4 niveaux de santé (5e édition)",
       "SanteFormeAucune": "La forme ne change pas la santé (W20)",
-      "SanteFormeAide": "Les blessures sont gardées au changement de forme, même si elles dépassent la nouvelle piste."
+      "SanteFormeAide": "Les blessures sont gardées au changement de forme, même si elles dépassent la nouvelle piste.",
+      "SectionCombat": "Combat",
+      "LancerParJoueurs": "Les joueurs lancent eux-mêmes défense, dégâts et encaissement",
+      "LancerParJoueursAide": "Chaque étape de la carte de combat attend un clic sur « Lancer » : la défense et l'encaissement par le joueur de la cible, les dégâts par celui de l'attaquant. Le MJ peut toujours lancer à leur place. Décochée, tout se lance automatiquement."
     },
     "Orbe": {
       "Infobulle": "Réserve de sang ({n} par tour)",
@@ -845,7 +848,8 @@
       "Saisie": "réussites saisies par le MJ",
       "PasDeCible": "Ciblez d'abord le jeton du défenseur.",
       "CibleIntrouvable": "Le personnage ciblé n'existe plus.",
-      "PasDeMJ": "Aucun MJ connecté : la carte de combat ne peut pas avancer."
+      "PasDeMJ": "Aucun MJ connecté : la carte de combat ne peut pas avancer.",
+      "AttenteDe": "à lancer par {nom}"
     },
     "Forme": {
       "Noms": {

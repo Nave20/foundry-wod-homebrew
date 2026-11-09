@@ -25,6 +25,14 @@
   {{/if}}
   {{/each}}
 
+  {{#if attente}}
+  <div class="wod-combat-attente" data-etape="attente">
+    <span class="texte"><b>{{attente.libelle}}</b> {{#if attente.detail}}<span class="detail">{{attente.detail}}</span>{{/if}}
+      <span class="infos">{{attente.reserve}}d10 · {{localize "WODHOMEBREW.Jets.DifficulteCourte"}} {{attente.difficulte}} · {{attente.qui}}</span></span>
+    <button type="button" class="lancer" data-combat="lancer" data-pour="lanceur"><i class="fa-solid fa-dice" inert></i> {{localize "WODHOMEBREW.Jets.Lancer"}}</button>
+  </div>
+  {{/if}}
+
   {{#if attendDefense}}
   <div class="wod-combat-defense" data-etape="choix" data-pour="defense">
     <div class="titre">{{#if cibleNom}}{{localize "WODHOMEBREW.Combat.DefenseDe" c=cibleNom}}{{else}}{{localize "WODHOMEBREW.Combat.DefenseCiblee"}}{{/if}}</div>

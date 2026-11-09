@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { creerEtape, recalculer, corriger, defensePossible } from "../module/combat-regles.mjs";
+import { creerEtape, recalculer, corriger, defensePossible, mettreEnAttente, lancerAttente } from "../module/combat-regles.mjs";
 
 /** Lanceur factice : rend les réussites prévues dans l'ordre et note les réserves demandées */
 function lanceur(...reussites) {
@@ -135,4 +135,75 @@ test("attaque à 0 ou moins : pas de défense possible", () => {
   const e = etatGlock(3);
   e.defense = creerEtape("Aucune", { reserve: 0, difficulte: 6 }, () => ({ reussites: 0, des: [] }));
   assert.equal(defensePossible(e), false);
+});
+
+/* Mode « les joueurs lancent leurs dés » : chaque étape attend un clic sur Lancer */
+function etatJoueurs(a = 5) {
+  const e = etatGlock(a);
+  e.parJoueurs = true;
+  e.attente = null;
+  e.contexte.encaissement = { reserve: 5, difficulte: 6 };
+  return e;
+}
+const fixe = n => () => ({ reussites: n, des: [] });
+
+test("joueurs : la défense choisie attend son lancer, avec le réglage du MJ", () => {
+  const e = etatJoueurs(5);
+  mettreEnAttente(e, "defense", { reserve: 3, difficulte: 6 }, { ajust: { des: 2, diff: 0 }, detail: "Dex 3 + Esquive 0" });
+  assert.equal(defensePossible(e), false);
+  assert.deepEqual([e.attente.etape, e.attente.reserve, e.attente.difficulte], ["defense", 5, 6]);
+  const appels = [];
+  lancerAttente(e, (r, d) => { appels.push([r, d]); return { reussites: 3, des: [] }; });
+  assert.deepEqual(appels, [[5, 6]]);
+  assert.equal(e.defense.reussites, 3);
+  assert.equal(e.defense.detail, "Dex 3 + Esquive 0");
+  assert.equal(e.attente.etape, "degats");
+});
+
+test("joueurs : les dégâts attendent leur lancer (réserve calculée), sans dés lancés d'office", () => {
+  const e = etatJoueurs(5);
+  mettreEnAttente(e, "defense", { reserve: 3, difficulte: 6 });
+  let appels = 0;
+  lancerAttente(e, () => { appels++; return { reussites: 3, des: [] }; });
+  assert.equal(appels, 1);
+  assert.equal(e.degats, null);
+  assert.deepEqual([e.attente.etape, e.attente.reserve, e.attente.difficulte], ["degats", 5, 6]);
+  assert.equal(e.final, null);
+});
+
+test("joueurs : dégâts lancés, puis l'encaissement attend, puis le final se calcule", () => {
+  const e = etatJoueurs(5);
+  mettreEnAttente(e, "defense", { reserve: 3, difficulte: 6 });
+  lancerAttente(e, fixe(3));
+  lancerAttente(e, fixe(4));
+  assert.equal(e.degats.reussites, 4);
+  assert.deepEqual([e.attente.etape, e.attente.reserve], ["encaissement", 5]);
+  lancerAttente(e, fixe(1));
+  assert.equal(e.attente, null);
+  assert.equal(e.final, 3);
+});
+
+test("joueurs : dégâts ratés ou coup raté, plus rien n'attend", () => {
+  const e = etatJoueurs(5);
+  mettreEnAttente(e, "defense", { reserve: 3, difficulte: 6 });
+  lancerAttente(e, fixe(3));
+  lancerAttente(e, fixe(0));
+  assert.equal(e.attente, null);
+  assert.equal(e.final, 0);
+  const r = etatJoueurs(2);
+  mettreEnAttente(r, "defense", { reserve: 3, difficulte: 6 });
+  lancerAttente(r, fixe(2));
+  assert.equal(r.attente, null);
+  assert.equal(r.final, 0);
+});
+
+test("joueurs : une correction de la défense qui change la réserve de dégâts les remet en attente", () => {
+  const e = etatJoueurs(5);
+  mettreEnAttente(e, "defense", { reserve: 3, difficulte: 6 });
+  lancerAttente(e, fixe(2));      // nettes 3 → 6 dés
+  lancerAttente(e, fixe(4));      // dégâts lancés
+  corriger(e, "defense", { reussites: 4 }, fixe(0));   // nettes 1 → 4 dés : à relancer par le joueur
+  assert.equal(e.degats, null);
+  assert.deepEqual([e.attente.etape, e.attente.reserve], ["degats", 4]);
+  assert.equal(e.final, null);
 });

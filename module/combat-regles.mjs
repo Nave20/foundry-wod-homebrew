@@ -112,6 +112,7 @@ export function recalculer(etat, lancer) {
   const t = resoudreTouche(etat.attaque.reussites, etat.defense.reussites);
   etat.touche = t.touche;
   etat.restantes = t.restantes;
+  etat.attente = null;
   if ( !t.touche ) {
     etat.degats = null;
     etat.encaissement = null;
@@ -123,19 +124,58 @@ export function recalculer(etat, lancer) {
   if ( !etat.degats || (etat.degats.base.reserve !== reserve) ) {
     const difficulte = difficulteOpposee(c.degatsDifficulte ?? 6, etat.arme.force && c.specForce);
     const ajust = etat.degats?.ajust;
+    // Les joueurs lancent eux-mêmes : les dégâts attendent un clic sur « Lancer »
+    if ( etat.parJoueurs ) {
+      etat.degats = null;
+      etat.final = null;
+      return mettreEnAttente(etat, "degats", { reserve, difficulte }, { ajust });
+    }
     etat.degats = creerEtape("degats", { reserve, difficulte }, lancer);
     if ( ajust && (ajust.des || ajust.diff) ) { etat.degats.ajust = ajust; relancerEtape(etat.degats, lancer); }
   }
   // Pas d'encaissement contre des dégâts infinis, ni contre un jet de dégâts raté (0 ou moins)
   if ( etat.arme.infini || (etat.degats.reussites <= 0) ) etat.encaissement = null;
-  else if ( !etat.encaissement ) etat.encaissement = creerEtape("encaissement", c.encaissement, lancer);
+  else if ( !etat.encaissement ) {
+    if ( etat.parJoueurs ) {
+      etat.final = null;
+      return mettreEnAttente(etat, "encaissement", c.encaissement);
+    }
+    etat.encaissement = creerEtape("encaissement", c.encaissement, lancer);
+  }
   etat.final = etat.finalManuel ?? degatsFinaux(etat.degats.reussites, etat.encaissement?.reussites ?? 0, etat.arme.infini);
   return etat;
 }
 
+/**
+ * Mode « les joueurs lancent leurs dés » : l'étape suivante attend un clic sur « Lancer ».
+ * La réserve et la difficulté sont calculées ici (réglage du MJ compris) pour être affichées sur la carte.
+ * @param {object} etat
+ * @param {"defense"|"degats"|"encaissement"} etape
+ * @param {{reserve: number, difficulte: number}} base
+ * @param {{ajust?: {des, diff}, detail?: string, mods?: string[]}} [extra]
+ */
+export function mettreEnAttente(etat, etape, base, { ajust = null, detail = "", mods = [] } = {}) {
+  const a = { des: Number(ajust?.des) || 0, diff: Number(ajust?.diff) || 0 };
+  etat.attente = { etape, base: { ...base }, ajust: a, detail, mods,
+    reserve: Math.max(0, base.reserve + a.des), difficulte: Math.min(10, Math.max(2, base.difficulte + a.diff)) };
+  return etat;
+}
+
+/** Lance l'étape en attente (dés fournis par le joueur qui a cliqué) puis enchaîne la suite */
+export function lancerAttente(etat, lancer) {
+  const a = etat.attente;
+  if ( !a ) return etat;
+  const etape = creerEtape(a.etape, a.base, lancer, 0, a.ajust);
+  etape.detail = a.detail;
+  etape.mods = a.mods;
+  etat[a.etape] = etape;
+  etat.attente = null;
+  return recalculer(etat, lancer);
+}
+
 /** La défense peut être choisie : pas encore lancée, et l'attaque a au moins une réussite */
 export function defensePossible(etat) {
-  return !etat.defense && (etat.attaque.reussites > 0);
+  return !etat.defense && !etat.attente && (etat.attaque.reussites > 0);
 }
 
 /**

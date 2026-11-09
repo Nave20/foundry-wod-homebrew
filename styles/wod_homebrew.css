@@ -480,3 +480,9 @@ body.wod-sans-scene #board { opacity: 0; }
 
 .wod_homebrew .sante-forme { color: #39ff88; }
 .wod_homebrew .alerte-sante { color: #e07c7c; font-weight: bold; margin: 0.2rem 0; }
+
+.wod-combat-attente { display: flex; align-items: center; gap: 0.5rem; border-top: 1px solid var(--color-border, #8884);
+  padding: 0.35rem 0.4rem; margin-top: 0.15rem; border-radius: 4px; background: rgb(57 255 136 / 0.07); }
+.wod-combat-attente .texte { flex: 1; }
+.wod-combat-attente .detail, .wod-combat-attente .infos { display: block; font-size: 0.85em; opacity: 0.8; }
+.wod-combat-attente button.lancer { flex: 0 0 auto; width: auto; line-height: 1.7rem; padding: 0 0.7rem; }

@@ -63,7 +63,8 @@ export default class ReglesJets extends HandlebarsApplicationMixin(ApplicationV2
       extensionDifficulte: Number(donnees.extensionDifficulte) || 0,
       malusBlessure: !!donnees.malusBlessure,
       volonteSansMalus: !!donnees.volonteSansMalus,
-      santeForme: (donnees.santeForme in REGLES_SANTE_FORME) ? donnees.santeForme : REGLES_DEFAUT.santeForme
+      santeForme: (donnees.santeForme in REGLES_SANTE_FORME) ? donnees.santeForme : REGLES_DEFAUT.santeForme,
+      lancerParJoueurs: !!donnees.lancerParJoueurs
     });
     // Les fiches de garou recalculent leur piste de santé selon la forme
     for ( const actor of game.actors.filter(a => a.type === "garou") ) {

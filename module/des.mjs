@@ -33,7 +33,8 @@ export const REGLES_DEFAUT = {
   extensionDifficulte: 1,
   malusBlessure: true, volonteSansMalus: true,
   degatsDifficulte: 6, encaissementDifficulte: 6,
-  santeForme: "double"
+  santeForme: "double",
+  lancerParJoueurs: true
 };
 
 export function registerDesSettings() {
@@ -65,6 +66,7 @@ export function reglesJets() {
   r.degatsDifficulte = Math.min(r.de, entier(r.degatsDifficulte, REGLES_DEFAUT.degatsDifficulte, 2));
   r.encaissementDifficulte = Math.min(r.de, entier(r.encaissementDifficulte, REGLES_DEFAUT.encaissementDifficulte, 2));
   if ( !(r.santeForme in REGLES_SANTE_FORME) ) r.santeForme = REGLES_DEFAUT.santeForme;
+  r.lancerParJoueurs = !!r.lancerParJoueurs;
   return r;
 }
 
