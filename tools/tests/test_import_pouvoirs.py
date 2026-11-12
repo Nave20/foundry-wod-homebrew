@@ -112,6 +112,24 @@ class TestFormatsParticuliers(unittest.TestCase):
         self.assertIn("Ingrédients : la vitae", s["description"])
         self.assertIn("Durée : une scène", s["description"])
 
+    def test_rituels_v5(self):
+        p = lire_discipline(RITUELS, "Sorcellerie du sang")
+        self.assertEqual(len(p), 2)
+        s = p[1]["system"]
+        self.assertEqual((p[1]["name"], s["categorie"], s["edition"], s["niveau"], s["groupe"]),
+                         ("Pierre de sang", "rite", "V5", 1, "Sorcellerie du sang"))
+        self.assertIn("Ingrédients : un aimant", s["description"])
+        self.assertIn("Système : jet de Rituel", s["description"])
+
+
+RITUELS = """### Rituels V5
+
+| Niveau | Rituel | Effet | Ingrédients | Système |
+|---|---|---|---|---|
+| 1 | **Chemin du sang** | Étend Goût du sang. | une coupe d'argent | jet de Rituel |
+| 1 | **Pierre de sang** | Une balise magique. | un aimant | jet de Rituel à la troisième nuit |
+"""
+
 COMBINEES = """# Disciplines combinées
 
 Intro.

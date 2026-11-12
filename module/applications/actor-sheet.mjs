@@ -226,7 +226,9 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     if (context.estVampirique) {
       const sang = source.sang ?? {};
       context.orbe = { valeur: sang.valeur ?? 0, max: sang.max ?? 0, parTour: sang.par_tour ?? 1 };
-      context.vertus = ["conscience", "maitrise_de_soi", "courage"].map(k => champ(k, fields.vertus.fields, source.vertus));
+      // Vertus masquées par la règle du monde (jeu sans Vertus) : les valeurs restent enregistrées
+      context.vertus = reglesJets().masquerVertus ? null
+        : ["conscience", "maitrise_de_soi", "courage"].map(k => champ(k, fields.vertus.fields, source.vertus));
     }
     // Garou : jauges de rage et de gnose dans l'en-tête
     if (context.estGarou) {
@@ -336,7 +338,8 @@ export default class WodActorSheet extends HandlebarsApplicationMixin(ActorSheet
     for ( const p of this.actor.items.filter(i => i.type === "pouvoir") ) {
       const g = p.system.groupe?.trim() || sansGroupe;
       if ( !groupes.has(g) ) groupes.set(g, []);
-      groupes.get(g).push({ id: p.id, nom: p.name, niveau: p.system.niveau, edition: p.system.edition, img: p.img,
+      groupes.get(g).push({ id: p.id, nom: p.name, niveau: p.system.niveau, img: p.img,
+        edition: _loc(CONFIG.WODHOMEBREW.editionsPouvoir[p.system.edition] ?? p.system.edition),
         categorie: _loc(CONFIG.WODHOMEBREW.categoriesPouvoir[p.system.categorie] ?? "") });
     }
     return [...groupes.entries()].sort(([a], [b]) => a.localeCompare(b, "fr"))

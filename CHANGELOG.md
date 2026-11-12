@@ -2,6 +2,25 @@
 
 Une entrée par session de travail. Chaque entrée indique le build de Foundry sur lequel la version a été vérifiée.
 
+## 0.8.0 — 2026-11-12 · Session 8 : import des personnages de la vault
+
+Vérifié sur **Foundry VTT 14.369**.
+
+### Import de personnages
+- Outil en deux temps : `tools/import_personnage_vault.py` lit des notes de personnage Obsidian (propriétés, sections en HTML, pouvoirs, rituels, équipement, portrait et jeton copiés dans `Data/wod-homebrew-portraits`) ; `tools/importer-personnage.js` crée les acteurs dans la console du MJ.
+- Les traits sont reconnus par leur clé ou leur nom affiché (Traits de la chronique) : Sang-froid, capacités ajoutées (Esquive, Sanguinis…), spécialités « Spécialité X (y) » ou « Trait : spécialité », capacités d'un autre jeu rangées en capacités secondaires dans leur colonne d'origine.
+- Pouvoirs, rituels et objets pris dans les compendiums du monde quand le nom correspond (accents, casse et pluriels ignorés ; pouvoirs combinés) ; sinon créés depuis la note. Les descriptions en phrases ne deviennent pas des pouvoirs.
+- Armes : Bagarre et contondant pour « Force + N », Armes à feu et létal pour des dégâts fixes ; une protection importée est portée.
+- Import en masse : dossiers de la vault recréés sous un dossier racine, un réimport remplace l'acteur de la même note, créatures sans fiche ignorées, rapport regroupé par type de remarque.
+- Rituels V5 de Sorcellerie du sang lus par `import_pouvoirs_vault.py` (catégorie « rite »).
+
+### Fiche
+- Nouvelle option **« Masquer les Vertus »** (Règles des jets → Vampires et goules), cochée par défaut.
+- Le nom d'un trait reste lisible : la spécialité est coupée en premier (texte entier au survol).
+- Capacités secondaires : les points restent alignés avec les autres lignes.
+- Biographie : les textes s'affichent en entier (jusqu'à 28rem, puis défilement).
+- Pouvoirs : l'édition « Autre » est traduite.
+
 ## 0.7.0 — 2026-11-09 · Session 7 : jets des joueurs et pouvoirs
 
 Vérifié sur **Foundry VTT 14.369**.

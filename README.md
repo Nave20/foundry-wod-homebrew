@@ -6,7 +6,7 @@ Système de jeu **maison** pour [Foundry Virtual Tabletop](https://foundryvtt.co
 > Le système est développé et testé sur ce build précis. Le build cible **évoluera** avec les mises à jour de Foundry ;
 > le [CHANGELOG](CHANGELOG.md) indique pour chaque version le build sur lequel elle a été vérifiée.
 
-Version actuelle du système : **0.7.0** · Statut : **en développement** (étapes 1 à 4 terminées, jauges animées, armes, combat et formes des garous ajoutés)
+Version actuelle du système : **0.8.0** · Statut : **en développement** (étapes 1 à 4 terminées, jauges animées, armes, combat et formes des garous ajoutés)
 
 ## Ce que fait le système aujourd'hui
 
@@ -71,8 +71,9 @@ Chaque session de travail se termine par un envoi sur ce dépôt, avec son réca
 | 2026-11-06 | 0.3.0 | Profils de traits (dont Homebrew), jets de dés avec réussites et règles réglables |
 | 2026-11-07 | 0.4.0 | Volonté, sang et quintessence dans les jets, jets étendus, santé cliquable et malus, jet de Volonté |
 | 2026-11-08 | 0.5.0 | Jauges animées dans l'en-tête (sang, rage, gnose, quintessence et paradoxe, Volonté), Avatar du mage, règle du paradoxe |
-| 2026-11-09 | 0.7.0 | Jets de combat lancés par les joueurs, pouvoirs suivis sur la fiche, sphères jetables, import des disciplines |
 | 2026-11-08 | 0.6.0 | Armes et armures dans les jets, onglet Combat, carte de combat avec corrections du MJ, import vers un compendium, formes des garous |
+| 2026-11-09 | 0.7.0 | Jets de combat lancés par les joueurs, pouvoirs suivis sur la fiche, sphères jetables, import des disciplines |
+| 2026-11-12 | 0.8.0 | Import des personnages de la vault (PNJ en masse), option « Masquer les Vertus » |
 
 ## Développement
 

@@ -40,10 +40,12 @@
     </fieldset>
 
     {{#if estVampirique}}
+    {{#if vertus}}
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.vertus.label"}}</legend>
       {{#each vertus as |c|}}{{> "systems/wod_homebrew/templates/actor/trait.hbs" label=c.field.label name=c.field.fieldPath value=c.value max=@root.echelle editable=@root.editable}}{{/each}}
     </fieldset>
+    {{/if}}
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.voie.label"}}</legend>
       {{formGroup systemFields.voie.fields.nom value=source.voie.nom localize=true disabled=(not editable)}}

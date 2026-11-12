@@ -65,7 +65,8 @@ export default class ReglesJets extends HandlebarsApplicationMixin(ApplicationV2
       malusBlessure: !!donnees.malusBlessure,
       volonteSansMalus: !!donnees.volonteSansMalus,
       santeForme: (donnees.santeForme in REGLES_SANTE_FORME) ? donnees.santeForme : REGLES_DEFAUT.santeForme,
-      lancerParJoueurs: !!donnees.lancerParJoueurs
+      lancerParJoueurs: !!donnees.lancerParJoueurs,
+      masquerVertus: !!donnees.masquerVertus
     });
     // Les fiches de garou recalculent leur piste de santé selon la forme
     for ( const actor of game.actors.filter(a => a.type === "garou") ) {
@@ -75,6 +76,10 @@ export default class ReglesJets extends HandlebarsApplicationMixin(ApplicationV2
     // Les fiches de mage recalculent leur quintessence maximale
     for ( const actor of game.actors.filter(a => a.type === "mage") ) {
       actor.reset();
+      actor.sheet?.rendered && actor.sheet.render();
+    }
+    // Les fiches de vampire et de goule affichent ou masquent les Vertus
+    for ( const actor of game.actors.filter(a => ["vampire", "goule"].includes(a.type)) ) {
       actor.sheet?.rendered && actor.sheet.render();
     }
     ui.notifications.info("WODHOMEBREW.Jets.Enregistre", { localize: true });

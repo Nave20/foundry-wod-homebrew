@@ -8,6 +8,7 @@ Lit dans chaque note :
 - les pouvoirs des éditions classiques : sections « ### Niveau N », lignes « - **Nom** (*nom anglais*) : effet »,
   lignes de suite indentées, puis « *Sources : … * » ; édition « V20 » ;
 - le tableau « ### Pouvoirs V5 » (Niveau | Pouvoir | Effet | Coût | Dés | Durée | Amalgame) ; édition « V5 ».
+- le tableau « ### Rituels V5 » (Niveau | Rituel | Effet | Ingrédients | Système) : pouvoirs de catégorie « rite », édition « V5 ».
 Les sections « Généralités » et « Pouvoirs combinés » sont ignorées.
 La note « Disciplines combinées » donne un pouvoir par bloc « ## Nom » (niveau = plus haut prérequis).
 Les notes « Dons - Groupe » (W20) donnent un don par « ### Nom » sous « ## Niveau N » ; édition « W20 ».
@@ -70,6 +71,8 @@ def lire_discipline(texte: str, groupe: str) -> list:
                 section, niveau = "v5", None
             elif t.startswith("Formules V5"):
                 section, niveau = "formules", None
+            elif t.startswith("Rituels V5"):
+                section, niveau = "rituels", None
             else:
                 section, niveau = None, None
             continue
@@ -80,6 +83,14 @@ def lire_discipline(texte: str, groupe: str) -> list:
                 if len(c) >= 6 and c[0].isdigit():
                     desc = [vide(c[2])] + [f"{t} : {v}" for t, v in (("Ingrédients", c[3]), ("Durée", c[5])) if vide(v)]
                     resultat.append(pouvoir(c[1], groupe, int(c[0]), "V5", desc, cout=vide(c[4])))
+            continue
+        if section == "rituels":
+            # Niveau | Rituel | Effet | Ingrédients | Système
+            if ligne.startswith("|") and not re.match(r"^\|\s*-", ligne) and not ligne.startswith("| Niveau"):
+                c = [x.strip() for x in ligne.strip("|").split("|")]
+                if len(c) >= 5 and c[0].isdigit():
+                    desc = [vide(c[2])] + [f"{t} : {v}" for t, v in (("Ingrédients", c[3]), ("Système", c[4])) if vide(v)]
+                    resultat.append(pouvoir(c[1], groupe, int(c[0]), "V5", desc, categorie="rite"))
             continue
         if section == "v5":
             if ligne.startswith("|") and not re.match(r"^\|\s*-", ligne) and not ligne.startswith("| Niveau"):

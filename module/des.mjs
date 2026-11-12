@@ -23,6 +23,7 @@ const TEMPLATE = "systems/wod_homebrew/templates/chat/jet.hbs";
  * - quintessenceAvatarPrime : la quintessence maximale d'un mage vaut Avatar + Prime
  * - extensionDifficulte : difficulté ajoutée à chaque extension d'un jet (bouton « Étendre » de la carte)
  * - malusBlessure : le malus de santé retire des dés aux jets ; volonteSansMalus : sauf au jet de Volonté
+ * - masquerVertus : les fiches de vampire et de goule n'affichent pas les Vertus (valeurs gardées)
  */
 export const REGLES_DEFAUT = {
   de: 10, difficulte: 6, dixDouble: true, unRetire: true,
@@ -34,7 +35,8 @@ export const REGLES_DEFAUT = {
   malusBlessure: true, volonteSansMalus: true,
   degatsDifficulte: 6, encaissementDifficulte: 6,
   santeForme: "double",
-  lancerParJoueurs: true
+  lancerParJoueurs: true,
+  masquerVertus: true
 };
 
 export function registerDesSettings() {
@@ -67,6 +69,7 @@ export function reglesJets() {
   r.encaissementDifficulte = Math.min(r.de, entier(r.encaissementDifficulte, REGLES_DEFAUT.encaissementDifficulte, 2));
   if ( !(r.santeForme in REGLES_SANTE_FORME) ) r.santeForme = REGLES_DEFAUT.santeForme;
   r.lancerParJoueurs = !!r.lancerParJoueurs;
+  r.masquerVertus = !!r.masquerVertus;
   return r;
 }
 

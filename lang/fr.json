@@ -798,7 +798,10 @@
       "SanteFormeAide": "Les blessures sont gardées au changement de forme, même si elles dépassent la nouvelle piste.",
       "SectionCombat": "Combat",
       "LancerParJoueurs": "Les joueurs lancent eux-mêmes défense, dégâts et encaissement",
-      "LancerParJoueursAide": "Chaque étape de la carte de combat attend un clic sur « Lancer » : la défense et l'encaissement par le joueur de la cible, les dégâts par celui de l'attaquant. Le MJ peut toujours lancer à leur place. Décochée, tout se lance automatiquement."
+      "LancerParJoueursAide": "Chaque étape de la carte de combat attend un clic sur « Lancer » : la défense et l'encaissement par le joueur de la cible, les dégâts par celui de l'attaquant. Le MJ peut toujours lancer à leur place. Décochée, tout se lance automatiquement.",
+      "SectionVampire": "Vampires et goules",
+      "MasquerVertus": "Masquer les Vertus",
+      "MasquerVertusAide": "Pour un jeu sans Vertus (Conscience, Maîtrise de soi, Courage). Les valeurs restent enregistrées : décochée, la section revient dans l'onglet État."
     },
     "Orbe": {
       "Infobulle": "Réserve de sang ({n} par tour)",

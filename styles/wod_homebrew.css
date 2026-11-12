@@ -500,3 +500,15 @@ body.wod-sans-scene #board { opacity: 0; }
 .wod_homebrew .ligne-pouvoir .niveau-pouvoir { flex: 0 0 1.4rem; text-align: center; font-weight: bold; color: var(--wod-trait); }
 .wod_homebrew .ligne-pouvoir .nom-objet { flex: 1; cursor: pointer; }
 .wod_homebrew .ligne-pouvoir button.icone { flex: 0 0 auto; width: 1.6rem; height: 1.6rem; padding: 0; }
+
+/* Import de fiches complètes (09/11) : le nom du trait reste lisible, la spécialité est coupée en premier
+   (texte entier au survol) ; le bouton « retirer » d'une capacité secondaire passe avant les points pour
+   les garder alignés ; les textes de la biographie s'affichent en entier (jusqu'à 28rem, puis défilement). */
+.wod_homebrew .nom-trait .libelle { flex: 0 0 auto; max-width: 100%; }
+.wod_homebrew .secondaire .wod-points { order: 2; }
+.wod_homebrew .secondaire button.retirer-mini { order: 1; }
+.wod_homebrew.actor prose-mirror.inactive { height: auto; max-height: 28rem; }
+.wod_homebrew.actor prose-mirror.inactive .editor-content { position: static; height: auto; }
+.wod_homebrew.actor prose-mirror.active { height: 28rem; }
+.wod_homebrew.actor prose-mirror table { font-size: var(--font-size-12, 0.75rem); margin: 0.3rem 0; }
+.wod_homebrew.actor prose-mirror :is(th, td) { padding: 0.1rem 0.3rem; }
