@@ -2,6 +2,32 @@
 
 Une entrée par session de travail. Chaque entrée indique le build de Foundry sur lequel la version a été vérifiée.
 
+## 1.0.0 — 2026-11-15 · Session 9 : fiche Créature et finitions
+
+Vérifié sur **Foundry VTT 14.369**. Première version complète pour la table : fiches des cinq créatures jouables, jets, combat, pouvoirs, import des personnages et fiche Créature.
+
+### Fiche Créature
+- Nouveau type d'acteur **Créature** (fiche simple) : catégorie (animal, esprit, artificielle, autre) et espèce dans l'en-tête, mêmes traits qu'un mortel avec les capacités des livres.
+- Les attaques naturelles sont des armes (Dextérité + Bagarre) : elles s'utilisent dans l'onglet Combat comme les autres.
+
+### Toutes les fiches
+- **Expérience** (XP disponibles, XP gagnés au total) dans l'onglet État, pour les PJ comme pour les PNJ.
+- **Vrai nom** et **Pseudonyme** dans l'identité (onglet Biographie).
+- Les listes de choix de l'en-tête sont traduites.
+
+### Import des personnages
+- Les fiches du dossier « Créature » de la vault deviennent des créatures ; « Morsure 2 dégâts létaux » ou « Griffe 2L » dans l'historique deviennent des attaques.
+- Capacités secondaires de la vault rangées dans leur colonne (talents, compétences, connaissances) grâce à une table de tri.
+- Fiches de PJ : les sections sans champ (rotes, journal…) restent visibles du joueur, à la suite de l'historique.
+- Propriétés écrites entre guillemets (`type: "personnage"`) et listes sans retrait reconnues.
+- Le rapport signale chaque acteur existant remplacé, avec sa date de modification.
+- Propriétés propres à une campagne (carte et actions du Succubus Club) ignorées.
+
+### Corrections
+- L'importeur de compendium valide et dédoublonne les objets **avant** de vider le compendium ; une catégorie inconnue devient « Divers ».
+- Gras et italique des notes convertis en vrai gras et italique dans les compendiums (plus d'astérisques).
+- La fiche des objets, pouvoirs et avantages porte un nom neutre dans la configuration des fiches.
+
 ## 0.8.0 — 2026-11-12 · Session 8 : import des personnages de la vault
 
 Vérifié sur **Foundry VTT 14.369**.

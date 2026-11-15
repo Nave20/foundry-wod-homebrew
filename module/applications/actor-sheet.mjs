@@ -27,16 +27,18 @@ const ENTETE = {
   vampire: ["clan", "generation", "nature", "attitude"],
   goule: ["domitor", "clan_domitor", "nature", "attitude"],
   garou: ["tribu", "auspice", "nature", "attitude"],
-  mage: ["tradition", "essence", "nature", "attitude"]
+  mage: ["tradition", "essence", "nature", "attitude"],
+  creature: ["espece", "categorie"]
 };
 
 /** Section « Identité » de l'onglet Biographie : le reste des champs d'identité */
 const IDENTITE = {
-  mortel: ["chronique", "joueur", "affiliation"],
-  vampire: ["concept", "chronique", "joueur", "sire", "secte", "refuge"],
-  goule: ["concept", "chronique", "joueur", "secte"],
-  garou: ["concept", "chronique", "joueur", "race", "meute", "totem", "rang"],
-  mage: ["concept", "chronique", "joueur", "cabale", "paradigme", "pratique", "instruments"]
+  mortel: ["vrai_nom", "pseudo", "chronique", "joueur", "affiliation"],
+  vampire: ["vrai_nom", "pseudo", "concept", "chronique", "joueur", "sire", "secte", "refuge"],
+  goule: ["vrai_nom", "pseudo", "concept", "chronique", "joueur", "secte"],
+  garou: ["vrai_nom", "pseudo", "concept", "chronique", "joueur", "race", "meute", "totem", "rang"],
+  mage: ["vrai_nom", "pseudo", "concept", "chronique", "joueur", "cabale", "paradigme", "pratique", "instruments"],
+  creature: ["vrai_nom", "pseudo", "concept", "chronique"]
 };
 
 /** Listes libres (nom + valeur) par onglet et par créature */

@@ -10,7 +10,16 @@ const creatures = {
   vampire: { label: "TYPES.Actor.vampire", jeu: "V20" },
   goule: { label: "TYPES.Actor.goule", jeu: "V20" },
   garou: { label: "TYPES.Actor.garou", jeu: "W20" },
-  mage: { label: "TYPES.Actor.mage", jeu: "M20" }
+  mage: { label: "TYPES.Actor.mage", jeu: "M20" },
+  creature: { label: "TYPES.Actor.creature", jeu: "V20" }
+};
+
+/** Catégories de créature (fiche simple) */
+const categoriesCreature = {
+  animal: `${L}.Creature.Animal`,
+  esprit: `${L}.Creature.Esprit`,
+  artificiel: `${L}.Creature.Artificiel`,
+  autre: `${L}.Creature.Autre`
 };
 
 const jeux = {
@@ -116,5 +125,5 @@ const editionsPouvoir = { V20: "V20", V5: "V5", W20: "W20", M20: "M20", autre: `
 
 export const WODHOMEBREW = {
   creatures, jeux, attributs, capacites, toutesCapacites, spheres, niveauxSante, categoriesObjet, typesDegats,
-  attributsCombat, competencesCombat, categoriesPouvoir, editionsPouvoir, categoriesAvantage
+  attributsCombat, competencesCombat, categoriesPouvoir, editionsPouvoir, categoriesAvantage, categoriesCreature
 };

@@ -110,3 +110,17 @@ export class MageData extends ActorBaseData {
     this.quintessenceMax = quintessenceMax(this);
   }
 }
+
+/**
+ * Créature (fiche simple) : animaux, esprits, créatures artificielles…
+ * Mêmes traits qu'un mortel (capacités des livres), plus l'espèce et la catégorie ; les attaques naturelles sont des armes.
+ */
+export class CreatureData extends ActorBaseData {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      categorie: new StringField({ required: true, blank: false, initial: "animal", choices: () => WODHOMEBREW.categoriesCreature }),
+      espece: texte()
+    };
+  }
+}

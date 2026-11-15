@@ -35,7 +35,7 @@
       {{#each entete.haut as |c|}}
       <label class="champ-cle">
         <span>{{localize c.field.label}}</span>
-        {{formInput c.field value=c.value disabled=(not @root.editable)}}
+        {{formInput c.field value=c.value localize=true disabled=(not @root.editable)}}
       </label>
       {{/each}}
     </div>

@@ -200,7 +200,7 @@ class TestDons(unittest.TestCase):
         s = p[0]["system"]
         self.assertEqual((s["categorie"], s["groupe"], s["niveau"], s["edition"]), ("don", "Ahroun", 1, "W20"))
         self.assertIn("Description du don.", s["description"])
-        self.assertIn("Système : le personnage dépense 1 point de Rage.", s["description"])
+        self.assertIn("<strong>Système</strong> : le personnage dépense 1 point de Rage.", s["description"])
         self.assertEqual(s["cout"], "1 point de Rage")
         self.assertEqual(p[1]["system"]["cout"], "2 points de Gnose")
         self.assertIn("Aussi chez : Fils de Fenris", p[1]["system"]["description"])

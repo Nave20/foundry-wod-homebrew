@@ -121,17 +121,17 @@ const noms = liste => [...liste].sort((a, b) => a.localeCompare(b, "fr")).map(no
 export const LISTES_PREFAITES = {
   historiques: {
     mortel: noms(HISTO_MORTEL), vampire: noms(HISTO_VAMPIRE), goule: noms(HISTO_GOULE),
-    garou: noms(HISTO_GAROU), mage: noms(HISTO_MAGE)
+    garou: noms(HISTO_GAROU), mage: noms(HISTO_MAGE), creature: []
   },
   atouts: {
     mortel: fusion(ATOUTS_COMMUNS), vampire: fusion(ATOUTS_COMMUNS, ATOUTS_VAMPIRE),
     goule: fusion(ATOUTS_COMMUNS, ATOUTS_GOULE), garou: fusion(ATOUTS_COMMUNS, ATOUTS_GAROU),
-    mage: fusion(ATOUTS_COMMUNS, ATOUTS_MAGE)
+    mage: fusion(ATOUTS_COMMUNS, ATOUTS_MAGE), creature: []
   },
   handicaps: {
     mortel: fusion(HANDICAPS_COMMUNS), vampire: fusion(HANDICAPS_COMMUNS, HANDICAPS_VAMPIRE),
     goule: fusion(HANDICAPS_COMMUNS, HANDICAPS_GOULE), garou: fusion(HANDICAPS_COMMUNS, HANDICAPS_GAROU),
-    mage: fusion(HANDICAPS_COMMUNS, HANDICAPS_MAGE)
+    mage: fusion(HANDICAPS_COMMUNS, HANDICAPS_MAGE), creature: []
   }
 };
 

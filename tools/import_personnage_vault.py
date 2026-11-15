@@ -39,7 +39,7 @@ def lire_front_matter(texte: str) -> dict:
         return {}
     props, cle = {}, None
     for ligne in m.group(1).splitlines():
-        e = re.match(r"^\s+-\s*(.*)$", ligne)
+        e = re.match(r"^\s*-\s*(.*)$", ligne)  # avec ou sans retrait (« - "Do 4" »)
         if e and cle:
             if not isinstance(props[cle], list):
                 props[cle] = []

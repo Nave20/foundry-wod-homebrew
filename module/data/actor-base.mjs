@@ -19,6 +19,8 @@ export default class ActorBaseData extends foundry.abstract.TypeDataModel {
       jeu: new StringField({ required: true, blank: false, initial: this.JEU_DEFAUT, choices: () => WODHOMEBREW.jeux }),
       role: new StringField({ required: true, blank: false, initial: "PNJ", choices: { PJ: "PJ", PNJ: "PNJ" } }),
       joueur: texte(),
+      vrai_nom: texte(),
+      pseudo: texte(),
       statut: texte("actif"),
       chronique: texte(),
       concept: texte(),
@@ -38,6 +40,10 @@ export default class ActorBaseData extends foundry.abstract.TypeDataModel {
       historiques: listeTraits(),
       atouts: listeTraits(),
       handicaps: listeTraits(),
+
+      // Expérience (PJ et PNJ)
+      xp: points(0),
+      xp_total: points(0),
 
       // État
       volonte: jauge(3),

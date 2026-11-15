@@ -7,6 +7,11 @@
       {{formGroup systemFields.volonte.fields.temporaire value=source.volonte.temporaire localize=true disabled=(not editable)}}
       <p class="hint">{{localize "WODHOMEBREW.Fiche.VolontePermanenteEnTete"}}</p>
     </fieldset>
+    <fieldset>
+      <legend>{{localize "WODHOMEBREW.Fiche.Experience"}}</legend>
+      {{formGroup systemFields.xp value=source.xp localize=true disabled=(not editable)}}
+      {{formGroup systemFields.xp_total value=source.xp_total localize=true disabled=(not editable)}}
+    </fieldset>
     {{#if estMage}}
     <fieldset>
       <legend>{{localize "WODHOMEBREW.Actor.FIELDS.avatar.label"}}</legend>

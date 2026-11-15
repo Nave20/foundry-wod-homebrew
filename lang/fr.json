@@ -5,7 +5,8 @@
       "vampire": "Vampire",
       "goule": "Goule",
       "garou": "Garou",
-      "mage": "Mage"
+      "mage": "Mage",
+      "creature": "Créature"
     },
     "Item": {
       "objet": "Objet",
@@ -26,6 +27,18 @@
         "joueur": {
           "label": "Joueur"
         },
+        "espece": {
+          "label": "Espèce"
+        },
+        "categorie": {
+          "label": "Catégorie"
+        },
+        "vrai_nom": {
+          "label": "Vrai nom"
+        },
+        "pseudo": {
+          "label": "Pseudonyme"
+        },
         "statut": {
           "label": "Statut"
         },
@@ -40,6 +53,12 @@
         },
         "attitude": {
           "label": "Attitude"
+        },
+        "xp": {
+          "label": "XP disponibles"
+        },
+        "xp_total": {
+          "label": "XP gagnés au total"
         },
         "echelle_max": {
           "label": "Échelle max.",
@@ -632,9 +651,16 @@
       "EnForme": "En {forme} : {n} niveaux de santé (base {base}).",
       "Depassement": "{n} dégât(s) au-delà de la piste de santé."
     },
+    "Creature": {
+      "Animal": "Animal",
+      "Esprit": "Esprit",
+      "Artificiel": "Artificielle (golem, automate)",
+      "Autre": "Autre"
+    },
     "Fiche": {
+      "Experience": "Expérience",
       "Acteur": "Fiche Monde des Ténèbres",
-      "Objet": "Objet Monde des Ténèbres",
+      "Objet": "Fiche Monde des Ténèbres (objet, pouvoir, avantage)",
       "Nom": "Nom",
       "Reglages": "Réglages de la fiche",
       "Attributs": "Attributs",

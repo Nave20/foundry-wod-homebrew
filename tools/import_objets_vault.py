@@ -20,6 +20,8 @@ import shutil
 import sys
 from pathlib import Path
 
+from import_personnage_vault import _en_ligne  # gras et italique → <strong>, <em>
+
 # Objets rangés dans Armes qui sont des artefacts (effets, pas une arme)
 ARTEFACTS = {
     "Auto-collant porte au loin", "Bague o-ku", "Bonbon langue de feu", "Chevalière de protection",
@@ -71,7 +73,7 @@ def corps_html(corps: str) -> str:
             continue
         ligne = re.sub(r"\[\[([^\]|]+)\|([^\]]+)\]\]", r"\2", ligne)
         ligne = re.sub(r"\[\[([^\]]+)\]\]", r"\1", ligne)
-        lignes.append(f"<p>{html.escape(ligne)}</p>")
+        lignes.append(f"<p>{_en_ligne(ligne)}</p>")
     return "\n".join(lignes)
 
 

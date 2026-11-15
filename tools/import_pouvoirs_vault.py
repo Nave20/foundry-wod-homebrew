@@ -21,6 +21,8 @@ import re
 import sys
 from pathlib import Path
 
+from import_personnage_vault import _en_ligne  # gras et italique → <strong>, <em>
+
 PUCE = re.compile(r"^- \*\*(?P<nom>[^*]+)\*\*(?:\s*\(\*(?P<en>[^*]+)\*\))?\s*:?\s*(?P<effet>.*)$")
 SOURCES = re.compile(r"^\*Sources\s*:\s*(?P<s>.*?)\*?\s*$")
 
@@ -33,7 +35,7 @@ def nettoyer(texte: str) -> str:
 
 
 def paragraphes(lignes) -> str:
-    return "\n".join(f"<p>{html.escape(nettoyer(l))}</p>" for l in lignes if nettoyer(l))
+    return "\n".join(f"<p>{_en_ligne(l.strip())}</p>" for l in lignes if nettoyer(l))
 
 
 def pouvoir(nom, groupe, niveau, edition, description_lignes, cout="", jet="", en="", sources="", categorie="discipline"):

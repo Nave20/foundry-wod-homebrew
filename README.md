@@ -1,18 +1,19 @@
 # Monde des Ténèbres (Homebrew) — système Foundry VTT
 
-Système de jeu **maison** pour [Foundry Virtual Tabletop](https://foundryvtt.com), destiné aux parties du Monde des Ténèbres « classique » (éditions 20e anniversaire) : **Mortel, Vampire, Goule, Garou, Mage**.
+Système de jeu **maison** pour [Foundry Virtual Tabletop](https://foundryvtt.com), destiné aux parties du Monde des Ténèbres « classique » (éditions 20e anniversaire) : **Mortel, Vampire, Goule, Garou, Mage**, plus une fiche **Créature** simple.
 
 > **Version de Foundry ciblée : V14, build 369 (`14.369`).**
 > Le système est développé et testé sur ce build précis. Le build cible **évoluera** avec les mises à jour de Foundry ;
 > le [CHANGELOG](CHANGELOG.md) indique pour chaque version le build sur lequel elle a été vérifiée.
 
-Version actuelle du système : **0.8.0** · Statut : **en développement** (étapes 1 à 4 terminées, jauges animées, armes, combat et formes des garous ajoutés)
+Version actuelle du système : **1.0.0** · Statut : **version 1.0** (fiches des cinq créatures jouables et fiche Créature, jets, combat, pouvoirs, import des personnages)
 
 ## Ce que fait le système aujourd'hui
 
 | Fonction | Statut |
 |---|---|
 | 5 types de personnage (Mortel, Vampire, Goule, Garou, Mage) avec base commune | ✅ |
+| Fiche Créature simple (animaux, esprits, créatures artificielles), attaques naturelles en armes | ✅ |
 | Choix du jeu par fiche (V20, Dark Ages V20, W20, M20), qui change la liste de capacités | ✅ |
 | Attributs, capacités, capacités secondaires, historiques, atouts, handicaps | ✅ |
 | Volonté, santé (niveaux, dégâts contondants / létaux / aggravés, malus calculé) | ✅ |
@@ -74,6 +75,7 @@ Chaque session de travail se termine par un envoi sur ce dépôt, avec son réca
 | 2026-11-08 | 0.6.0 | Armes et armures dans les jets, onglet Combat, carte de combat avec corrections du MJ, import vers un compendium, formes des garous |
 | 2026-11-09 | 0.7.0 | Jets de combat lancés par les joueurs, pouvoirs suivis sur la fiche, sphères jetables, import des disciplines |
 | 2026-11-12 | 0.8.0 | Import des personnages de la vault (PNJ en masse), option « Masquer les Vertus » |
+| 2026-11-15 | 1.0.0 | Fiche Créature, XP et vrai nom sur toutes les fiches, import des PJ et créatures, corrections |
 
 ## Développement
 

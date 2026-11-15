@@ -37,7 +37,8 @@ Hooks.once("init", () => {
     vampire: data.VampireData,
     goule: data.GouleData,
     garou: data.GarouData,
-    mage: data.MageData
+    mage: data.MageData,
+    creature: data.CreatureData
   };
   CONFIG.Item.dataModels = { objet: data.ObjetData, pouvoir: data.PouvoirData, avantage: data.AvantageData };
 

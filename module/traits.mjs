@@ -64,7 +64,7 @@ export function nomAttribut(cle, config = configTraits()) {
 export function capacitesAffichees(jeu, config = configTraits(), type = null) {
   const base = WODHOMEBREW.capacites[jeu] ?? WODHOMEBREW.capacites.V20;
   const livres = { renommes: {}, masques: [], ajouts: {} };
-  const c = config.livresPour.includes(type) ? livres : (config.capacites[jeu] ?? config.capacites.V20);
+  const c = (config.livresPour.includes(type) || type === "creature") ? livres : (config.capacites[jeu] ?? config.capacites.V20);
   const tri = (a, b) => a.nom.localeCompare(b.nom, "fr", { sensitivity: "base" });
   return Object.entries(base).map(([groupe, cles]) => ({
     groupe,

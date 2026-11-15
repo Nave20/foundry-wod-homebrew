@@ -6,13 +6,32 @@
  *   await importerCompendium("wod-homebrew-pouvoirs/pouvoirs.json", { nom: "disciplines", titre: "Disciplines", filtre: o => o.system.categorie === "discipline" });
  *   await importerCompendium("wod-homebrew-pouvoirs/pouvoirs.json", { nom: "dons", titre: "Dons", filtre: o => o.system.categorie === "don" });
  *   await importerCompendium("wod-homebrew-avantages/avantages.json", { nom: "atouts-et-handicaps", titre: "Atouts et handicaps" });
- * Le compendium est vidé puis rempli (dossiers par catégorie d'objet, ou par groupe). Il appartient au monde :
+ * Les objets sont validés et dédoublonnés avant que le compendium soit vidé puis rempli (dossiers par catégorie d'objet, ou par groupe). Il appartient au monde :
  * il n'est pas publié avec le système.
  */
 export async function importerCompendium(url, { nom = "armes-et-armures", titre = "Armes et armures", filtre = null } = {}) {
   if ( !game.user.isGM ) throw new Error("Import réservé au MJ");
   let objets = await (await fetch(url, { cache: "no-store" })).json();
   if ( filtre ) objets = objets.filter(filtre);
+
+  // Préparer et valider AVANT de vider le compendium : un objet invalide ne doit pas le laisser vide
+  const { WODHOMEBREW } = await import("../module/config.mjs");
+  const vus = new Set();
+  let doublons = 0;
+  const invalides = [];
+  objets = objets.filter(o => {
+    if ( (o.type === "objet") && !(o.system?.categorie in WODHOMEBREW.categoriesObjet) ) {
+      o.system = { ...o.system, categorie: "divers" };
+    }
+    // Doublons : même type, même groupe, même nom (accents et casse ignorés)
+    const cle = [o.type, o.system?.groupe ?? "", o.name].join("|").normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+    if ( vus.has(cle) ) { doublons++; return false; }
+    vus.add(cle);
+    try { new Item.implementation(o).validate({ strict: true }); }
+    catch(err) { invalides.push(`${o.name} : ${err.message.split("\n")[0]}`); return false; }
+    return true;
+  });
+  if ( invalides.length ) console.warn(`${titre} : objets invalides ignorés`, invalides);
   let pack = game.packs.get(`world.${nom}`);
   if ( !pack ) pack = await foundry.documents.collections.CompendiumCollection.createCompendium({ label: titre, name: nom, type: "Item" });
   if ( pack.locked ) await pack.configure({ locked: false });
@@ -31,6 +50,7 @@ export async function importerCompendium(url, { nom = "armes-et-armures", titre 
   }
   const docs = objets.map(o => ({ ...o, folder: dossiers[cleDossier(o)] ?? null }));
   const crees = await Item.createDocuments(docs, { pack: pack.collection });
-  ui.notifications.info(`${titre} : ${crees.length} objets importés.`);
-  return crees.length;
+  const details = [doublons && `${doublons} doublons retirés`, invalides.length && `${invalides.length} invalides ignorés (voir la console)`].filter(Boolean);
+  ui.notifications.info(`${titre} : ${crees.length} objets importés${details.length ? ` (${details.join(", ")})` : ""}.`);
+  return { crees: crees.length, doublons, invalides };
 }

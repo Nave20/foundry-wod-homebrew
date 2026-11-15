@@ -20,8 +20,26 @@ const slug = s => norm(s).replace(/ /g, "_");
 /** Clé de comparaison des noms : accents, casse et pluriels ignorés (« Réflexes éclairs » = « Réflexe éclair ») */
 const memeNom = (a, b) => { const c = s => norm(s).split(" ").map(m => m.replace(/(?<=..)[sx]$/, "")).join(" "); return c(a) === c(b); };
 
+/** Colonne des capacités secondaires de la vault qui ne sont dans aucun jeu (tri validé le 15/11/2026) */
+const COLONNES_SECONDAIRES = Object.fromEntries(Object.entries({
+  talents: ["Aplomb", "Séduction", "Baratin", "Instinct", "Commandement", "Entregent", "Négociation", "Marchandage",
+    "Diplomatie", "Picoler", "Vices", "Style", "Ingénierie sociale", "Hypnose", "Rêve éveillé"],
+  competences: ["Do", "Herboristerie", "Animaux", "Armes à énergie", "Armes lourdes", "Armurerie", "Démolition",
+    "Fouille", "Déguisement", "Langue des signes", "Vol", "Acrobatie", "Artisanat", "Bricolage", "Calligraphie",
+    "Combat à l'aveugle", "Cuisine", "Évasion", "Natation", "Pistage", "Torture", "Tatouage rituel", "Lecture rapide",
+    "Génie de siège", "Tir à l'arc", "Certamen", "Boomerang", "Escrime", "Discrétion", "Survie"],
+  connaissances: ["Théologie", "Cryptographie", "Pharmacopée", "Biotechnologie", "Sorcellerie", "Alchimie",
+    "Astronomie", "Astrophysique", "Botanique", "Bureaucratie", "Code d'Hermès", "Cosmologie", "Culture étrangère",
+    "Démonologie", "Enseignement", "Folklore", "Génétique", "Haut rituel", "Histoire", "Héraldique", "Magnétisme",
+    "Prophétie", "Médias", "Tactique", "Administration hospitalière", "Énigmes hermétiques", "Linguistique", "Droit",
+    "Connaissance des loups-garous", "Connaissance des voies ferrées abandonnées", "Rituels", "Finances", "Sciences",
+    "Médecine", "Ésotérisme", "Psychologie", "Services secrets", "Météo", "Guerre non conventionnelle"]
+}).flatMap(([colonne, noms]) => noms.map(n => [slug(n), colonne])));
+
 /** Propriétés propres à la note Obsidian, sans équivalent attendu sur la fiche */
-const PROPRIETES_NOTE = new Set(["type", "creature", "tags", "campagne", "aliases"]);
+const PROPRIETES_NOTE = new Set(["type", "creature", "tags", "campagne", "aliases",
+  // Campagne du Succubus Club : à garder dans le texte de la note si besoin, pas dans un champ
+  "carte_succubus", "actions_succubus"]);
 /** Sections reprises dans la biographie */
 const SECTIONS_BIO = { "Historique": "historique", "Apparence": "apparence", "Relations": "relations", "Notes du MJ": "notes_mj" };
 /** Sections sans champ, mais que le joueur doit voir */
@@ -82,9 +100,16 @@ async function importerFiche(f, racine) {
   if ( !(f.creature in CONFIG.Actor.dataModels) ) {
     return { nom: f.nom, ignore: true, remarques: { ignores: [`Créature « ${f.creature} » sans fiche : non importée.`] } };
   }
-  const type = f.creature;
+  // Les fiches « mortel » rangées dans le dossier Créature de la vault deviennent des créatures (fiche simple)
+  const enCreature = f.creature === "mortel" && /^Créature\//.test(f.chemin ?? "");
+  const type = enCreature ? "creature" : f.creature;
   const champs = CONFIG.Actor.dataModels[type].schema.fields;
   const system = {};
+  if ( enCreature ) {
+    const faune = /\/Faune\//.test(f.chemin);
+    system.categorie = faune ? "animal" : /golem|automate/i.test(f.nom) ? "artificiel" : "autre";
+    if ( faune ) system.espece = f.nom;
+  }
 
   // Champs simples du modèle (identité, génération, arété…) : même clé dans la note
   for ( const [cle, champ] of Object.entries(champs) ) {
@@ -217,7 +242,8 @@ async function importerFiche(f, racine) {
   for ( const [titre, html] of Object.entries(f.sections) ) {
     const champ = SECTIONS_BIO[titre];
     if ( champ ) system.biographie[champ] = [system.biographie[champ], html].filter(Boolean).join("\n");
-    else if ( SECTIONS_JOUEUR.has(titre) ) {
+    // Sur une fiche de PJ, les sections sans champ (rotes, journal…) restent visibles du joueur
+    else if ( SECTIONS_JOUEUR.has(titre) || (lire("role") === "PJ" && !SECTIONS_OBJETS.has(titre)) ) {
       // Visible du joueur (les notes du MJ sont cachées) : à la suite de l'historique
       system.biographie.historique = [system.biographie.historique, `<h2>${titre}</h2>${html}`].filter(Boolean).join("\n");
       remarques.approximations.push(`Section « ${titre} » : pas de champ dédié, ajoutée à la fin de l'historique.`);
@@ -256,7 +282,8 @@ async function importerFiche(f, racine) {
   const items = [
     ...await pouvoirs(f, jeu, remarques),
     ...await rituels(f, remarques),
-    ...await equipement(f, remarques)
+    ...await equipement(f, remarques),
+    ...(type === "creature" ? attaquesNaturelles(f, remarques) : [])
   ];
 
   // Remplacer un import précédent de la même note
@@ -265,7 +292,12 @@ async function importerFiche(f, racine) {
     const i = a.getFlag("wod_homebrew", "import");
     return i && ((i.chemin === chemin) || (!i.chemin && a.name === f.nom));
   });
-  if ( ancien ) await ancien.delete();
+  if ( ancien ) {
+    // Dit clairement qu'une fiche existante est remplacée (modifications faites dans Foundry perdues)
+    const date = new Date(ancien._stats.modifiedTime).toLocaleString("fr-FR");
+    remarques.crees.push(`Remplace l'acteur « ${ancien.name} » déjà importé (modifié le ${date}).`);
+    await ancien.delete();
+  }
   const folder = await dossierActeur([racine, ...(f.dossier ?? [])]);
   const acteur = await Actor.create({
     name: f.nom, type, system, items, folder,
@@ -285,7 +317,7 @@ function colonneConnue(nom, config) {
       if ( (config.capacites[jeu]?.ajouts?.[groupe] ?? []).some(a => a.cle === cle || slug(a.nom) === cle) ) return groupe;
     }
   }
-  return null;
+  return COLONNES_SECONDAIRES[cle] ?? null;
 }
 
 /** Index d'un compendium du monde (vide s'il n'existe pas) */
@@ -356,6 +388,27 @@ async function rituels(f, remarques) {
     resultat.push({ name: nom, type: "pouvoir", system: {
       categorie: "rite", groupe: "Rituels", niveau: Number(r.Niveau) || 1, edition: "autre",
       description: r.Effet ? `<p>${foundry.utils.escapeHTML(r.Effet)}</p>` : "" } });
+  }
+  return resultat;
+}
+
+/**
+ * Attaques naturelles d'une créature, écrites dans l'historique : « Morsure 2 dégâts létaux », « Griffe 2L ».
+ * Chacune devient une arme (Dextérité + Bagarre, dégâts fixes de la note).
+ */
+function attaquesNaturelles(f, remarques) {
+  const texte = String(f.sections?.Historique ?? "").replace(/<br\s*\/?>|<\/(p|li|h\d)>/gi, "\n").replace(/<[^>]+>/g, "");
+  const TYPES = { l: "letal", c: "contondant", a: "aggrave" };
+  // Nom de 1 à 3 mots commençant par une majuscule ; plusieurs attaques possibles sur une ligne (« Morsure 3L Griffe 2L »)
+  const re = /([A-ZÀ-Ý][\p{L}'-]*(?:\s+[\p{L}'-]+){0,2})\s+(\d+)\s*(?:dégâts?\s+)?(létaux|létal|contondants?|aggravés?|[LCA])(?![\p{L}])/gu;
+  const resultat = [];
+  for ( const m of texte.matchAll(re) ) {
+    const typeDegats = TYPES[norm(m[3])[0]];
+    resultat.push({
+      name: m[1].trim(), type: "objet", img: "icons/svg/claw.svg",
+      system: { categorie: "arme", degats: Number(m[2]), type_degats: typeDegats, attribut: "dexterite", competence: "bagarre", equipe: true }
+    });
+    remarques.crees.push(`Attaque naturelle «…» créée depuis l'historique (Dextérité + Bagarre).`);
   }
   return resultat;
 }

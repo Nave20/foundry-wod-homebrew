@@ -90,6 +90,12 @@ class TestPersonnage(unittest.TestCase):
     def test_liste_vide(self):
         self.assertEqual(lire_front_matter("---\natouts: []\n---\n")["atouts"], [])
 
+    def test_liste_sans_retrait(self):
+        fm = lire_front_matter('---\ntype: "personnage"\ncapacites_secondaires:\n- "Do 4"\n- "Vol 1"\nxp: 9\n---\n')
+        self.assertEqual(fm["type"], "personnage")
+        self.assertEqual(fm["capacites_secondaires"], ["Do 4", "Vol 1"])
+        self.assertEqual(fm["xp"], 9)
+
     def test_tableau(self):
         lignes = lire_tableau(NOTE.split("## Équipement")[1])
         self.assertEqual(lignes, [{"Objet": "Beretta", "Type": "Arme", "Effet": "4 dégâts.", "Description": "Classique."}])
